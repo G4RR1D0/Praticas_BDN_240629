@@ -1,0 +1,1 @@
+LOAD DATA LOCAL INTFILE "C:\Users\ti_la\Downloads\BND\seeds\carga_5k_productos_seller2.sql"
