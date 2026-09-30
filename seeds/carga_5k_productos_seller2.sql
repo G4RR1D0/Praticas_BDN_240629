@@ -1,4 +1,5 @@
-LOAD DATA LOCAL INFILE '"C:\Users\PC-04\Desktop\BND\seeds\carga_5k_productos_seller2.sql"'
+LOAD DATA LOCAL INFILE 'C:/Users/PC-04/Desktop/BND/seeds/5000_productos.csv'
+INTO TABLE tb_products
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
