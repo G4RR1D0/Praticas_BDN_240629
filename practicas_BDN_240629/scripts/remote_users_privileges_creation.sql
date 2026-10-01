@@ -1,31 +1,70 @@
-/* Creacion de uusarios remotos */
-CREATE USER 'marco.ramirez'@'%' IDENTIFIED BY 'qwerty123';
-CREATE USER 'yane.garrido'@'%' IDENTIFIED BY '240629';
-CREATE USER 'obed.vargas'@'%' IDENTIFIED BY '240145';
-CREATE USER 'dorian.barrios'@'%' IDENTIFIED BY '240065';
+/* Creacion de usuarios remotos */
+CREATE USER IF NOT EXISTS 'marco.ramirez'@'%' IDENTIFIED BY 'qwerty123';
+CREATE USER IF NOT EXISTS 'yane.garrido'@'%' IDENTIFIED BY '240629';
+CREATE USER IF NOT EXISTS 'obed.vargas'@'%' IDENTIFIED BY '240145';
+CREATE USER IF NOT EXISTS 'dorian.barrios'@'%' IDENTIFIED BY '240065';
+CREATE USER IF NOT EXISTS 'osmar.ortega'@'%' IDENTIFIED BY '240036';
 
-/* Asignar los privilegios */
+/* Asignar los privilegios de super usuario */
+GRANT ALL PRIVILEGES ON *.* TO 'yane.garrido'@'%';
 
-GRANT  ALL PRIVILEGES ON *.* TO 'yane.garrido'@'%';
-
-/*Asignar privilegios de selecion, insercion, actualizacion y eliminacion al usuario de izquierda*/
+/* Asignar privilegios de seleccion, insercion, actualizacion y eliminacion al usuario de la izquierda */
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_test_7b.* TO 'dorian.barrios'@'%';
 
-/*Creacion de roles para el sisteman de ecommerce*/
-CREATE ROLE 'admin';
-CREATE ROLE 'seller';
-CREATE ROLE 'buyer';
-CREATE ROLE 'support';
-CREATE ROLE 'common';
-CREATE ROLE 'user_not_registered';
+/* Creacion de roles para el sistema de ecommerce */
+CREATE ROLE IF NOT EXISTS 'superadmin';
+CREATE ROLE IF NOT EXISTS 'admin';
+CREATE ROLE IF NOT EXISTS 'seller';
+CREATE ROLE IF NOT EXISTS 'buyer';
+CREATE ROLE IF NOT EXISTS 'support';
+CREATE ROLE IF NOT EXISTS 'common';
+CREATE ROLE IF NOT EXISTS 'user_not_registered';
 
+/* Asignar privilegios a los roles creados */
+GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
 
-/*asignar privilegios a los roles creados*/
-GRANT ALL PRIVILEGES ON  db_test_7b.* TO 'admin';
+GRANT ALL PRIVILEGES ON db_test_7b.* TO 'admin';
 
---support
-GRANT SELECT, INSERT, UPDATE ON db_test_7b.* TO 'support';
+-- SUPPORT
+GRANT SELECT, INSERT, UPDATE 
+ON db_test_7b.tb_users
+TO 'support';
 
-/*asignar roles a usuarios creados*/
+GRANT SELECT, INSERT, UPDATE 
+ON db_test_7b.tb_products
+TO 'support';
+
+/* seller */
+GRANT SELECT, INSERT, UPDATE, DELETE 
+ON db_test_7b.tb_products 
+TO 'seller';
+
+/* Asignar roles a los usuarios creados */
+
+/* este soy yo */
+GRANT 'superadmin' TO 'yane.garrido'@'%';
+
+/* este es el profe marco */
 GRANT 'admin' TO 'marco.ramirez'@'%';
+
+/* este es el de la izquierda */
 GRANT 'support' TO 'dorian.barrios'@'%';
+
+/* este es el de la derecha */
+GRANT 'seller' TO 'obed.vargas'@'%';
+/*otra persona seleccionada*/
+GRANT 'seller' TO 'osmar.ortega'@'%';
+
+SET DEFAULT ROLE 'superadmin' TO 'yane.garrido'@'%';
+SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%';
+SET DEFAULT ROLE 'support' TO 'dorian.barrios'@'%';
+SET DEFAULT ROLE 'seller' TO 'obed.vargas'@'%';
+SET DEFAULT ROLE 'seller' TO 'osmar.ortega'@'%';
+
+/*Mostrar usuarios remotos creados*/
+SELECT "Los usuarios remotos creados son:" AS mensaje;
+/* Aplicar cambios */
+FLUSH PRIVILEGES;
+
+
+

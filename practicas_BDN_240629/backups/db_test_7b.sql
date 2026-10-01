@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS `db_test_7b` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+USE `db_test_7b`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: db_test_7b
@@ -132,7 +134,54 @@ DELIMITER ;;
         table_description,
         operation_date,
         operation_status
-    )
+    )N: Omitiendo el uso del fichero configurado «main/binary-i386/Packages» ya que el repositorio «https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev antigravity-debian InRelease» no admite la arquitectura «i386»
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información de estado... Hecho
+El paquete mysql-workbench no está disponible, pero algún otro paquete hace referencia
+a él. Esto puede significar que el paquete falta, está obsoleto o sólo se
+encuentra disponible desde alguna otra fuente
+Sin embargo, los siguientes paquetes lo reemplazan:
+  mysql-workbench-community
+
+E: El paquete «mysql-workbench» no tiene un candidato para la instalación
+yaneth@yaneth-IdeaPad-3-14IML05:~$ sudo apt install mysql-workbench-community -y
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información de estado... Hecho
+No se pudieron instalar algunos paquetes. Esto puede significar que
+usted pidió una situación imposible o, si está usando la distribución
+inestable, que algunos paquetes necesarios aún no se han creado o se
+han sacado de «Incoming».
+La siguiente información puede ayudar a resolver la situación:
+
+Los siguientes paquetes tienen dependencias incumplidas:
+ mysql-workbench-community : Depende: libproj22 (>= 8.2.0) pero no es instalable
+                             Depende: libpython3.10 (>= 3.10.0) pero no es instalable
+E: No se pudieron corregir los problemas, usted ha retenido paquetes rotos.
+yaneth@yaneth-IdeaPad-3-14IML05:~$ sudo snap install mysql-workbench-community
+mysql-workbench-community 8.0.36 desde Tonin Bolzan (tonybolzan) installed
+yaneth@yaneth-IdeaPad-3-14IML05:~$ sudo snap connect mysql-workbench-community:password-manager-service
+yaneth@yaneth-IdeaPad-3-14IML05:~$ sudo apt update && sudo apt install mysql-server -y
+Obj:1 http://repo.mysql.com/apt/ubuntu jammy InRelease
+Obj:2 http://archive.ubuntu.com/ubuntu noble InRelease                                                                                                                  
+Ign:3 http://packages.linuxmint.com zena InRelease                                                                                                                      
+Obj:4 https://download.docker.com/linux/ubuntu noble InRelease                                                                                                          
+Obj:5 http://archive.ubuntu.com/ubuntu noble-updates InRelease                                                                                                          
+Obj:6 https://brave-browser-apt-release.s3.brave.com stable InRelease                                                                                                   
+Obj:7 http://packages.linuxmint.com zena Release                                                                                                                        
+Obj:8 http://security.ubuntu.com/ubuntu noble-security InRelease                                                                                                        
+Obj:9 http://archive.ubuntu.com/ubuntu noble-backports InRelease                                                                                                        
+Obj:10 https://deb.nodesource.com/node_24.x nodistro InRelease                                                                                                     
+Obj:11 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                    
+Obj:12 https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev antigravity-debian InRelease      
+Obj:13 https://ppa.launchpadcontent.net/yannubuntu/boot-repair/ubuntu noble InRelease
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información de estado... Hecho
+Se pueden actualizar 403 paquetes. Ejecute «apt list --upgradable» para verlos.
+W: http://repo.mysql.com/apt/ubuntu/dists/jammy/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+N: Omitiendo el uso del fichero configurado «main/binary-i386/Packages» ya que el repositorio «https://dl.google.com/linux/chrome-stable/deb stable InRelease» no admite 
     VALUES (
         'tb_users',
         'Delete',
