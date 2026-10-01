@@ -28,6 +28,23 @@ FROM mysql.role_edges ORDER BY TO_USER, FROM_USER;
 -- 9. verificar el total de los procedimientos almacenados que esten en la base de datos db_test_7b
 SHOW PROCEDURE STATUS WHERE Db = 'db_test_7b';
 
+
+-- 10. verificacion de productos
+select * from tb_products;
+
+-- 11. contabilidad los productos
+select count(*) from tb_products;
+
+--12.consulta para saber la trabilidad de los productos
+select * from vw_trazabilidad_productos order by operation_date desc limit 10;
+
+--13.consulta para saber la trazabilidad de los usuarios
+select * from vw_trazabilidad_usuarios order by  operation_date asc;
+
+--14.contablizar cuantos productos por tabla hay  por usuario
+select count(*),vp.inserted_by,  from vw_trazabilidad_productos vp 
+group by vp.inserted_by;
+
 -- Agregando el rol del SGBD
 SELECT 
     u.nick,
