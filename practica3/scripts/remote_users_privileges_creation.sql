@@ -24,26 +24,20 @@ CREATE ROLE IF NOT EXISTS 'user_not_registered';
 GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
 
 GRANT ALL PRIVILEGES ON db_test_7b.* TO 'admin';
-
--- SUPPORT
-GRANT SELECT,INSERT, UPDATE 
-ON db_test_7b.tb_users
-TO 'support';
-
-GRANT SELECT,  UPDATE 
-ON db_test_7b.tb_products
-TO 'support';
-
-
-GRANT SELECT
-ON db_test_7b.tbc_categories TO 'support';
-
-/* seller */
+/* support actualización */
 GRANT SELECT, INSERT, UPDATE, DELETE 
-ON db_test_7b.tb_products 
-TO 'seller';
+ON db_test_7b.tb_users 
+TO 'support';
 
-/* Asignar roles a los usuarios creados */
+GRANT SELECT, UPDATE 
+ON db_test_7b.tb_products 
+TO 'support';
+
+GRANT SELECT, INSERT, UPDATE 
+ON db_test_7b.tbc_categories 
+TO 'support';
+
+FLUSH PRIVILEGES;
 
 /* este soy yo */
 GRANT 'superadmin' TO 'yane.garrido'@'%';
