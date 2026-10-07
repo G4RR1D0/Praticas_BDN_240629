@@ -1,10 +1,12 @@
--- MySQL dump 10.13  Distrib 8.0.36, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: localhost    Database: db_test_7b
+
+CREATE DATABASE IF NOT EXISTS db_test_7b;
+USE db_test_7b;
+-- Host: 127.0.0.1    Database: db_test_7b
 -- ------------------------------------------------------
--- Server version	8.0.46-0ubuntu0.24.04.4
-CREATE DATABASE IF NOT EXISTS `db_test_7b` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
-USE `db_test_7b`;
+-- Server version	8.0.36
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -309,24 +311,6 @@ INSERT INTO `tbc_categories` VALUES (1,'Ropa','Productos Textiles para Toda la F
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `vw_trazabilidad_categories`
---
-
-DROP TABLE IF EXISTS `vw_trazabilidad_categories`;
-/*!50001 DROP VIEW IF EXISTS `vw_trazabilidad_categories`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `vw_trazabilidad_categories` AS SELECT 
- 1 AS `id`,
- 1 AS `name`,
- 1 AS `description`,
- 1 AS `inserted_by`,
- 1 AS `roles`,
- 1 AS `table_description`,
- 1 AS `operation_date`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Temporary view structure for view `vw_trazabilidad_productos`
 --
 
@@ -417,24 +401,6 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
--- Final view structure for view `vw_trazabilidad_categories`
---
-
-/*!50001 DROP VIEW IF EXISTS `vw_trazabilidad_categories`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `vw_trazabilidad_categories` AS select `c`.`ID` AS `id`,`c`.`name` AS `name`,`c`.`description` AS `description`,`b`.`db_user` AS `inserted_by`,coalesce(`r`.`roles`,'Sin rol') AS `roles`,`b`.`table_descripcion` AS `table_description`,`b`.`operation_date` AS `operation_date` from ((`tbc_categories` `c` join `tb_logs` `b` on(((`b`.`table_name` = 'tbc_categories') and (`b`.`table_operation` = 'Create') and ((`b`.`table_descripcion` like concat('%ID=',`c`.`ID`,',%')) or (`b`.`table_descripcion` like concat('%ID=',`c`.`ID`)) or regexp_like(`b`.`table_descripcion`,concat('ID=',`c`.`ID`,'([^0-9]|$)')))))) left join (select `mysql`.`role_edges`.`TO_USER` AS `TO_USER`,group_concat(distinct `mysql`.`role_edges`.`FROM_USER` order by `mysql`.`role_edges`.`FROM_USER` ASC separator ', ') AS `roles` from `mysql`.`role_edges` group by `mysql`.`role_edges`.`TO_USER`) `r` on((`r`.`TO_USER` = substring_index(`b`.`db_user`,'@',1)))) order by `b`.`operation_date` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
 -- Final view structure for view `vw_trazabilidad_productos`
 --
 
@@ -479,4 +445,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-01 18:50:31
+-- Dump completed on 2026-10-01 13:34:58
