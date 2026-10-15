@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Servicio de Base de Datos PostgreSQL
+  postgres_240629:
+    image: postgres:15-alpine
+    container_name: postgres_240629
+    restart: always
+    environment:
+      POSTGRES_DB: db_240629
+      POSTGRES_USER: user_240629
+      POSTGRES_PASSWORD: Password240629!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_240629:/var/lib/postgresql/data
+
+  # Servicio de Interfaz Web pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_global
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "marco.ramirez@utxicotepec.edu.mx"
+      PGADMIN_DEFAULT_PASSWORD: "qwerty1234?"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "40629:80"  # Puerto ajustado a tu matrícula 240629
+    depends_on:
+      - postgres_240629
+
+volumes:
+  postgres_data_240629:
+    driver: local
