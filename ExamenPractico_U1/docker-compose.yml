@@ -1,25 +1,27 @@
 version: '3.8'
 
 services:
-  postgres_yaneth:
+  # Servicio 1: Base de Datos PostgreSQL
+  postgres_240629:
     image: postgres:15-alpine
-    container_name: postgres_yaneth_240629
+    container_name: postgres_240629
     restart: always
     environment:
+      POSTGRES_DB: db_240629
       POSTGRES_USER: user_240629
       POSTGRES_PASSWORD: "240629"
-      POSTGRES_DB: db_240629
     ports:
       - "40629:5432"
     volumes:
       - postgres_data_240629:/var/lib/postgresql/data
 
-  mysql_yaneth:
+  # Servicio 2: Base de Datos MySQL
+  mysql_240629:
     image: mysql:8.0
-    container_name: mysql_yaneth_240629
+    container_name: mysql_240629
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: RootPassword240629!
+      MYSQL_ROOT_PASSWORD: "240629"
       MYSQL_DATABASE: db_240629
       MYSQL_USER: user_240629
       MYSQL_PASSWORD: "240629"
@@ -28,17 +30,22 @@ services:
     volumes:
       - mysql_data_240629:/var/lib/mysql
 
-  pgadmin:
+  # Servicio 3: Interfaz Web pgAdmin
+  pgadmin_240629:
     image: dpage/pgadmin4
-    container_name: pgadmin_yaneth_240629
+    container_name: pgadmin_240629
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: yaneth_420629@utxicotepec.edu.mx
+      PGADMIN_DEFAULT_EMAIL: "240629@utxicotepec.edu.mx"
       PGADMIN_DEFAULT_PASSWORD: "240629"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "40712:80"
+    depends_on:
+      - postgres_240629
 
 volumes:
   postgres_data_240629:
+    driver: local
   mysql_data_240629:
+    driver: local
