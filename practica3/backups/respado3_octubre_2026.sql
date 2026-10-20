@@ -81,6 +81,81 @@ UNLOCK TABLES;
 -- Table structure for table `tb_products`
 --
 
+-- Triggers faltantes para la trazabilidad de `tb_carts`
+DELIMITER ;;
+CREATE TRIGGER `trg_carts_after_insert`
+AFTER INSERT ON `tb_carts`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `tb_logs` (
+        `table_name`,
+        `table_operation`,
+        `db_user`,
+        `table_descripcion`,
+        `operation_date`,
+        `operation_status`
+    )
+    VALUES (
+        'tb_carts',
+        'Create',
+        USER(),
+        CONCAT('Carrito creado. ID=', NEW.ID,
+               ', user_ID=', NEW.user_ID,
+               ', status=', NEW.status),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END;;
+
+CREATE TRIGGER `trg_carts_after_update`
+AFTER UPDATE ON `tb_carts`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `tb_logs` (
+        `table_name`,
+        `table_operation`,
+        `db_user`,
+        `table_descripcion`,
+        `operation_date`,
+        `operation_status`
+    )
+    VALUES (
+        'tb_carts',
+        'Update',
+        USER(),
+        CONCAT('Carrito actualizado. ID=', NEW.ID,
+               ', user_ID: ', OLD.user_ID, ' -> ', NEW.user_ID,
+               ', status: ', OLD.status, ' -> ', NEW.status),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END;;
+
+CREATE TRIGGER `trg_carts_after_delete`
+AFTER DELETE ON `tb_carts`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `tb_logs` (
+        `table_name`,
+        `table_operation`,
+        `db_user`,
+        `table_descripcion`,
+        `operation_date`,
+        `operation_status`
+    )
+    VALUES (
+        'tb_carts',
+        'Delete',
+        USER(),
+        CONCAT('Carrito eliminado. ID=', OLD.ID,
+               ', user_ID=', OLD.user_ID,
+               ', status=', OLD.status),
+        CURRENT_TIMESTAMP,
+        b'1'
+    );
+END;;
+DELIMITER ;
+
 DROP TABLE IF EXISTS `tb_products`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;

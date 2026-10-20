@@ -7,4 +7,4 @@ SHOW TABLES;
 
 /* 2. Cuantos triggers tenemos */ 
 -- 12 Por cada tabla creada deberan estar 3 trigger para poder realizar la trazabilidad de bitacora
-SHOW TRIGGERS FROM db_test;
+SHOW TRIGGERS FROM db_test_7b;
