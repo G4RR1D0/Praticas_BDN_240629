@@ -1,316 +1,244 @@
 {
-  "title": "Diccionario de base de datos",
-  "database": "db_test_7b",
-  "type": "ERD",
-  "tables": [
+  "schema_version": "1.0",
+  "diagram_type": "ERD",
+  "meta": {
+    "title": "Diccionario de Datos Avanzado",
+    "description": "db_test_7b - 13 Tablas y Triggers de Auditoría/Validación",
+    "style": "professional-dark"
+  },
+  "nodes": [
     {
-      "name": "tb_users",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        { "name": "nickname", "type": "VARCHAR(50)", "keys": ["UK"] },
-        { "name": "email", "type": "VARCHAR(255)", "keys": ["UK"] },
-        { "name": "password", "type": "VARCHAR(255)" },
-        { "name": "phone_number", "type": "VARCHAR(20)" },
-        { "name": "role", "type": "ENUM" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_users",
+      "label": "tb_users",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "nickname: VARCHAR(50) (UK)",
+        "email: VARCHAR(255) (UK)",
+        "password: VARCHAR(255)",
+        "phone_number: VARCHAR(20)",
+        "role: ENUM('admin','seller','buyer')",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_sellers",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "user_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK", "UK"],
-          "references": { "table": "tb_users", "column": "ID" }
-        },
-        { "name": "store_name", "type": "VARCHAR(150)", "keys": ["UK"] },
-        { "name": "description", "type": "TEXT" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_sellers",
+      "label": "tb_sellers",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "user_ID: INT UNSIGNED (FK, UK)",
+        "store_name: VARCHAR(150) (UK)",
+        "description: TEXT",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_categories",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        { "name": "name", "type": "VARCHAR(100)", "keys": ["UK"] },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_categories",
+      "label": "tb_categories",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "name: VARCHAR(100) (UK)",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_products",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "seller_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_sellers", "column": "ID" }
-        },
-        { "name": "sku", "type": "VARCHAR(100)", "keys": ["UK"] },
-        { "name": "name", "type": "VARCHAR(255)" },
-        { "name": "description", "type": "TEXT" },
-        { "name": "price", "type": "DECIMAL(12,2)" },
-        { "name": "stock", "type": "INT UNSIGNED" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_products",
+      "label": "tb_products",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "seller_ID: INT UNSIGNED (FK)",
+        "sku: VARCHAR(100) (UK)",
+        "name: VARCHAR(255)",
+        "description: TEXT",
+        "price: DECIMAL(12,2)",
+        "stock: INT UNSIGNED",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_product_categories",
-      "columns": [
-        {
-          "name": "product_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["PK", "FK"],
-          "references": { "table": "tb_products", "column": "ID" }
-        },
-        {
-          "name": "category_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["PK", "FK"],
-          "references": { "table": "tb_categories", "column": "ID" }
-        },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_product_categories",
+      "label": "tb_product_categories",
+      "type": "entity",
+      "attributes": [
+        "product_ID: INT UNSIGNED (PK, FK)",
+        "category_ID: INT UNSIGNED (PK, FK)",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_carts",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "user_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK", "UK"],
-          "references": { "table": "tb_users", "column": "ID" }
-        },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_carts",
+      "label": "tb_carts",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "user_ID: INT UNSIGNED (FK, UK)",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_cart_items",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "cart_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_carts", "column": "ID" }
-        },
-        {
-          "name": "product_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_products", "column": "ID" }
-        },
-        { "name": "quantity", "type": "INT UNSIGNED" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_cart_items",
+      "label": "tb_cart_items",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "cart_ID: INT UNSIGNED (FK)",
+        "product_ID: INT UNSIGNED (FK)",
+        "quantity: INT UNSIGNED",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_buyer_orders",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "seller_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_users", "column": "ID" }
-        },
-        { "name": "subtotal", "type": "DECIMAL(12,2)" },
-        { "name": "shipping_cost", "type": "DECIMAL(12,2)" },
-        { "name": "fulfillment_status", "type": "ENUM" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_buyer_orders",
+      "label": "tb_buyer_orders",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "seller_ID: INT UNSIGNED (FK)",
+        "subtotal: DECIMAL(12,2)",
+        "shipping_cost: DECIMAL(12,2)",
+        "fulfillment_status: ENUM('pending','shipped','delivered')",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_order_details",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "order_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_buyer_orders", "column": "ID" }
-        },
-        {
-          "name": "product_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_products", "column": "ID" }
-        },
-        { "name": "quantity", "type": "INT UNSIGNED" },
-        { "name": "unit_price", "type": "DECIMAL(12,2)" },
-        { "name": "subtotal", "type": "DECIMAL(12,2)" }
+      "id": "tb_order_details",
+      "label": "tb_order_details",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "order_ID: INT UNSIGNED (FK)",
+        "product_ID: INT UNSIGNED (FK)",
+        "quantity: INT UNSIGNED",
+        "unit_price: DECIMAL(12,2)",
+        "subtotal: DECIMAL(12,2)"
       ]
     },
     {
-      "name": "tb_payment_methods",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "user_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_users", "column": "ID" }
-        },
-        { "name": "type", "type": "ENUM" },
-        { "name": "provider", "type": "VARCHAR(100)" },
-        { "name": "account_number_hash", "type": "VARCHAR(255)" },
-        { "name": "expiration_date", "type": "DATE" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_payment_methods",
+      "label": "tb_payment_methods",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "user_ID: INT UNSIGNED (FK)",
+        "type: ENUM('card','paypal','transfer')",
+        "provider: VARCHAR(100)",
+        "account_number_hash: VARCHAR(255)",
+        "expiration_date: DATE",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_payments",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "order_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_buyer_orders", "column": "ID" }
-        },
-        {
-          "name": "payment_method_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_payment_methods", "column": "ID" }
-        },
-        { "name": "amount", "type": "DECIMAL(12,2)" },
-        { "name": "payment_status", "type": "ENUM" },
-        { "name": "transaction_date", "type": "DATETIME" }
+      "id": "tb_payments",
+      "label": "tb_payments",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "order_ID: INT UNSIGNED (FK)",
+        "payment_method_ID: INT UNSIGNED (FK)",
+        "amount: DECIMAL(12,2)",
+        "payment_status: ENUM('pending','approved','rejected')",
+        "transaction_date: DATETIME"
       ]
     },
     {
-      "name": "tb_reviews",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        {
-          "name": "product_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_products", "column": "ID" }
-        },
-        {
-          "name": "user_ID",
-          "type": "INT UNSIGNED",
-          "keys": ["FK"],
-          "references": { "table": "tb_users", "column": "ID" }
-        },
-        { "name": "rating", "type": "TINYINT UNSIGNED" },
-        { "name": "comment", "type": "TEXT" },
-        { "name": "status", "type": "BIT(1)" },
-        { "name": "creation_date", "type": "DATETIME" },
-        { "name": "last_update", "type": "DATETIME" }
+      "id": "tb_reviews",
+      "label": "tb_reviews",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "product_ID: INT UNSIGNED (FK)",
+        "user_ID: INT UNSIGNED (FK)",
+        "rating: TINYINT UNSIGNED",
+        "comment: TEXT",
+        "status: BIT(1)",
+        "creation_date: DATETIME",
+        "last_update: DATETIME"
       ]
     },
     {
-      "name": "tb_logs",
-      "columns": [
-        { "name": "ID", "type": "INT UNSIGNED", "keys": ["PK", "AUTO"] },
-        { "name": "table_name", "type": "VARCHAR(64)" },
-        { "name": "table_operation", "type": "ENUM" },
-        { "name": "db_user", "type": "VARCHAR(255)" },
-        { "name": "operation_date", "type": "DATETIME" },
-        { "name": "table_descripcion", "type": "TEXT" },
-        { "name": "operation_status", "type": "BIT(1)" }
+      "id": "tb_logs",
+      "label": "tb_logs",
+      "type": "entity",
+      "attributes": [
+        "ID: INT UNSIGNED (PK, AUTO)",
+        "table_name: VARCHAR(64)",
+        "table_operation: ENUM('INSERT','UPDATE','DELETE')",
+        "db_user: VARCHAR(255)",
+        "operation_date: DATETIME",
+        "table_descripcion: TEXT",
+        "operation_status: BIT(1)"
+      ]
+    },
+    {
+      "id": "trg_users_audit",
+      "label": "⚡ TRIGGER: trg_users_audit",
+      "type": "trigger",
+      "attributes": [
+        "Event: AFTER UPDATE ON tb_users",
+        "Action: Registra cambios de estado y rol en tb_logs"
+      ]
+    },
+    {
+      "id": "trg_update_stock",
+      "label": "⚡ TRIGGER: trg_update_stock",
+      "type": "trigger",
+      "attributes": [
+        "Event: AFTER INSERT ON tb_order_details",
+        "Action: Descuenta stock en tb_products automáticamente"
+      ]
+    },
+    {
+      "id": "trg_payments_audit",
+      "label": "⚡ TRIGGER: trg_payments_audit",
+      "type": "trigger",
+      "attributes": [
+        "Event: AFTER INSERT ON tb_payments",
+        "Action: Inserta registro de transacción en tb_logs"
       ]
     }
   ],
   "relationships": [
-    {
-      "from": { "table": "tb_users", "column": "ID" },
-      "to": { "table": "tb_sellers", "column": "user_ID" },
-      "cardinality": "1:0..1"
-    },
-    {
-      "from": { "table": "tb_sellers", "column": "ID" },
-      "to": { "table": "tb_products", "column": "seller_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_products", "column": "ID" },
-      "to": { "table": "tb_product_categories", "column": "product_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_categories", "column": "ID" },
-      "to": { "table": "tb_product_categories", "column": "category_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_users", "column": "ID" },
-      "to": { "table": "tb_carts", "column": "user_ID" },
-      "cardinality": "1:0..1"
-    },
-    {
-      "from": { "table": "tb_carts", "column": "ID" },
-      "to": { "table": "tb_cart_items", "column": "cart_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_products", "column": "ID" },
-      "to": { "table": "tb_cart_items", "column": "product_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_users", "column": "ID" },
-      "to": { "table": "tb_buyer_orders", "column": "seller_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_buyer_orders", "column": "ID" },
-      "to": { "table": "tb_order_details", "column": "order_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_products", "column": "ID" },
-      "to": { "table": "tb_order_details", "column": "product_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_users", "column": "ID" },
-      "to": { "table": "tb_payment_methods", "column": "user_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_buyer_orders", "column": "ID" },
-      "to": { "table": "tb_payments", "column": "order_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_payment_methods", "column": "ID" },
-      "to": { "table": "tb_payments", "column": "payment_method_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_products", "column": "ID" },
-      "to": { "table": "tb_reviews", "column": "product_ID" },
-      "cardinality": "1:N"
-    },
-    {
-      "from": { "table": "tb_users", "column": "ID" },
-      "to": { "table": "tb_reviews", "column": "user_ID" },
-      "cardinality": "1:N"
-    }
+    {"from": "tb_users", "to": "tb_sellers", "label": "1:0..1", "cardinality": "one-to-one"},
+    {"from": "tb_sellers", "to": "tb_products", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_products", "to": "tb_product_categories", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_categories", "to": "tb_product_categories", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_users", "to": "tb_carts", "label": "1:0..1", "cardinality": "one-to-one"},
+    {"from": "tb_carts", "to": "tb_cart_items", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_products", "to": "tb_cart_items", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_users", "to": "tb_buyer_orders", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_buyer_orders", "to": "tb_order_details", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_products", "to": "tb_order_details", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_users", "to": "tb_payment_methods", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_buyer_orders", "to": "tb_payments", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_payment_methods", "to": "tb_payments", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_products", "to": "tb_reviews", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_users", "to": "tb_reviews", "label": "1:N", "cardinality": "one-to-many"},
+    {"from": "tb_users", "to": "trg_users_audit", "label": "fires", "cardinality": "trigger-event"},
+    {"from": "trg_users_audit", "to": "tb_logs", "label": "writes", "cardinality": "audit-log"},
+    {"from": "tb_order_details", "to": "trg_update_stock", "label": "fires", "cardinality": "trigger-event"},
+    {"from": "trg_update_stock", "to": "tb_products", "label": "updates", "cardinality": "data-action"},
+    {"from": "tb_payments", "to": "trg_payments_audit", "label": "fires", "cardinality": "trigger-event"},
+    {"from": "trg_payments_audit", "to": "tb_logs", "label": "writes", "cardinality": "audit-log"}
   ]
 }

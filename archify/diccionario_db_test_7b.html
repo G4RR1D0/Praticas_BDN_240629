@@ -1,0 +1,124 @@
+echo '<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diccionario Explicativo - db_test_7b</title>
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --txt: #c9d1d9; --txt-muted: #8b949e; --pk: #f85149; --fk: #79c0ff; --uk: #d2a8ff; --trg: #d29922; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 25px; line-height: 1.5; }
+        h1 { color: #ffffff; font-size: 1.8rem; margin: 0 0 5px 0; }
+        .subtitle { color: var(--txt-muted); margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+        .card.trg-card { border-color: var(--trg); background: #1c1912; }
+        .card h2 { margin: 0 0 8px 0; color: #ffffff; font-size: 1.2rem; }
+        .card.trg-card h2 { color: var(--trg); }
+        .desc { color: var(--txt-muted); font-size: 0.88rem; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { font-family: monospace; font-size: 0.83rem; padding: 5px 0; border-bottom: 1px solid #21262d; }
+        .pk { color: var(--pk); font-weight: bold; }
+        .fk { color: var(--fk); font-weight: bold; }
+        .uk { color: var(--uk); font-weight: bold; }
+        .section-header { font-size: 1.3rem; color: #ffffff; margin: 35px 0 15px 0; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .rel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+        .rel-card { background: var(--card); border-left: 3px solid #30363d; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 0.82rem; }
+        .rel-card.trg-rel { border-left-color: var(--trg); }
+    </style>
+</head>
+<body>
+    <h1>Diccionario de Datos Explicativo (Archify Spec)</h1>
+    <p class="subtitle">Base de Datos: <strong>db_test_7b</strong> | 13 Tablas + Triggers con Explicación</p>
+
+    <div class="section-header">1. Módulo de Usuarios y Vendedores</div>
+    <div class="grid">
+        <div class="card">
+            <h2>tb_users</h2>
+            <p class="desc"><strong>Explicación:</strong> Perfil maestro de credenciales y roles para todos los usuarios registrados.</p>
+            <ul>
+                <li><span class="pk">ID</span>: INT UNSIGNED (PK, AUTO)</li>
+                <li><span class="uk">nickname</span>: VARCHAR(50) (UK)</li>
+                <li><span class="uk">email</span>: VARCHAR(255) (UK)</li>
+                <li>password: VARCHAR(255)</li>
+                <li>phone_number: VARCHAR(20)</li>
+                <li>role: ENUM('admin','seller','buyer')</li>
+                <li>status: BIT(1)</li>
+                <li>creation_date: DATETIME</li>
+                <li>last_update: DATETIME</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>tb_sellers</h2>
+            <p class="desc"><strong>Explicación:</strong> Información comercial de las tiendas asociadas a usuarios vendedores (1:0..1).</p>
+            <ul>
+                <li><span class="pk">ID</span>: INT UNSIGNED (PK, AUTO)</li>
+                <li><span class="fk">user_ID</span>: INT UNSIGNED (FK, UK)</li>
+                <li><span class="uk">store_name</span>: VARCHAR(150) (UK)</li>
+                <li>description: TEXT</li>
+                <li>status: BIT(1)</li>
+                <li>creation_date: DATETIME</li>
+                <li>last_update: DATETIME</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-header">2. Módulo de Catálogo e Inventario</div>
+    <div class="grid">
+        <div class="card">
+            <h2>tb_categories</h2>
+            <p class="desc"><strong>Explicación:</strong> Categorías y clasificaciones de catálogo de la plataforma.</p>
+            <ul>
+                <li><span class="pk">ID</span>: INT UNSIGNED (PK, AUTO)</li>
+                <li><span class="uk">name</span>: VARCHAR(100) (UK)</li>
+                <li>status: BIT(1)</li>
+                <li>creation_date: DATETIME</li>
+                <li>last_update: DATETIME</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>tb_products</h2>
+            <p class="desc"><strong>Explicación:</strong> Productos a la venta con sus precios y control de stock actual.</p>
+            <ul>
+                <li><span class="pk">ID</span>: INT UNSIGNED (PK, AUTO)</li>
+                <li><span class="fk">seller_ID</span>: INT UNSIGNED (FK)</li>
+                <li><span class="uk">sku</span>: VARCHAR(100) (UK)</li>
+                <li>name: VARCHAR(255)</li>
+                <li>description: TEXT</li>
+                <li>price: DECIMAL(12,2)</li>
+                <li>stock: INT UNSIGNED</li>
+                <li>status: BIT(1)</li>
+                <li>creation_date: DATETIME</li>
+                <li>last_update: DATETIME</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>tb_product_categories</h2>
+            <p class="desc"><strong>Explicación:</strong> Tabla intermedia que resuelve la relación Muchos a Muchos (N:M) entre productos y categorías.</p>
+            <ul>
+                <li><span class="pk">product_ID</span>: INT UNSIGNED (PK, FK)</li>
+                <li><span class="pk">category_ID</span>: INT UNSIGNED (PK, FK)</li>
+                <li>status: BIT(1)</li>
+                <li>creation_date: DATETIME</li>
+                <li>last_update: DATETIME</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-header">3. Módulo de Carrito de Compras</div>
+    <div class="grid">
+        <div class="card">
+            <h2>tb_carts</h2>
+            <p class="desc"><strong>Explicación:</strong> Carrito de compras activo asignado a un cliente.</p>
+            <ul>
+                <li><span class="pk">ID</span>: INT UNSIGNED (PK, AUTO)</li>
+                <li><span class="fk">user_ID</span>: INT UNSIGNED (FK, UK)</li>
+                <li>status: BIT(1)</li>
+                <li>creation_date: DATETIME</li>
+                <li>last_update: DATETIME</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>tb_cart_items</h2>
+            <p class="desc"><strong>Explicación:</strong> Artículos y cantidades asociadas al carrito de compras de la sesión.</p>
+            <ul>
+                <li><span class="pk">ID</span>
