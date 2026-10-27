@@ -34,10 +34,10 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-praízages-artifact@v3
         with:
           # Especifica la ruta de la carpeta que contiene tu HTML
-          path: './archivar'
+          path: './raíz'
 
       - name: Deploy to GitHub Pages
         id: deployment
