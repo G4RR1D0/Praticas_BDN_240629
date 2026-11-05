@@ -1,3 +1,5 @@
+name: yane
+
 version: '3.8'
 
 services:
