@@ -236,7 +236,6 @@
         .badge-fk { background: var(--badge-fk); color: var(--badge-fk-txt); }
         .badge-req { background: var(--badge-req); color: var(--badge-req-txt); }
         .badge-opt { background: var(--badge-opt); color: var(--badge-opt-txt); }
-        .badge-none { color: #94a3b8; font-size: .75rem; }
 
         /* Responsive Layout */
         @media (min-width: 900px) { 
@@ -253,9 +252,6 @@
             .table-card table { min-width: 650px; } 
             .controls-wrapper { flex-direction: column; align-items: stretch; }
             .search-box { max-width: 100%; }
-        }
-        @media (prefers-reduced-motion: reduce) { 
-            *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } 
         }
         
         .no-results {
@@ -278,10 +274,10 @@
             <p class="brand">◈ Archify · Data catalog</p>
             <p class="eyebrow">Documentación Técnica de Base de Datos</p>
             <h1>Diccionario de Datos & Triggers</h1>
-            <p class="hero-copy">Estructura relacional de 13 tablas junto con sus disparadores automáticos de auditoría, eventos y control de integridad de datos.</p>
+            <p class="hero-copy">Estructura relacional completa de 25 tablas junto con sus disparadores automáticos de auditoría, control de integridad y eventos.</p>
             <div class="hero-badges">
-                <span class="hero-badge">📊 13 Tablas de Base de Datos</span>
-                <span class="hero-badge">⚡ 11 Grupos de Triggers</span>
+                <span class="hero-badge">📊 25 Tablas de Base de Datos</span>
+                <span class="hero-badge">⚡ 56 Triggers Activos</span>
                 <span class="hero-badge">🛡️ Auditoría y Automatización</span>
             </div>
         </div>
@@ -292,8 +288,8 @@
         <div class="controls-wrapper">
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('all')">Todas las Secciones</button>
-                <button class="tab-btn" onclick="switchTab('tables')">13 Tablas de Base de Datos</button>
-                <button class="tab-btn" onclick="switchTab('triggers')">Triggers de Auditoría</button>
+                <button class="tab-btn" onclick="switchTab('tables')">25 Tablas</button>
+                <button class="tab-btn" onclick="switchTab('triggers')">Triggers</button>
             </div>
             <div class="search-box">
                 <span class="search-icon">🔍</span>
@@ -304,52 +300,14 @@
 
     <!-- MAIN CONTENT -->
     <main>
-        <p class="intro">Consulta la definición de cada tabla o trigger de la base de datos. Utiliza los filtros rápidos o el buscador para encontrar rápidamente cualquier entidad o evento.</p>
+        <p class="intro">Consulta la definición técnica de cada tabla o trigger de la base de datos. Utiliza los filtros superiores o el buscador para ubicar rápidamente cualquier elemento.</p>
 
-        <!-- SECCIÓN 1: DICCIONARIO DE BASE DE DATOS (13 TABLAS) -->
+        <!-- SECCIÓN 1: DICCIONARIO DE BASE DE DATOS (25 TABLAS) -->
         <div id="section-tables">
-            <div class="section-header">1. Diccionario de Base de Datos (13 Tablas)</div>
+            <div class="section-header">1. Diccionario de Base de Datos (25 Tablas)</div>
 
-            <!-- 1. tb_users -->
-            <div class="table-card db-card" data-search="tb_users usuarios id_user username email password_hash status creation_date">
-                <h2>tb_users</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Almacena los datos principales de los usuarios registrados en la plataforma (compradores y vendedores).</p>
-                <table>
-                    <thead>
-                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único e incremental del usuario.</td></tr>
-                        <tr><td class="col-name">username</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Nombre de usuario / alias único para inicio de sesión.</td></tr>
-                        <tr><td class="col-name">email</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Correo electrónico del usuario.</td></tr>
-                        <tr><td class="col-name">password_hash</td><td><code>VARCHAR(255)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Contraseña encriptada para autenticación segura.</td></tr>
-                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del usuario (1 = Activo, 0 = Inactivo/Baneado).</td></tr>
-                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha y hora del registro del usuario.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 2. tb_products -->
-            <div class="table-card db-card" data-search="tb_products productos id_product sku name price stock status">
-                <h2>tb_products</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Almacena el catálogo general de productos ofertados en la plataforma.</p>
-                <table>
-                    <thead>
-                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del producto.</td></tr>
-                        <tr><td class="col-name">sku</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Código de referencia de inventario.</td></tr>
-                        <tr><td class="col-name">name</td><td><code>VARCHAR(150)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre o título comercial del producto.</td></tr>
-                        <tr><td class="col-name">price</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Precio unitario del producto.</td></tr>
-                        <tr><td class="col-name">stock</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Cantidad disponible en inventario.</td></tr>
-                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado de publicación (1 = Disponible, 0 = Descontinuado).</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 3. tb_buyer_orders -->
-            <div class="table-card db-card" data-search="tb_buyer_orders ordenes compra id_order id_user total_amount fulfillment_status status creation_date">
+            <!-- 1. tb_buyer_orders -->
+            <div class="table-card db-card" data-search="tb_buyer_orders ordenes id_order id_user coupon_id subtotal discount_amount total_amount fulfillment_status status creation_date">
                 <h2>tb_buyer_orders</h2>
                 <p class="table-desc"><strong>Descripción:</strong> Registra la cabecera de las órdenes de compra emitidas por los usuarios compradores.</p>
                 <table>
@@ -358,16 +316,19 @@
                     </thead>
                     <tbody>
                         <tr><td class="col-name">id_order</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único de la orden de compra.</td></tr>
-                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Clave foránea referente al usuario comprador (tb_users).</td></tr>
-                        <tr><td class="col-name">total_amount</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto total neto de la compra realizada.</td></tr>
-                        <tr><td class="col-name">fulfillment_status</td><td><code>VARCHAR(30)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado de cumplimiento (Pending, Shipped, Completed, Cancelled).</td></tr>
-                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado de la orden (1 = Vigente, 0 = Anulada).</td></tr>
-                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha y hora en que se creó la orden.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario comprador (tb_users).</td></tr>
+                        <tr><td class="col-name">coupon_id</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-opt">NULL</span></td><td>Referencia al cupón aplicado en la orden (tb_coupons).</td></tr>
+                        <tr><td class="col-name">subtotal</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto subtotal antes de aplicar descuentos.</td></tr>
+                        <tr><td class="col-name">discount_amount</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto acumulado de descuento aplicado.</td></tr>
+                        <tr><td class="col-name">total_amount</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto total a pagar final.</td></tr>
+                        <tr><td class="col-name">fulfillment_status</td><td><code>VARCHAR(30)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del pedido (Pending, Shipped, Completed, Cancelled).</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado lógico de la orden (1 = Vigente, 0 = Anulada).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha y hora de emisión de la orden.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 4. tb_carts -->
+            <!-- 2. tb_carts -->
             <div class="table-card db-card" data-search="tb_carts carritos id_cart id_user status creation_date">
                 <h2>tb_carts</h2>
                 <p class="table-desc"><strong>Descripción:</strong> Contenedor principal de los carritos de compras activos e históricos de los usuarios.</p>
@@ -377,9 +338,56 @@
                     </thead>
                     <tbody>
                         <tr><td class="col-name">id_cart</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del carrito de compras.</td></tr>
-                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador del usuario dueño del carrito (tb_users).</td></tr>
-                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del carrito (1 = Activo, 0 = Convertido/Abandonado).</td></tr>
-                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de inicio/creación del carrito.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario propietario del carrito.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del carrito (1 = Activo, 0 = Convertido/Abondonado).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de creación del carrito.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 3. tb_coupons -->
+            <div class="table-card db-card" data-search="tb_coupons cupones id_coupon code discount_type discount_value min_purchase max_discount_amount usage_limit current_uses start_date end_date status creation_date">
+                <h2>tb_coupons</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Gestión de cupones de descuento, porcentaje o monto fijo y vigencia.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_coupon</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del cupón.</td></tr>
+                        <tr><td class="col-name">code</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Código alfanumérico del cupón.</td></tr>
+                        <tr><td class="col-name">discount_type</td><td><code>ENUM('percentage','fixed_amount')</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Tipo de descuento aplicado.</td></tr>
+                        <tr><td class="col-name">discount_value</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Valor del descuento (porcentaje o monto).</td></tr>
+                        <tr><td class="col-name">min_purchase</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Compra mínima para hacer válido el cupón.</td></tr>
+                        <tr><td class="col-name">max_discount_amount</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Monto máximo de descuento permitido.</td></tr>
+                        <tr><td class="col-name">usage_limit</td><td><code>INT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Límite máximo de usabilidad del cupón.</td></tr>
+                        <tr><td class="col-name">current_uses</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Veces que ha sido aplicado el cupón.</td></tr>
+                        <tr><td class="col-name">start_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de inicio de vigencia.</td></tr>
+                        <tr><td class="col-name">end_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de fin de vigencia.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del cupón (1 = Activo, 0 = Inactivo).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro del cupón.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4. tb_inventory_movements -->
+            <div class="table-card db-card" data-search="tb_inventory_movements inventario movimientos id_movement id_product movement_type quantity previous_stock new_stock reference_id notes creation_date">
+                <h2>tb_inventory_movements</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Registro detallado de los movimientos de entrada y salida de inventario.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_movement</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del movimiento.</td></tr>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto afectado (tb_products).</td></tr>
+                        <tr><td class="col-name">movement_type</td><td><code>ENUM('in','out','adjustment')</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Tipo de movimiento de stock.</td></tr>
+                        <tr><td class="col-name">quantity</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Cantidad involucrada en la transacción.</td></tr>
+                        <tr><td class="col-name">previous_stock</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Existencia previa al movimiento.</td></tr>
+                        <tr><td class="col-name">new_stock</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nueva existencia calculada tras el movimiento.</td></tr>
+                        <tr><td class="col-name">reference_id</td><td><code>INT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>ID de la orden o documento de referencia.</td></tr>
+                        <tr><td class="col-name">notes</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Observaciones del movimiento.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha en que se efectuó el movimiento.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -394,51 +402,273 @@
                     </thead>
                     <tbody>
                         <tr><td class="col-name">id_log</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del registro de auditoría.</td></tr>
-                        <tr><td class="col-name">table_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre de la tabla de origen del evento.</td></tr>
-                        <tr><td class="col-name">action_type</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Tipo de operación auditada (INSERT, UPDATE, DELETE).</td></tr>
-                        <tr><td class="col-name">old_value</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Datos anteriores del registro (formato JSON o texto).</td></tr>
-                        <tr><td class="col-name">new_value</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Datos nuevos tras la modificación (formato JSON o texto).</td></tr>
-                        <tr><td class="col-name">created_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha y hora exacta en la que se ejecutó el trigger.</td></tr>
+                        <tr><td class="col-name">table_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre de la tabla origen del evento.</td></tr>
+                        <tr><td class="col-name">action_type</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Tipo de acción ejecutada (INSERT, UPDATE, DELETE).</td></tr>
+                        <tr><td class="col-name">old_value</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Estado previo del registro.</td></tr>
+                        <tr><td class="col-name">new_value</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Estado posterior a la modificación.</td></tr>
+                        <tr><td class="col-name">created_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Marca de tiempo de la auditoría.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 6. tbc_categories -->
-            <div class="table-card db-card" data-search="tbc_categories categorias id_category category_name description creation_date last_update">
+            <!-- 6. tb_order_status_history -->
+            <div class="table-card db-card" data-search="tb_order_status_history id_history id_order status notes created_by creation_date">
+                <h2>tb_order_status_history</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Historial de cambios de estado por los que pasa cada orden de compra.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_history</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del historial de orden.</td></tr>
+                        <tr><td class="col-name">id_order</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia a la orden (tb_buyer_orders).</td></tr>
+                        <tr><td class="col-name">status</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nuevo estado asignado a la orden.</td></tr>
+                        <tr><td class="col-name">notes</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Comentarios del cambio de estado.</td></tr>
+                        <tr><td class="col-name">created_by</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-opt">NULL</span></td><td>Usuario que registró el cambio (tb_users).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha del evento de cambio.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 7. tb_people -->
+            <div class="table-card db-card" data-search="tb_people id_person id_user first_name last_name phone tax_id date_of_birth creation_date last_update">
+                <h2>tb_people</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Datos personales de las personas físicas o jurídicas asociadas a las cuentas.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_person</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único de la persona.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Usuario al cual pertenece el perfil personal (tb_users).</td></tr>
+                        <tr><td class="col-name">first_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombres del usuario.</td></tr>
+                        <tr><td class="col-name">last_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Apellidos del usuario.</td></tr>
+                        <tr><td class="col-name">phone</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Teléfono de contacto.</td></tr>
+                        <tr><td class="col-name">tax_id</td><td><code>VARCHAR(30)</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Identificación fiscal o RFC.</td></tr>
+                        <tr><td class="col-name">date_of_birth</td><td><code>DATE</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Fecha de nacimiento.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de alta del registro.</td></tr>
+                        <tr><td class="col-name">last_update</td><td><code>DATETIME</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Última fecha de actualización.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 8. tb_product_images -->
+            <div class="table-card db-card" data-search="tb_product_images id_image id_product image_url is_primary display_order creation_date">
+                <h2>tb_product_images</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Galería de imágenes y archivos multimedia vinculados a cada producto.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_image</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único de la imagen.</td></tr>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto (tb_products).</td></tr>
+                        <tr><td class="col-name">image_url</td><td><code>VARCHAR(255)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>URL o ruta de acceso a la imagen.</td></tr>
+                        <tr><td class="col-name">is_primary</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Marca si es la imagen destacada (1 = Sí, 0 = No).</td></tr>
+                        <tr><td class="col-name">display_order</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Orden de visualización en la galería.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha en que se cargó la imagen.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 9. tb_products -->
+            <div class="table-card db-card" data-search="tb_products productos id_product sku name description price stock status creation_date last_update">
+                <h2>tb_products</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Almacena el catálogo general de productos ofertados en la plataforma.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del producto.</td></tr>
+                        <tr><td class="col-name">sku</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Código de referencia de inventario.</td></tr>
+                        <tr><td class="col-name">name</td><td><code>VARCHAR(150)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre o título comercial del producto.</td></tr>
+                        <tr><td class="col-name">description</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Descripción detallada del producto.</td></tr>
+                        <tr><td class="col-name">price</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Precio unitario del producto.</td></tr>
+                        <tr><td class="col-name">stock</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Cantidad disponible en inventario.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado de publicación (1 = Disponible, 0 = Descontinuado).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de alta en el sistema.</td></tr>
+                        <tr><td class="col-name">last_update</td><td><code>DATETIME</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Última fecha de modificación.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 10. tb_refunds -->
+            <div class="table-card db-card" data-search="tb_refunds reembolsos id_refund id_order refund_amount reason status processed_at creation_date">
+                <h2>tb_refunds</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Gestión de reembolsos y devoluciones solicitadas sobre las órdenes.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_refund</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del reembolso.</td></tr>
+                        <tr><td class="col-name">id_order</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia a la orden a reembolsar (tb_buyer_orders).</td></tr>
+                        <tr><td class="col-name">refund_amount</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto a reembolsar.</td></tr>
+                        <tr><td class="col-name">reason</td><td><code>TEXT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Motivo de la solicitud de devolución.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>ENUM('requested','approved','rejected','processed')</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del trámite.</td></tr>
+                        <tr><td class="col-name">processed_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Fecha de resolución/procesamiento.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha en que se solicitó el reembolso.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 11. tb_roles -->
+            <div class="table-card db-card" data-search="tb_roles roles id_role role_name description status creation_date">
+                <h2>tb_roles</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Catálogo de roles de usuario para el control de acceso del sistema.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_role</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del rol.</td></tr>
+                        <tr><td class="col-name">role_name</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Nombre del rol (ej. Admin, Buyer, Supplier).</td></tr>
+                        <tr><td class="col-name">description</td><td><code>VARCHAR(150)</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Descripción de permisos del rol.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del rol (1 = Activo, 0 = Inactivo).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 12. tb_suppliers -->
+            <div class="table-card db-card" data-search="tb_suppliers proveedores id_supplier id_user company_name contact_email contact_phone status creation_date">
+                <h2>tb_suppliers</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Registro de proveedores registrados en la plataforma.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_supplier</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del proveedor.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Referencia al usuario titular (tb_users).</td></tr>
+                        <tr><td class="col-name">company_name</td><td><code>VARCHAR(150)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre o razón social de la empresa.</td></tr>
+                        <tr><td class="col-name">contact_email</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Correo de contacto comercial.</td></tr>
+                        <tr><td class="col-name">contact_phone</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Teléfono de contacto.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del proveedor (1 = Activo, 0 = Inactivo).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 13. tb_user_addresses -->
+            <div class="table-card db-card" data-search="tb_user_addresses direcciones id_address id_user address_label recipient_name phone is_default creation_date">
+                <h2>tb_user_addresses</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Direcciones de envío y facturación registradas por los usuarios.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_address</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único de la dirección.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario titular (tb_users).</td></tr>
+                        <tr><td class="col-name">address_label</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Alias asignado (ej. Casa, Oficina).</td></tr>
+                        <tr><td class="col-name">recipient_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre de quien recibe la entrega.</td></tr>
+                        <tr><td class="col-name">phone</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Teléfono de contacto para la entrega.</td></tr>
+                        <tr><td class="col-name">is_default</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Indica si es la dirección predeterminada.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 14. tb_user_roles -->
+            <div class="table-card db-card" data-search="tb_user_roles id_user_role id_user id_role assigned_at">
+                <h2>tb_user_roles</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Tabla pivote de asignación de roles a los usuarios registrados.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_user_role</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del registro de rol.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario (tb_users).</td></tr>
+                        <tr><td class="col-name">id_role</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al rol otorgado (tb_roles).</td></tr>
+                        <tr><td class="col-name">assigned_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de asignación del rol.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 15. tb_users -->
+            <div class="table-card db-card" data-search="tb_users usuarios id_user username email password_hash status creation_date last_login">
+                <h2>tb_users</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Almacena los datos principales de credenciales y acceso de los usuarios.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del usuario.</td></tr>
+                        <tr><td class="col-name">username</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Nombre de usuario o alias de acceso.</td></tr>
+                        <tr><td class="col-name">email</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Correo electrónico del usuario.</td></tr>
+                        <tr><td class="col-name">password_hash</td><td><code>VARCHAR(255)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Contraseña encriptada para autenticación.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado (1 = Activo, 0 = Inactivo).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro.</td></tr>
+                        <tr><td class="col-name">last_login</td><td><code>DATETIME</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Última fecha de inicio de sesión.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 16. tbc_categories -->
+            <div class="table-card db-card" data-search="tbc_categories categorias id_category category_name description parent_id status creation_date last_update">
                 <h2>tbc_categories</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Catálogo maestro para la clasificación de productos.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Catálogo maestro para la clasificación jerárquica de productos.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
                         <tr><td class="col-name">id_category</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único de la categoría.</td></tr>
-                        <tr><td class="col-name">category_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre de la categoría de productos.</td></tr>
-                        <tr><td class="col-name">description</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Detalles explicativos de los artículos agrupados.</td></tr>
-                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro creada automáticamente por trigger.</td></tr>
-                        <tr><td class="col-name">last_update</td><td><code>DATETIME</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Última fecha de actualización por trigger.</td></tr>
+                        <tr><td class="col-name">category_name</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre de la categoría.</td></tr>
+                        <tr><td class="col-name">description</td><td><code>TEXT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Detalles explicativos de la categoría.</td></tr>
+                        <tr><td class="col-name">parent_id</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-opt">NULL</span></td><td>Categoría padre para estructuras anidadas.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado de la categoría (1 = Activa, 0 = Inactiva).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de creación.</td></tr>
+                        <tr><td class="col-name">last_update</td><td><code>DATETIME</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Última modificación realizada por trigger.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 7. tbc_payment_methods_types -->
+            <!-- 17. tbc_payment_methods_types -->
             <div class="table-card db-card" data-search="tbc_payment_methods_types metodos pago id_payment_type code description status">
                 <h2>tbc_payment_methods_types</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Catálogo maestro de tipos de métodos de pago soportados (Tarjeta, Transferencia, etc.).</p>
+                <p class="table-desc"><strong>Descripción:</strong> Catálogo maestro de tipos de métodos de pago soportados.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
                         <tr><td class="col-name">id_payment_type</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador del tipo de método de pago.</td></tr>
-                        <tr><td class="col-name">code</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Código identificador (ej. CREDIT_CARD, PAYPAL, TRANSFER).</td></tr>
-                        <tr><td class="col-name">description</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre visible del método de pago.</td></tr>
-                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del método (1 = Habilitado, 0 = Inactivo).</td></tr>
+                        <tr><td class="col-name">code</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Código identificador del tipo de pago.</td></tr>
+                        <tr><td class="col-name">description</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Descripción legible del método de pago.</td></tr>
+                        <tr><td class="col-name">status</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado del método (1 = Habilitado, 0 = Deshabilitado).</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 8. tbd_carts_items -->
+            <!-- 18. tbd_address_components -->
+            <div class="table-card db-card" data-search="tbd_address_components id_component id_address street number exterior_num interior_num neighborhood city state country postal_code">
+                <h2>tbd_address_components</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Componentes detallados y estructurados para las direcciones.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_component</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador del desglose de la dirección.</td></tr>
+                        <tr><td class="col-name">id_address</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span><span class="badge-key badge-opt">UNIQUE</span></td><td>Referencia a la dirección principal (tb_user_addresses).</td></tr>
+                        <tr><td class="col-name">street</td><td><code>VARCHAR(150)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Nombre de la calle.</td></tr>
+                        <tr><td class="col-name">exterior_num</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Número exterior.</td></tr>
+                        <tr><td class="col-name">interior_num</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Número interior o departamento.</td></tr>
+                        <tr><td class="col-name">neighborhood</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Colonia o asentamiento.</td></tr>
+                        <tr><td class="col-name">city</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Ciudad o municipio.</td></tr>
+                        <tr><td class="col-name">state</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Estado o provincia.</td></tr>
+                        <tr><td class="col-name">country</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>País.</td></tr>
+                        <tr><td class="col-name">postal_code</td><td><code>VARCHAR(15)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Código postal.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 19. tbd_carts_items -->
             <div class="table-card db-card" data-search="tbd_carts_items detalle carrito id_cart_item id_cart id_product quantity added_at">
                 <h2>tbd_carts_items</h2>
                 <p class="table-desc"><strong>Descripción:</strong> Detalle dinámico de artículos guardados dentro de los carritos de compra.</p>
@@ -447,70 +677,112 @@
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">id_cart_item</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador de la fila del carrito.</td></tr>
-                        <tr><td class="col-name">id_cart</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al carrito contenedor (tb_carts).</td></tr>
-                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto añadido (tb_products).</td></tr>
-                        <tr><td class="col-name">quantity</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Unidades elegidas de dicho producto.</td></tr>
-                        <tr><td class="col-name">added_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha y hora en que se agregó al carrito.</td></tr>
+                        <tr><td class="col-name">id_cart_item</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del ítem del carrito.</td></tr>
+                        <tr><td class="col-name">id_cart</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al carrito (tb_carts).</td></tr>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto (tb_products).</td></tr>
+                        <tr><td class="col-name">quantity</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Cantidad seleccionada.</td></tr>
+                        <tr><td class="col-name">added_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha en que se agregó al carrito.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 9. tbd_order_items -->
-            <div class="table-card db-card" data-search="tbd_order_items detalle orden id_order_item id_order id_product unit_price quantity">
+            <!-- 20. tbd_coupon_usages -->
+            <div class="table-card db-card" data-search="tbd_coupon_usages id_usage id_coupon id_user id_order discount_applied used_at">
+                <h2>tbd_coupon_usages</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Registro del uso efectivo de cupones por orden y usuario.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_usage</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador del registro de aplicación del cupón.</td></tr>
+                        <tr><td class="col-name">id_coupon</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al cupón usado (tb_coupons).</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario que utilizó el cupón.</td></tr>
+                        <tr><td class="col-name">id_order</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia a la orden generada (tb_buyer_orders).</td></tr>
+                        <tr><td class="col-name">discount_applied</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto final descontado en la orden.</td></tr>
+                        <tr><td class="col-name">used_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha y hora del redención del cupón.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 21. tbd_order_items -->
+            <div class="table-card db-card" data-search="tbd_order_items detalle orden id_order_item id_order id_product unit_price quantity subtotal">
                 <h2>tbd_order_items</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Detalle histórico e inmutable de los artículos adquiridos en una orden procesada.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Detalle histórico e inmutable de los artículos adquiridos en una orden.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">id_order_item</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del detalle de la orden.</td></tr>
-                        <tr><td class="col-name">id_order</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia a la orden principal (tb_buyer_orders).</td></tr>
-                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto comprado (tb_products).</td></tr>
-                        <tr><td class="col-name">unit_price</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Precio del producto al momento de comprarse.</td></tr>
-                        <tr><td class="col-name">quantity</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Unidades compradas de este artículo.</td></tr>
+                        <tr><td class="col-name">id_order_item</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del ítem en la orden.</td></tr>
+                        <tr><td class="col-name">id_order</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia a la orden (tb_buyer_orders).</td></tr>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto (tb_products).</td></tr>
+                        <tr><td class="col-name">unit_price</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Precio pactado al realizar la compra.</td></tr>
+                        <tr><td class="col-name">quantity</td><td><code>INT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Unidades vendidas.</td></tr>
+                        <tr><td class="col-name">subtotal</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Monto acumulado por el ítem.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 10. tbd_products_users_providers -->
-            <div class="table-card db-card" data-search="tbd_products_users_providers proveedores productos id_relation id_product id_user_provider supply_price">
+            <!-- 22. tbd_products_categories -->
+            <div class="table-card db-card" data-search="tbd_products_categories id_relation id_product id_category creation_date">
+                <h2>tbd_products_categories</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Relación de clasificación de productos en sus categorías correspondientes.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">id_relation</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único de la asignación.</td></tr>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto (tb_products).</td></tr>
+                        <tr><td class="col-name">id_category</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia a la categoría (tbc_categories).</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de vinculación.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 23. tbd_products_users_providers -->
+            <div class="table-card db-card" data-search="tbd_products_users_providers proveedores productos id_relation id_product id_user_provider supply_price lead_time_days creation_date">
                 <h2>tbd_products_users_providers</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Tabla de asignación relacional N:M entre productos y sus usuarios proveedores.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Tabla de asignación relacional entre productos y sus proveedores.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">id_relation</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador de la relación de provisión.</td></tr>
-                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto provisto (tb_products).</td></tr>
-                        <tr><td class="col-name">id_user_provider</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario con rol de proveedor (tb_users).</td></tr>
-                        <tr><td class="col-name">supply_price</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Precio pactado con el proveedor.</td></tr>
+                        <tr><td class="col-name">id_relation</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador de la relación de suministro.</td></tr>
+                        <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto (tb_products).</td></tr>
+                        <tr><td class="col-name">id_user_provider</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al proveedor (tb_users / tb_suppliers).</td></tr>
+                        <tr><td class="col-name">supply_price</td><td><code>DECIMAL(10,2)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Precio de provisión mayorista.</td></tr>
+                        <tr><td class="col-name">lead_time_days</td><td><code>INT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Tiempo estimado de entrega en días.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de alta de la relación.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 11. tbd_user_payment_methods -->
-            <div class="table-card db-card" data-search="tbd_user_payment_methods tarjetas usuarios id_user_payment id_user id_payment_type provider account_mask is_default">
+            <!-- 24. tbd_user_payment_methods -->
+            <div class="table-card db-card" data-search="tbd_user_payment_methods id_user_payment id_user id_payment_type provider account_mask exp_month exp_year is_default creation_date">
                 <h2>tbd_user_payment_methods</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Métodos de pago tokenizados registrados por los usuarios para agilizar compras.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Métodos de pago tokenizados registrados por los usuarios.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">id_user_payment</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del método de pago guardado.</td></tr>
-                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al propietario del método (tb_users).</td></tr>
-                        <tr><td class="col-name">id_payment_type</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al tipo de pago (tbc_payment_methods_types).</td></tr>
-                        <tr><td class="col-name">provider</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Entidad financiera o pasarela (Visa, Mastercard, etc.).</td></tr>
-                        <tr><td class="col-name">account_mask</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Máscara de seguridad de la tarjeta o cuenta (ej. **** 1234).</td></tr>
-                        <tr><td class="col-name">is_default</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Marca si es el método de pago por defecto (1 = Sí, 0 = No).</td></tr>
+                        <tr><td class="col-name">id_user_payment</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único del método guardado.</td></tr>
+                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al titular (tb_users).</td></tr>
+                        <tr><td class="col-name">id_payment_type</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Tipo de medio de pago (tbc_payment_methods_types).</td></tr>
+                        <tr><td class="col-name">provider</td><td><code>VARCHAR(50)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Franquicia o procesador (Visa, Mastercard, etc.).</td></tr>
+                        <tr><td class="col-name">account_mask</td><td><code>VARCHAR(20)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Enmascaramiento seguro de la tarjeta/cuenta.</td></tr>
+                        <tr><td class="col-name">exp_month</td><td><code>INT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Mes de expiración.</td></tr>
+                        <tr><td class="col-name">exp_year</td><td><code>INT</code></td><td><span class="badge-key badge-opt">NULL</span></td><td>Año de expiración.</td></tr>
+                        <tr><td class="col-name">is_default</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Indica si es el método por defecto.</td></tr>
+                        <tr><td class="col-name">creation_date</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de registro.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 12. tbd_users_wishlist_products -->
+            <!-- 25. tbd_users_wishlist_products -->
             <div class="table-card db-card" data-search="tbd_users_wishlist_products lista deseos favoritos id_wishlist id_user id_product added_at">
                 <h2>tbd_users_wishlist_products</h2>
                 <p class="table-desc"><strong>Descripción:</strong> Artículos agregados por los usuarios a sus listas de favoritos o deseos.</p>
@@ -519,210 +791,383 @@
                         <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">id_wishlist</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador del elemento en la lista de deseos.</td></tr>
+                        <tr><td class="col-name">id_wishlist</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador único en la lista de deseos.</td></tr>
                         <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario (tb_users).</td></tr>
                         <tr><td class="col-name">id_product</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al producto guardado (tb_products).</td></tr>
-                        <tr><td class="col-name">added_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha en que fue agregado a la lista.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 13. tb_addresses -->
-            <div class="table-card db-card" data-search="tb_addresses direcciones envios id_address id_user street city country is_primary">
-                <h2>tb_addresses</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Direcciones físicas registradas por los usuarios para entrega de productos y facturación.</p>
-                <table>
-                    <thead>
-                        <tr><th>Nombre de Campo</th><th>Tipo de Dato</th><th>Restricciones</th><th>Descripción</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="col-name">id_address</td><td><code>INT</code></td><td><span class="badge-key badge-pk">PK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Identificador de la dirección registrada.</td></tr>
-                        <tr><td class="col-name">id_user</td><td><code>INT</code></td><td><span class="badge-key badge-fk">FK</span><span class="badge-key badge-req">NOT NULL</span></td><td>Referencia al usuario titular (tb_users).</td></tr>
-                        <tr><td class="col-name">street</td><td><code>VARCHAR(200)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Calle, número exterior/interior y colonia.</td></tr>
-                        <tr><td class="col-name">city</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Ciudad o municipio.</td></tr>
-                        <tr><td class="col-name">country</td><td><code>VARCHAR(100)</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>País de entrega.</td></tr>
-                        <tr><td class="col-name">is_primary</td><td><code>BIT</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Dirección principal de entrega (1 = Sí, 0 = No).</td></tr>
+                        <tr><td class="col-name">added_at</td><td><code>DATETIME</code></td><td><span class="badge-key badge-req">NOT NULL</span></td><td>Fecha de adición.</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- SECCIÓN 2: DISPARADORES DE AUDITORÍA Y CONTROL (TRIGGERS) -->
+        <!-- SECCIÓN 2: DISPARADORES DE AUDITORÍA Y CONTROL (56 TRIGGERS EN 24 GRUPOS) -->
         <div id="section-triggers">
-            <div class="section-header">2. Disparadores de Auditoría y Control (Triggers)</div>
+            <div class="section-header">2. Disparadores de Auditoría y Control (56 Triggers)</div>
 
-            <!-- 1. tb_buyer_orders -->
-            <div class="table-card trg-card" data-search="tb_buyer_orders trg_after_insert_buyer_orders trg_after_update_buyer_orders trg_after_delete_buyer_orders AFTER INSERT UPDATE DELETE fulfillment_status">
+            <!-- Triggers tb_buyer_orders -->
+            <div class="table-card trg-card" data-search="tb_buyer_orders trg_after_insert_buyer_orders trg_after_update_buyer_orders trg_after_delete_buyer_orders AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tb_buyer_orders</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan las creaciones, cambios de estado y eliminaciones en las órdenes de compra.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_buyer_orders</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_after_insert_buyer_orders</td><td><code>AFTER INSERT</code></td><td>Inserta un registro en <code>tb_logs</code> documentando la creación de la orden y su estado inicial.</td></tr>
-                        <tr><td class="col-name">trg_after_update_buyer_orders</td><td><code>AFTER UPDATE</code></td><td>Detecta cambios en <code>fulfillment_status</code> o el estado bit de la orden y registra la modificación en <code>tb_logs</code>.</td></tr>
-                        <tr><td class="col-name">trg_after_delete_buyer_orders</td><td><code>AFTER DELETE</code></td><td>Registra la eliminación física o borrado de una orden en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_after_insert_buyer_orders</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_after_update_buyer_orders</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_after_delete_buyer_orders</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 2. tb_carts -->
-            <div class="table-card trg-card" data-search="tb_carts tg_carts_after_insert tg_carts_after_update tg_carts_after_delete AFTER INSERT UPDATE DELETE">
+            <!-- Triggers tb_carts -->
+            <div class="table-card trg-card" data-search="tb_carts tg_carts_after_insert tg_carts_after_update tg_carts_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tb_carts</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan la creación, modificación y eliminación de los carritos de compras de los usuarios.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_carts</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">tg_carts_after_insert</td><td><code>AFTER INSERT</code></td><td>Inserta un log con operación 'Create' al asignar un nuevo carrito a un usuario.</td></tr>
-                        <tr><td class="col-name">tg_carts_after_update</td><td><code>AFTER UPDATE</code></td><td>Guarda en <code>tb_logs</code> los cambios de estatus previo y nuevo del carrito.</td></tr>
-                        <tr><td class="col-name">tg_carts_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra la eliminación del carrito en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_carts_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_carts_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_carts_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 3. tb_products -->
-            <div class="table-card trg-card" data-search="tb_products trg_products_after_insert trg_products_after_update trg_products_after_delete AFTER INSERT UPDATE DELETE sku stock precio">
+            <!-- Triggers tb_coupons -->
+            <div class="table-card trg-card" data-search="tb_coupons trg_tb_coupons_after_insert trg_tb_coupons_after_update trg_tb_coupons_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
+                <h2>Triggers de tb_coupons</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_coupons</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_tb_coupons_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tb_coupons_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tb_coupons_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_inventory_movements -->
+            <div class="table-card trg-card" data-search="tb_inventory_movements trg_after_insert_inventory_movements AFTER INSERT">
+                <h2>Triggers de tb_inventory_movements</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_inventory_movements</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_inventory_movements</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_order_status_history -->
+            <div class="table-card trg-card" data-search="tb_order_status_history trg_after_insert_order_status_history AFTER INSERT">
+                <h2>Triggers de tb_order_status_history</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_order_status_history</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_order_status_history</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_people -->
+            <div class="table-card trg-card" data-search="tb_people trg_tb_people_before_insert trg_tb_people_before_update trg_tb_people_after_delete BEFORE INSERT BEFORE UPDATE AFTER DELETE">
+                <h2>Triggers de tb_people</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_people</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_tb_people_before_insert</td><td><code>BEFORE INSERT</code></td><td>Valida campos o asigna marcas de tiempo automáticas antes de completar la operación.</td></tr>
+                        <tr><td class="col-name">trg_tb_people_before_update</td><td><code>BEFORE UPDATE</code></td><td>Valida campos o asigna marcas de tiempo automáticas antes de completar la operación.</td></tr>
+                        <tr><td class="col-name">trg_tb_people_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_product_images -->
+            <div class="table-card trg-card" data-search="tb_product_images trg_after_insert_product_images AFTER INSERT">
+                <h2>Triggers de tb_product_images</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_product_images</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_product_images</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_products -->
+            <div class="table-card trg-card" data-search="tb_products trg_products_after_insert trg_products_after_update trg_products_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tb_products</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Monitorean las altas, modificaciones de stock/precio y bajas de productos en el catálogo.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_products</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_products_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra en <code>tb_logs</code> la adición de un nuevo producto especificando SKU, precio y stock.</td></tr>
-                        <tr><td class="col-name">trg_products_after_update</td><td><code>AFTER UPDATE</code></td><td>Guarda en <code>tb_logs</code> la actualización de campos o estatus del producto.</td></tr>
-                        <tr><td class="col-name">trg_products_after_delete</td><td><code>AFTER DELETE</code></td><td>Documenta la eliminación de un producto en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_products_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_products_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_products_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 4. tb_users -->
-            <div class="table-card trg-card" data-search="tb_users trg_users_after_insert trg_users_after_update trg_users_after_delete AFTER INSERT UPDATE DELETE alias email OLD">
+            <!-- Triggers tb_refunds -->
+            <div class="table-card trg-card" data-search="tb_refunds trg_after_update_refunds AFTER UPDATE">
+                <h2>Triggers de tb_refunds</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_refunds</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_update_refunds</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_roles -->
+            <div class="table-card trg-card" data-search="tb_roles trg_after_insert_roles AFTER INSERT">
+                <h2>Triggers de tb_roles</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_roles</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_roles</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_suppliers -->
+            <div class="table-card trg-card" data-search="tb_suppliers trg_after_insert_suppliers AFTER INSERT">
+                <h2>Triggers de tb_suppliers</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_suppliers</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_suppliers</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_user_addresses -->
+            <div class="table-card trg-card" data-search="tb_user_addresses trg_user_addresses_single_default_insert trg_user_addresses_single_default_update trg_user_addresses_ensure_default_after_delete BEFORE INSERT BEFORE UPDATE AFTER DELETE">
+                <h2>Triggers de tb_user_addresses</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_user_addresses</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_user_addresses_single_default_insert</td><td><code>BEFORE INSERT</code></td><td>Garantiza y gestiona la regla de dirección/registro por defecto en BEFORE INSERT.</td></tr>
+                        <tr><td class="col-name">trg_user_addresses_single_default_update</td><td><code>BEFORE UPDATE</code></td><td>Garantiza y gestiona la regla de dirección/registro por defecto en BEFORE UPDATE.</td></tr>
+                        <tr><td class="col-name">trg_user_addresses_ensure_default_after_delete</td><td><code>AFTER DELETE</code></td><td>Garantiza y gestiona la regla de dirección/registro por defecto en AFTER DELETE.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_user_roles -->
+            <div class="table-card trg-card" data-search="tb_user_roles trg_after_insert_user_roles AFTER INSERT">
+                <h2>Triggers de tb_user_roles</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_user_roles</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_user_roles</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tb_users -->
+            <div class="table-card trg-card" data-search="tb_users trg_users_after_insert trg_users_after_update trg_users_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tb_users</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Registran la actividad en el registro, edición de perfil y baja de usuarios.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tb_users</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_users_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el alta de un nuevo usuario en <code>tb_logs</code> con su alias e email.</td></tr>
-                        <tr><td class="col-name">trg_users_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra las actualizaciones realizadas sobre los datos del perfil del usuario.</td></tr>
-                        <tr><td class="col-name">trg_users_after_delete</td><td><code>AFTER DELETE</code></td><td>Usa la cláusula <code>OLD</code> para auditoría al eliminar un usuario de la base de datos.</td></tr>
+                        <tr><td class="col-name">trg_users_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_users_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_users_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 5. tbc_categories -->
-            <div class="table-card trg-card" data-search="tbc_categories trg_tbc_categories_before_insert trg_tbc_categories_before_update trg_tbc_categories_after_delete BEFORE AFTER INSERT UPDATE DELETE creation_date last_update NOW()">
+            <!-- Triggers tbc_categories -->
+            <div class="table-card trg-card" data-search="tbc_categories trg_tbc_categories_before_insert trg_tbc_categories_before_update trg_tbc_categories_after_delete BEFORE INSERT BEFORE UPDATE AFTER DELETE">
                 <h2>Triggers de tbc_categories</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Asignan marcas de tiempo e inserts de auditoría para el catálogo de categorías.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbc_categories</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_tbc_categories_before_insert</td><td><code>BEFORE INSERT</code></td><td>Asigna automáticamente la fecha actual mediante <code>SET NEW.creation_date = NOW()</code>.</td></tr>
-                        <tr><td class="col-name">trg_tbc_categories_before_update</td><td><code>BEFORE UPDATE</code></td><td>Actualiza la marca de tiempo usando <code>SET NEW.last_update = NOW()</code>.</td></tr>
-                        <tr><td class="col-name">trg_tbc_categories_after_delete</td><td><code>AFTER DELETE</code></td><td>Inserta el evento de eliminación en la tabla de auditoría.</td></tr>
+                        <tr><td class="col-name">trg_tbc_categories_before_insert</td><td><code>BEFORE INSERT</code></td><td>Valida campos o asigna marcas de tiempo automáticas antes de completar la operación.</td></tr>
+                        <tr><td class="col-name">trg_tbc_categories_before_update</td><td><code>BEFORE UPDATE</code></td><td>Valida campos o asigna marcas de tiempo automáticas antes de completar la operación.</td></tr>
+                        <tr><td class="col-name">trg_tbc_categories_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 6. tbc_payment_methods_types -->
-            <div class="table-card trg-card" data-search="tbc_payment_methods_types trg_payment_methods_types_after_insert trg_payment_methods_types_after_update trg_payment_methods_types_after_delete AFTER INSERT UPDATE DELETE">
+            <!-- Triggers tbc_payment_methods_types -->
+            <div class="table-card trg-card" data-search="tbc_payment_methods_types trg_payment_methods_types_after_insert trg_payment_methods_types_after_update trg_payment_methods_types_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tbc_payment_methods_types</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan las modificaciones en los tipos de formas de pago disponibles.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbc_payment_methods_types</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_payment_methods_types_after_insert</td><td><code>AFTER INSERT</code></td><td>Inserta la creación del método de pago en <code>tb_logs</code>.</td></tr>
-                        <tr><td class="col-name">trg_payment_methods_types_after_update</td><td><code>AFTER UPDATE</code></td><td>Detecta cambios en el código o descripción del método de pago y los audita.</td></tr>
-                        <tr><td class="col-name">trg_payment_methods_types_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra la eliminación del tipo de método de pago en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_payment_methods_types_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_payment_methods_types_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_payment_methods_types_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 7. tbd_carts_items -->
-            <div class="table-card trg-card" data-search="tbd_carts_items trg_tbd_carts_items_after_insert trg_tbd_carts_items_after_update trg_tbd_carts_items_after_delete AFTER INSERT UPDATE DELETE">
+            <!-- Triggers tbd_address_components -->
+            <div class="table-card trg-card" data-search="tbd_address_components trg_tbd_address_components_after_insert trg_tbd_address_components_after_update trg_tbd_address_components_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
+                <h2>Triggers de tbd_address_components</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_address_components</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_tbd_address_components_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_address_components_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_address_components_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tbd_carts_items -->
+            <div class="table-card trg-card" data-search="tbd_carts_items trg_tbd_carts_items_after_insert trg_tbd_carts_items_after_update trg_tbd_carts_items_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tbd_carts_items</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan la adición, modificación de cantidad y eliminación de ítems dentro de los carritos.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_carts_items</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_tbd_carts_items_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra en <code>tb_logs</code> el producto y cantidad añadidos al carrito.</td></tr>
-                        <tr><td class="col-name">trg_tbd_carts_items_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra cambios de cantidad de productos dentro del carrito.</td></tr>
-                        <tr><td class="col-name">trg_tbd_carts_items_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra en <code>tb_logs</code> la remoción de un producto del carrito.</td></tr>
+                        <tr><td class="col-name">trg_tbd_carts_items_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_carts_items_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_carts_items_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 8. tbd_order_items -->
-            <div class="table-card trg-card" data-search="tbd_order_items trg_tbd_order_items_after_insert trg_tbd_order_items_after_update trg_tbd_order_items_after_delete AFTER INSERT UPDATE DELETE">
+            <!-- Triggers tbd_coupon_usages -->
+            <div class="table-card trg-card" data-search="tbd_coupon_usages trg_after_insert_coupon_usages AFTER INSERT">
+                <h2>Triggers de tbd_coupon_usages</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_coupon_usages</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_after_insert_coupon_usages</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tbd_order_items -->
+            <div class="table-card trg-card" data-search="tbd_order_items trg_tbd_order_items_after_insert trg_tbd_order_items_after_update trg_tbd_order_items_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tbd_order_items</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Registran los ítems comprados dentro de cada orden enviando eventos a la bitácora.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_order_items</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_tbd_order_items_after_insert</td><td><code>AFTER INSERT</code></td><td>Inserta en <code>tb_logs</code> la asignación de un ítem con su cantidad a la orden.</td></tr>
-                        <tr><td class="col-name">trg_tbd_order_items_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra la modificación de datos de un ítem en la orden.</td></tr>
-                        <tr><td class="col-name">trg_tbd_order_items_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra la eliminación de un artículo de la orden en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_order_items_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_order_items_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_order_items_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 9. tbd_products_users_providers -->
-            <div class="table-card trg-card" data-search="tbd_products_users_providers tg_products_users_providers_after_insert tg_products_users_providers_after_update tg_products_users_providers_after_delete AFTER INSERT UPDATE DELETE">
+            <!-- Triggers tbd_products_categories -->
+            <div class="table-card trg-card" data-search="tbd_products_categories trg_tbd_products_categories_after_insert trg_tbd_products_categories_after_update trg_tbd_products_categories_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
+                <h2>Triggers de tbd_products_categories</h2>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_products_categories</code>.</p>
+                <table>
+                    <thead>
+                        <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="col-name">trg_tbd_products_categories_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_products_categories_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_tbd_products_categories_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Triggers tbd_products_users_providers -->
+            <div class="table-card trg-card" data-search="tbd_products_users_providers tg_products_users_providers_after_insert tg_products_users_providers_after_update tg_products_users_providers_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tbd_products_users_providers</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan la vinculación o desvinculación entre proveedores y productos.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_products_users_providers</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">tg_products_users_providers_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra la asignación de un producto a un usuario proveedor en <code>tb_logs</code>.</td></tr>
-                        <tr><td class="col-name">tg_products_users_providers_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra cambios en la relación producto-proveedor.</td></tr>
-                        <tr><td class="col-name">tg_products_users_providers_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra la desvinculación del proveedor con el producto.</td></tr>
+                        <tr><td class="col-name">tg_products_users_providers_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_products_users_providers_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_products_users_providers_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 10. tbd_user_payment_methods -->
-            <div class="table-card trg-card" data-search="tbd_user_payment_methods trg_user_payment_methods_after_insert trg_user_payment_methods_after_update trg_user_payment_methods_after_delete AFTER INSERT UPDATE DELETE">
+            <!-- Triggers tbd_user_payment_methods -->
+            <div class="table-card trg-card" data-search="tbd_user_payment_methods trg_user_payment_methods_after_insert trg_user_payment_methods_after_update trg_user_payment_methods_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tbd_user_payment_methods</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan la gestión de métodos de pago guardados por los usuarios.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_user_payment_methods</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">trg_user_payment_methods_after_insert</td><td><code>AFTER INSERT</code></td><td>Inserta la adición de un nuevo método de pago de usuario en <code>tb_logs</code>.</td></tr>
-                        <tr><td class="col-name">trg_user_payment_methods_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra cambios de estado o actualización de tarjeta/método en la bitácora.</td></tr>
-                        <tr><td class="col-name">trg_user_payment_methods_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra la eliminación del método de pago en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_user_payment_methods_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_user_payment_methods_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">trg_user_payment_methods_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- 11. tbd_users_wishlist_products -->
-            <div class="table-card trg-card" data-search="tbd_users_wishlist_products tg_users_wishlist_products_after_insert tg_users_wishlist_products_after_update tg_users_wishlist_products_after_delete AFTER INSERT UPDATE DELETE wishlist">
+            <!-- Triggers tbd_users_wishlist_products -->
+            <div class="table-card trg-card" data-search="tbd_users_wishlist_products tg_users_wishlist_products_after_insert tg_users_wishlist_products_after_update tg_users_wishlist_products_after_delete AFTER INSERT AFTER UPDATE AFTER DELETE">
                 <h2>Triggers de tbd_users_wishlist_products</h2>
-                <p class="table-desc"><strong>Descripción:</strong> Auditan las interacciones en la lista de deseos de los usuarios.</p>
+                <p class="table-desc"><strong>Descripción:</strong> Disparadores de automatización, integridad y auditoría asociados a la tabla <code>tbd_users_wishlist_products</code>.</p>
                 <table>
                     <thead>
                         <tr><th>Nombre del Trigger</th><th>Momento / Evento</th><th>Acción Realizada</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="col-name">tg_users_wishlist_products_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra la inclusión de un producto a la wishlist en <code>tb_logs</code>.</td></tr>
-                        <tr><td class="col-name">tg_users_wishlist_products_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra cualquier actualización en la relación de lista de deseos.</td></tr>
-                        <tr><td class="col-name">tg_users_wishlist_products_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra la remoción de un producto de la wishlist en <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_users_wishlist_products_after_insert</td><td><code>AFTER INSERT</code></td><td>Registra el evento AFTER INSERT en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_users_wishlist_products_after_update</td><td><code>AFTER UPDATE</code></td><td>Registra el evento AFTER UPDATE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
+                        <tr><td class="col-name">tg_users_wishlist_products_after_delete</td><td><code>AFTER DELETE</code></td><td>Registra el evento AFTER DELETE en la tabla de auditoría <code>tb_logs</code>.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -744,8 +1189,8 @@
             // Highlight active button
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
+            if (window.event && window.event.target) {
+                window.event.target.classList.add('active');
             }
 
             filterContent();
