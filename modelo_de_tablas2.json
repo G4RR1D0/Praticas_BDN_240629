@@ -1,0 +1,1485 @@
+{
+  "project": "db_test_7b",
+  "version": "2.0_relational",
+  "total_tables": 25,
+  "total_triggers": 56,
+  "tables": [
+    {
+      "name": "tb_users",
+      "description": "Usuarios del sistema (compradores y vendedores)",
+      "cols": [
+        [
+          "id_user",
+          "INT",
+          "PK",
+          "Identificador único de usuario"
+        ],
+        [
+          "username",
+          "VARCHAR(50)",
+          "UNIQUE",
+          "Nombre de usuario único"
+        ],
+        [
+          "email",
+          "VARCHAR(100)",
+          "UNIQUE",
+          "Correo electrónico de acceso"
+        ],
+        [
+          "password_hash",
+          "VARCHAR(255)",
+          "",
+          "Hash seguro de contraseña"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado (1=Activo, 0=Inactivo)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de registro"
+        ],
+        [
+          "last_login",
+          "DATETIME",
+          "NULL",
+          "Último inicio de sesión"
+        ]
+      ]
+    },
+    {
+      "name": "tb_people",
+      "description": "Información personal vinculada al usuario (Relación 1:1 con tb_users)",
+      "cols": [
+        [
+          "id_person",
+          "INT",
+          "PK",
+          "Identificador único del registro personal"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario titular (1:1 con tb_users)"
+        ],
+        [
+          "first_name",
+          "VARCHAR(100)",
+          "",
+          "Nombres del usuario"
+        ],
+        [
+          "last_name",
+          "VARCHAR(100)",
+          "",
+          "Apellidos del usuario"
+        ],
+        [
+          "phone",
+          "VARCHAR(20)",
+          "NULL",
+          "Teléfono principal de contacto"
+        ],
+        [
+          "tax_id",
+          "VARCHAR(30)",
+          "NULL",
+          "Identificación fiscal / RFC"
+        ],
+        [
+          "date_of_birth",
+          "DATE",
+          "NULL",
+          "Fecha de nacimiento"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de creación del registro"
+        ],
+        [
+          "last_update",
+          "DATETIME",
+          "NULL",
+          "Última fecha de actualización"
+        ]
+      ]
+    },
+    {
+      "name": "tb_roles",
+      "description": "Catálogo de roles de seguridad y acceso",
+      "cols": [
+        [
+          "id_role",
+          "INT",
+          "PK",
+          "Identificador único del rol"
+        ],
+        [
+          "role_name",
+          "VARCHAR(50)",
+          "UNIQUE",
+          "Nombre del rol (Admin, Buyer, Supplier)"
+        ],
+        [
+          "description",
+          "VARCHAR(150)",
+          "NULL",
+          "Descripción detallada de permisos"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado del rol (1=Activo, 0=Inactivo)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de registro del rol"
+        ]
+      ]
+    },
+    {
+      "name": "tb_user_roles",
+      "description": "Asignación N:M entre usuarios y roles",
+      "cols": [
+        [
+          "id_user_role",
+          "INT",
+          "PK",
+          "ID de asignación de rol"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario al que se le otorga el rol"
+        ],
+        [
+          "id_role",
+          "INT",
+          "FK -> tb_roles(id_role)",
+          "Rol asignado"
+        ],
+        [
+          "assigned_at",
+          "DATETIME",
+          "",
+          "Fecha y hora de asignación"
+        ]
+      ]
+    },
+    {
+      "name": "tb_suppliers",
+      "description": "Perfiles corporativos de usuarios proveedores (1:1 / 1:N con tb_users)",
+      "cols": [
+        [
+          "id_supplier",
+          "INT",
+          "PK",
+          "Identificador único de empresa proveedora"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario administrador de la empresa"
+        ],
+        [
+          "company_name",
+          "VARCHAR(150)",
+          "",
+          "Razón social o comercial"
+        ],
+        [
+          "contact_email",
+          "VARCHAR(100)",
+          "",
+          "Correo de contacto comercial"
+        ],
+        [
+          "contact_phone",
+          "VARCHAR(20)",
+          "NULL",
+          "Teléfono de contacto comercial"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado operativo (1=Habilitado, 0=Inhabilitado)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de alta como proveedor"
+        ]
+      ]
+    },
+    {
+      "name": "tb_user_addresses",
+      "cols": [
+        [
+          "id_address",
+          "INT",
+          "PK",
+          "ID único de dirección del usuario"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario dueño de la dirección"
+        ],
+        [
+          "address_label",
+          "VARCHAR(50)",
+          "",
+          "Etiqueta identificadora (Casa, Trabajo)"
+        ],
+        [
+          "recipient_name",
+          "VARCHAR(100)",
+          "",
+          "Nombre de la persona que recibe"
+        ],
+        [
+          "phone",
+          "VARCHAR(20)",
+          "",
+          "Teléfono de la ubicación"
+        ],
+        [
+          "is_default",
+          "BIT(1)",
+          "",
+          "Marca de dirección principal (1=Sí, 0=No)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de registro"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_address_components",
+      "description": "Desglose estructurado de una dirección (1:1 con tb_user_addresses)",
+      "cols": [
+        [
+          "id_component",
+          "INT",
+          "PK",
+          "ID del detalle de dirección"
+        ],
+        [
+          "id_address",
+          "INT",
+          "FK -> tb_user_addresses(id_address)",
+          "Dirección principal vinculada"
+        ],
+        [
+          "street",
+          "VARCHAR(150)",
+          "",
+          "Calle principal"
+        ],
+        [
+          "exterior_num",
+          "VARCHAR(20)",
+          "",
+          "Número exterior"
+        ],
+        [
+          "interior_num",
+          "VARCHAR(20)",
+          "NULL",
+          "Número interior o departamento"
+        ],
+        [
+          "neighborhood",
+          "VARCHAR(100)",
+          "",
+          "Colonia o barrio"
+        ],
+        [
+          "city",
+          "VARCHAR(100)",
+          "",
+          "Ciudad o municipio"
+        ],
+        [
+          "state",
+          "VARCHAR(100)",
+          "",
+          "Estado o provincia"
+        ],
+        [
+          "country",
+          "VARCHAR(100)",
+          "",
+          "País"
+        ],
+        [
+          "postal_code",
+          "VARCHAR(15)",
+          "",
+          "Código postal"
+        ]
+      ]
+    },
+    {
+      "name": "tbc_payment_methods_types",
+      "cols": [
+        [
+          "id_payment_type",
+          "INT",
+          "PK",
+          "ID del tipo de método de pago"
+        ],
+        [
+          "code",
+          "VARCHAR(20)",
+          "UNIQUE",
+          "Código único (CREDIT_CARD, DEBIT, PAYPAL)"
+        ],
+        [
+          "description",
+          "VARCHAR(100)",
+          "",
+          "Nombre descriptivo del medio de pago"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Disponibilidad (1=Habilitado, 0=Deshabilitado)"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_user_payment_methods",
+      "cols": [
+        [
+          "id_user_payment",
+          "INT",
+          "PK",
+          "ID del método de pago guardado"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario titular de la tarjeta/cuenta"
+        ],
+        [
+          "id_payment_type",
+          "INT",
+          "FK -> tbc_payment_methods_types(id_payment_type)",
+          "Tipo de método de pago"
+        ],
+        [
+          "provider",
+          "VARCHAR(50)",
+          "",
+          "Entidad emisora (Visa, Mastercard, Amex)"
+        ],
+        [
+          "account_mask",
+          "VARCHAR(20)",
+          "",
+          "Máscara de seguridad (ej. **** 4321)"
+        ],
+        [
+          "exp_month",
+          "INT",
+          "NULL",
+          "Mes de vencimiento"
+        ],
+        [
+          "exp_year",
+          "INT",
+          "NULL",
+          "Año de vencimiento"
+        ],
+        [
+          "is_default",
+          "BIT(1)",
+          "",
+          "Medio de pago predeterminado (1=Sí, 0=No)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de registro"
+        ]
+      ]
+    },
+    {
+      "name": "tb_products",
+      "cols": [
+        [
+          "id_product",
+          "INT",
+          "PK",
+          "Identificador único de producto"
+        ],
+        [
+          "sku",
+          "VARCHAR(50)",
+          "UNIQUE",
+          "Código único de inventario / SKU"
+        ],
+        [
+          "name",
+          "VARCHAR(150)",
+          "",
+          "Título público del producto"
+        ],
+        [
+          "description",
+          "TEXT",
+          "NULL",
+          "Especificaciones y detalles técnicos"
+        ],
+        [
+          "price",
+          "DECIMAL(10,2)",
+          "",
+          "Precio de venta al público"
+        ],
+        [
+          "stock",
+          "INT",
+          "",
+          "Stock físico disponible en inventario"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estatus (1=Publicado, 0=Descontinuado)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de alta en catálogo"
+        ],
+        [
+          "last_update",
+          "DATETIME",
+          "NULL",
+          "Última actualización de datos/stock"
+        ]
+      ]
+    },
+    {
+      "name": "tb_product_images",
+      "cols": [
+        [
+          "id_image",
+          "INT",
+          "PK",
+          "ID de la imagen del producto"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto al que pertenece la imagen"
+        ],
+        [
+          "image_url",
+          "VARCHAR(255)",
+          "",
+          "Ruta URL de almacenamiento de la imagen"
+        ],
+        [
+          "is_primary",
+          "BIT(1)",
+          "",
+          "Imagen principal de portada (1=Sí, 0=No)"
+        ],
+        [
+          "display_order",
+          "INT",
+          "",
+          "Secuencia de ordenamiento en la galería"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de subida"
+        ]
+      ]
+    },
+    {
+      "name": "tbc_categories",
+      "cols": [
+        [
+          "id_category",
+          "INT",
+          "PK",
+          "ID de la categoría"
+        ],
+        [
+          "category_name",
+          "VARCHAR(100)",
+          "",
+          "Nombre de la categoría"
+        ],
+        [
+          "description",
+          "TEXT",
+          "NULL",
+          "Descripción del grupo de productos"
+        ],
+        [
+          "parent_id",
+          "INT",
+          "FK -> tbc_categories(id_category)",
+          "Categoría padre (Autorreferenciada para árbol)"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado (1=Activa, 0=Inactiva)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de alta"
+        ],
+        [
+          "last_update",
+          "DATETIME",
+          "NULL",
+          "Última fecha de actualización"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_products_categories",
+      "cols": [
+        [
+          "id_relation",
+          "INT",
+          "PK",
+          "ID de la relación producto-categoría"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto clasificado"
+        ],
+        [
+          "id_category",
+          "INT",
+          "FK -> tbc_categories(id_category)",
+          "Categoría asignada"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de vinculación"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_products_users_providers",
+      "cols": [
+        [
+          "id_relation",
+          "INT",
+          "PK",
+          "ID de la asignación de provisión"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto suministrado"
+        ],
+        [
+          "id_user_provider",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario/Proveedor que surte el producto"
+        ],
+        [
+          "supply_price",
+          "DECIMAL(10,2)",
+          "",
+          "Costo de compra/proveedor"
+        ],
+        [
+          "lead_time_days",
+          "INT",
+          "NULL",
+          "Días de entrega del proveedor"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de asignación"
+        ]
+      ]
+    },
+    {
+      "name": "tb_inventory_movements",
+      "cols": [
+        [
+          "id_movement",
+          "INT",
+          "PK",
+          "ID único del movimiento de inventario"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto afectado"
+        ],
+        [
+          "movement_type",
+          "ENUM('in','out','adjustment')",
+          "",
+          "Tipo de movimiento (Entrada, Salida, Ajuste)"
+        ],
+        [
+          "quantity",
+          "INT",
+          "",
+          "Cantidad involucrada"
+        ],
+        [
+          "previous_stock",
+          "INT",
+          "",
+          "Stock anterior al movimiento"
+        ],
+        [
+          "new_stock",
+          "INT",
+          "",
+          "Stock resultante tras el movimiento"
+        ],
+        [
+          "reference_id",
+          "INT",
+          "NULL",
+          "ID de documento o compra de referencia"
+        ],
+        [
+          "notes",
+          "TEXT",
+          "NULL",
+          "Motivo o descripción del ajuste"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha y hora de ejecución"
+        ]
+      ]
+    },
+    {
+      "name": "tb_carts",
+      "cols": [
+        [
+          "id_cart",
+          "INT",
+          "PK",
+          "ID único del carrito"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario comprador dueño del carrito"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado (1=Activo, 0=Convertido a orden/Abandonado)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de apertura del carrito"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_carts_items",
+      "cols": [
+        [
+          "id_cart_item",
+          "INT",
+          "PK",
+          "ID del ítem en carrito"
+        ],
+        [
+          "id_cart",
+          "INT",
+          "FK -> tb_carts(id_cart)",
+          "Carrito al que pertenece la línea"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto añadido"
+        ],
+        [
+          "quantity",
+          "INT",
+          "",
+          "Unidades elegidas"
+        ],
+        [
+          "added_at",
+          "DATETIME",
+          "",
+          "Fecha en que se insertó"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_users_wishlist_products",
+      "cols": [
+        [
+          "id_wishlist",
+          "INT",
+          "PK",
+          "ID de elemento en lista de deseos"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario guardando el favorito"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto guardado"
+        ],
+        [
+          "added_at",
+          "DATETIME",
+          "",
+          "Fecha en que se agregó"
+        ]
+      ]
+    },
+    {
+      "name": "tb_coupons",
+      "cols": [
+        [
+          "id_coupon",
+          "INT",
+          "PK",
+          "ID del cupón promocional"
+        ],
+        [
+          "code",
+          "VARCHAR(50)",
+          "UNIQUE",
+          "Código del cupón para canjear"
+        ],
+        [
+          "discount_type",
+          "ENUM('percentage','fixed_amount')",
+          "",
+          "Tipo de beneficio (% o monto directo)"
+        ],
+        [
+          "discount_value",
+          "DECIMAL(10,2)",
+          "",
+          "Valor del descuento"
+        ],
+        [
+          "min_purchase",
+          "DECIMAL(10,2)",
+          "",
+          "Monto mínimo de compra exigido"
+        ],
+        [
+          "max_discount_amount",
+          "DECIMAL(10,2)",
+          "NULL",
+          "Tope máximo de descuento permitido"
+        ],
+        [
+          "usage_limit",
+          "INT",
+          "NULL",
+          "Límite total de redenciones del cupón"
+        ],
+        [
+          "current_uses",
+          "INT",
+          "",
+          "Cantidad de veces canjeado a la fecha"
+        ],
+        [
+          "start_date",
+          "DATETIME",
+          "",
+          "Inicio de vigencia"
+        ],
+        [
+          "end_date",
+          "DATETIME",
+          "",
+          "Fin de vigencia"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado (1=Vigente, 0=Inactivo)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de emisión del cupón"
+        ]
+      ]
+    },
+    {
+      "name": "tb_buyer_orders",
+      "cols": [
+        [
+          "id_order",
+          "INT",
+          "PK",
+          "Identificador único de la orden de compra"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario comprador que realiza el pedido"
+        ],
+        [
+          "coupon_id",
+          "INT",
+          "FK -> tb_coupons(id_coupon)",
+          "Cupón de descuento aplicado (opcional)"
+        ],
+        [
+          "subtotal",
+          "DECIMAL(10,2)",
+          "",
+          "Subtotal sin descuentos"
+        ],
+        [
+          "discount_amount",
+          "DECIMAL(10,2)",
+          "",
+          "Total de descuento aplicado"
+        ],
+        [
+          "total_amount",
+          "DECIMAL(10,2)",
+          "",
+          "Monto final neto a pagar"
+        ],
+        [
+          "fulfillment_status",
+          "VARCHAR(30)",
+          "",
+          "Estado operativo (Pending, Shipped, Completed, Cancelled)"
+        ],
+        [
+          "status",
+          "BIT(1)",
+          "",
+          "Estado lógico (1=Vigente, 0=Anulada)"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha y hora de emisión"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_order_items",
+      "cols": [
+        [
+          "id_order_item",
+          "INT",
+          "PK",
+          "ID del ítem en la orden"
+        ],
+        [
+          "id_order",
+          "INT",
+          "FK -> tb_buyer_orders(id_order)",
+          "Orden de compra contenedora"
+        ],
+        [
+          "id_product",
+          "INT",
+          "FK -> tb_products(id_product)",
+          "Producto comprado"
+        ],
+        [
+          "unit_price",
+          "DECIMAL(10,2)",
+          "",
+          "Precio unitario pactado"
+        ],
+        [
+          "quantity",
+          "INT",
+          "",
+          "Cantidad de unidades compradas"
+        ],
+        [
+          "subtotal",
+          "DECIMAL(10,2)",
+          "",
+          "Monto de la línea de compra (unit_price * quantity)"
+        ]
+      ]
+    },
+    {
+      "name": "tbd_coupon_usages",
+      "cols": [
+        [
+          "id_usage",
+          "INT",
+          "PK",
+          "ID de uso de cupón"
+        ],
+        [
+          "id_coupon",
+          "INT",
+          "FK -> tb_coupons(id_coupon)",
+          "Cupón promocional utilizado"
+        ],
+        [
+          "id_user",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario que canjeó el cupón"
+        ],
+        [
+          "id_order",
+          "INT",
+          "FK -> tb_buyer_orders(id_order)",
+          "Orden de compra en la que se aplicó"
+        ],
+        [
+          "discount_applied",
+          "DECIMAL(10,2)",
+          "",
+          "Importe exacto descontado"
+        ],
+        [
+          "used_at",
+          "DATETIME",
+          "",
+          "Fecha y hora del canje"
+        ]
+      ]
+    },
+    {
+      "name": "tb_order_status_history",
+      "cols": [
+        [
+          "id_history",
+          "INT",
+          "PK",
+          "ID del historial de estado"
+        ],
+        [
+          "id_order",
+          "INT",
+          "FK -> tb_buyer_orders(id_order)",
+          "Orden de compra auditada"
+        ],
+        [
+          "status",
+          "VARCHAR(50)",
+          "",
+          "Nuevo estado registrado"
+        ],
+        [
+          "notes",
+          "TEXT",
+          "NULL",
+          "Observaciones del cambio de estado"
+        ],
+        [
+          "created_by",
+          "INT",
+          "FK -> tb_users(id_user)",
+          "Usuario/Operador que registró el cambio"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha y hora del evento"
+        ]
+      ]
+    },
+    {
+      "name": "tb_refunds",
+      "cols": [
+        [
+          "id_refund",
+          "INT",
+          "PK",
+          "ID único de devolución/reembolso"
+        ],
+        [
+          "id_order",
+          "INT",
+          "FK -> tb_buyer_orders(id_order)",
+          "Orden de compra a devolver"
+        ],
+        [
+          "refund_amount",
+          "DECIMAL(10,2)",
+          "",
+          "Monto devuelto"
+        ],
+        [
+          "reason",
+          "TEXT",
+          "",
+          "Justificación de la solicitud"
+        ],
+        [
+          "status",
+          "ENUM('requested','approved','rejected','processed')",
+          "",
+          "Estatus de la devolución"
+        ],
+        [
+          "processed_at",
+          "DATETIME",
+          "NULL",
+          "Fecha de resolución"
+        ],
+        [
+          "creation_date",
+          "DATETIME",
+          "",
+          "Fecha de solicitud"
+        ]
+      ]
+    },
+    {
+      "name": "tb_logs",
+      "cols": [
+        [
+          "id_log",
+          "INT",
+          "PK",
+          "ID único del registro de auditoría"
+        ],
+        [
+          "table_name",
+          "VARCHAR(100)",
+          "",
+          "Tabla origen de la transacción"
+        ],
+        [
+          "action_type",
+          "VARCHAR(20)",
+          "",
+          "Operación (INSERT, UPDATE, DELETE)"
+        ],
+        [
+          "old_value",
+          "TEXT",
+          "NULL",
+          "Datos previos al cambio (JSON/Texto)"
+        ],
+        [
+          "new_value",
+          "TEXT",
+          "NULL",
+          "Datos posteriores al cambio (JSON/Texto)"
+        ],
+        [
+          "created_at",
+          "DATETIME",
+          "",
+          "Marca de tiempo exacta de ejecución del trigger"
+        ]
+      ]
+    }
+  ],
+  "triggers": [
+    {
+      "name": "trg_after_insert_buyer_orders",
+      "table": "tb_buyer_orders",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tb_buyer_orders para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_after_update_buyer_orders",
+      "table": "tb_buyer_orders",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tb_buyer_orders para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_after_delete_buyer_orders",
+      "table": "tb_buyer_orders",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tb_buyer_orders para el evento AFTER DELETE."
+    },
+    {
+      "name": "tg_carts_after_insert",
+      "table": "tb_carts",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_carts escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "tg_carts_after_update",
+      "table": "tb_carts",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tb_carts escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "tg_carts_after_delete",
+      "table": "tb_carts",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tb_carts escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tb_coupons_after_insert",
+      "table": "tb_coupons",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_coupons escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tb_coupons_after_update",
+      "table": "tb_coupons",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tb_coupons escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tb_coupons_after_delete",
+      "table": "tb_coupons",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tb_coupons escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_after_insert_inventory_movements",
+      "table": "tb_inventory_movements",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_inventory_movements escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_after_insert_order_status_history",
+      "table": "tb_order_status_history",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_order_status_history escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tb_people_before_insert",
+      "table": "tb_people",
+      "event": "BEFORE INSERT",
+      "desc": "Audita y gestiona el evento BEFORE INSERT sobre la tabla tb_people escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tb_people_before_update",
+      "table": "tb_people",
+      "event": "BEFORE UPDATE",
+      "desc": "Audita y gestiona el evento BEFORE UPDATE sobre la tabla tb_people escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tb_people_after_delete",
+      "table": "tb_people",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tb_people para el evento AFTER DELETE."
+    },
+    {
+      "name": "trg_after_insert_product_images",
+      "table": "tb_product_images",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_product_images escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_products_after_insert",
+      "table": "tb_products",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_products escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_products_after_update",
+      "table": "tb_products",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tb_products escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_products_after_delete",
+      "table": "tb_products",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tb_products escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_after_update_refunds",
+      "table": "tb_refunds",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tb_refunds escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_after_insert_roles",
+      "table": "tb_roles",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_roles escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_after_insert_suppliers",
+      "table": "tb_suppliers",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_suppliers escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_user_addresses_single_default_insert",
+      "table": "tb_user_addresses",
+      "event": "BEFORE INSERT",
+      "desc": "Controla la regla de negocio de dirección predeterminada única para la tabla tb_user_addresses."
+    },
+    {
+      "name": "trg_user_addresses_single_default_update",
+      "table": "tb_user_addresses",
+      "event": "BEFORE UPDATE",
+      "desc": "Controla la regla de negocio de dirección predeterminada única para la tabla tb_user_addresses."
+    },
+    {
+      "name": "trg_user_addresses_ensure_default_after_delete",
+      "table": "tb_user_addresses",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tb_user_addresses para el evento AFTER DELETE."
+    },
+    {
+      "name": "trg_after_insert_user_roles",
+      "table": "tb_user_roles",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_user_roles escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_users_after_insert",
+      "table": "tb_users",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tb_users escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_users_after_update",
+      "table": "tb_users",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tb_users escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_users_after_delete",
+      "table": "tb_users",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tb_users escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tbc_categories_before_insert",
+      "table": "tbc_categories",
+      "event": "BEFORE INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbc_categories para el evento BEFORE INSERT."
+    },
+    {
+      "name": "trg_tbc_categories_before_update",
+      "table": "tbc_categories",
+      "event": "BEFORE UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbc_categories para el evento BEFORE UPDATE."
+    },
+    {
+      "name": "trg_tbc_categories_after_delete",
+      "table": "tbc_categories",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tbc_categories escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_payment_methods_types_after_insert",
+      "table": "tbc_payment_methods_types",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbc_payment_methods_types para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_payment_methods_types_after_update",
+      "table": "tbc_payment_methods_types",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbc_payment_methods_types para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_payment_methods_types_after_delete",
+      "table": "tbc_payment_methods_types",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbc_payment_methods_types para el evento AFTER DELETE."
+    },
+    {
+      "name": "trg_tbd_address_components_after_insert",
+      "table": "tbd_address_components",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_address_components para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_tbd_address_components_after_update",
+      "table": "tbd_address_components",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_address_components para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_tbd_address_components_after_delete",
+      "table": "tbd_address_components",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_address_components para el evento AFTER DELETE."
+    },
+    {
+      "name": "trg_tbd_carts_items_after_insert",
+      "table": "tbd_carts_items",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_carts_items para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_tbd_carts_items_after_update",
+      "table": "tbd_carts_items",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_carts_items para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_tbd_carts_items_after_delete",
+      "table": "tbd_carts_items",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_carts_items para el evento AFTER DELETE."
+    },
+    {
+      "name": "trg_after_insert_coupon_usages",
+      "table": "tbd_coupon_usages",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tbd_coupon_usages escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_tbd_order_items_after_insert",
+      "table": "tbd_order_items",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_order_items para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_tbd_order_items_after_update",
+      "table": "tbd_order_items",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_order_items para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_tbd_order_items_after_delete",
+      "table": "tbd_order_items",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_order_items para el evento AFTER DELETE."
+    },
+    {
+      "name": "trg_tbd_products_categories_after_insert",
+      "table": "tbd_products_categories",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_products_categories para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_tbd_products_categories_after_update",
+      "table": "tbd_products_categories",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_products_categories para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_tbd_products_categories_after_delete",
+      "table": "tbd_products_categories",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_products_categories para el evento AFTER DELETE."
+    },
+    {
+      "name": "tg_products_users_providers_after_insert",
+      "table": "tbd_products_users_providers",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tbd_products_users_providers escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "tg_products_users_providers_after_update",
+      "table": "tbd_products_users_providers",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tbd_products_users_providers escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "tg_products_users_providers_after_delete",
+      "table": "tbd_products_users_providers",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tbd_products_users_providers escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "trg_user_payment_methods_after_insert",
+      "table": "tbd_user_payment_methods",
+      "event": "AFTER INSERT",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_user_payment_methods para el evento AFTER INSERT."
+    },
+    {
+      "name": "trg_user_payment_methods_after_update",
+      "table": "tbd_user_payment_methods",
+      "event": "AFTER UPDATE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_user_payment_methods para el evento AFTER UPDATE."
+    },
+    {
+      "name": "trg_user_payment_methods_after_delete",
+      "table": "tbd_user_payment_methods",
+      "event": "AFTER DELETE",
+      "desc": "Asigna o actualiza marcas de tiempo automáticas en la tabla tbd_user_payment_methods para el evento AFTER DELETE."
+    },
+    {
+      "name": "tg_users_wishlist_products_after_insert",
+      "table": "tbd_users_wishlist_products",
+      "event": "AFTER INSERT",
+      "desc": "Audita y gestiona el evento AFTER INSERT sobre la tabla tbd_users_wishlist_products escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "tg_users_wishlist_products_after_update",
+      "table": "tbd_users_wishlist_products",
+      "event": "AFTER UPDATE",
+      "desc": "Audita y gestiona el evento AFTER UPDATE sobre la tabla tbd_users_wishlist_products escribiendo cambios o marcas en tb_logs."
+    },
+    {
+      "name": "tg_users_wishlist_products_after_delete",
+      "table": "tbd_users_wishlist_products",
+      "event": "AFTER DELETE",
+      "desc": "Audita y gestiona el evento AFTER DELETE sobre la tabla tbd_users_wishlist_products escribiendo cambios o marcas en tb_logs."
+    }
+  ]
+}

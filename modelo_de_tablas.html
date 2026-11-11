@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelo de Tablas y Triggers</title>
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --pk-color: #f59e0b;
+      --fk-color: #a855f7;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .table-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+
+    .table-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--accent);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .column-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .column-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed #1e293b;
+    }
+
+    .col-name {
+      font-weight: 500;
+    }
+
+    .col-type {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+
+    .badge-pk { background: var(--pk-color); color: #000; }
+    .badge-fk { background: var(--fk-color); color: #fff; }
+
+    .trigger-section {
+      margin-top: 3rem;
+    }
+
+    .trigger-card {
+      background: #1e1b4b;
+      border: 1px solid #3730a3;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .trigger-title {
+      color: #818cf8;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Modelo de Tablas y Triggers (db_test_7b)</h1>
+
+  <div class="grid-container" id="tables-container"></div>
+
+  <div class="trigger-section">
+    <h2 style="color: #818cf8;">Triggers del Sistema</h2>
+    <div id="triggers-container"></div>
+  </div>
+
+  <script>
+    const dbData = {
+      "tables": [
+        { "name": "tb_users", "cols": [["ID", "INT", "PK"], ["email", "VARCHAR(190)"], ["nick", "VARCHAR(50)"], ["password", "VARCHAR(255)"], ["creation_date", "DATETIME"], ["status", "BIT(1)"]] },
+        { "name": "tb_carts", "cols": [["ID", "INT", "PK"], ["user_ID", "INT", "FK"], ["status", "BIT(1)"], ["creation_date", "DATETIME"]] },
+        { "name": "tb_products", "cols": [["ID", "INT", "PK"], ["SKU", "VARCHAR(50)"], ["name", "VARCHAR(255)"], ["current_price", "DECIMAL(10,2)"], ["current_stock", "INT"]] },
+        { "name": "tbc_categories", "cols": [["ID", "INT", "PK"], ["name", "VARCHAR(120)"], ["sup_id_category", "INT", "FK"], ["status", "BIT(1)"]] },
+        { "name": "tbd_products_categories", "cols": [["category_ID", "INT", "PK/FK"], ["product_ID", "INT", "PK/FK"], ["status", "BIT(1)"]] },
+        { "name": "tbd_products_users", "cols": [["user_ID", "INT", "PK/FK"], ["product_ID", "INT", "PK/FK"], ["type_ownership", "ENUM"]] },
+        { "name": "tbd_users_wishlist_products", "cols": [["user_ID", "INT", "PK/FK"], ["product_ID", "INT", "PK/FK"], ["status", "BIT(1)"]] },
+        { "name": "tb_buyer_orders", "cols": [["ID", "INT", "PK"], ["seller_ID", "INT", "FK"], ["subtotal", "DECIMAL(12,2)"], ["fulfillment_status", "ENUM"]] },
+        { "name": "tb_logs", "cols": [["ID", "INT", "PK"], ["table_name", "VARCHAR(80)"], ["table_operation", "ENUM"], ["db_user", "VARCHAR(80)"]] },
+        { "name": "tbd_cart_items", "cols": [["cart_ID", "INT", "FK"], ["product_ID", "INT", "FK"], ["quantity", "INT"], ["price_at_addition", "DECIMAL(10,2)"]] },
+        { "name": "tbd_order_items", "cols": [["order_ID", "INT", "FK"], ["product_ID", "INT", "FK"], ["unit_price", "DECIMAL(10,2)"], ["quantity", "INT"]] },
+        { "name": "tb_addresses", "cols": [["ID", "INT", "PK"], ["user_ID", "INT", "FK"], ["address_line", "VARCHAR(255)"], ["city", "VARCHAR(100)"]] },
+        { "name": "tb_payments", "cols": [["ID", "INT", "PK"], ["order_ID", "INT", "FK"], ["payment_method", "VARCHAR(50)"], ["amount", "DECIMAL(12,2)"]] },
+        { "name": "tb_reviews", "cols": [["ID", "INT", "PK"], ["user_ID", "INT", "FK"], ["product_ID", "INT", "FK"], ["rating", "INT"]] },
+        { "name": "tb_roles", "cols": [["ID", "INT", "PK"], ["role_name", "VARCHAR(50)"], ["description", "VARCHAR(255)"]] },
+        { "name": "tbd_user_roles", "cols": [["user_ID", "INT", "PK/FK"], ["role_ID", "INT", "PK/FK"]] }
+      ],
+      "triggers": [
+        { "name": "trg_after_insert_buyer_orders", "table": "tb_buyer_orders", "desc": "Audita inserción de órdenes en tb_logs." },
+        { "name": "trg_after_update_buyer_orders", "table": "tb_buyer_orders", "desc": "Audita cambios de estado en tb_logs." },
+        { "name": "trg_after_delete_buyer_orders", "table": "tb_buyer_orders", "desc": "Audita eliminación de órdenes en tb_logs." },
+        { "name": "tg_carts_after_insert", "table": "tb_carts", "desc": "Audita creación de carrito en tb_logs." },
+        { "name": "tg_carts_after_update", "table": "tb_carts", "desc": "Audita actualización de carrito en tb_logs." },
+        { "name": "tg_carts_after_delete", "table": "tb_carts", "desc": "Audita eliminación de carrito en tb_logs." }
+      ]
+    };
+
+    const tablesDiv = document.getElementById('tables-container');
+    dbData.tables.forEach(t => {
+      let colsHtml = t.cols.map(c => {
+        let badge = c[2] ? `<span class="badge ${c[2].includes('PK')?'badge-pk':'badge-fk'}">${c[2]}</span>` : '';
+        return `<li class="column-item"><span class="col-name">${c[0]} ${badge}</span><span class="col-type">${c[1]}</span></li>`;
+      }).join('');
+      tablesDiv.innerHTML += `<div class="table-card"><h3 class="table-title">${t.name}</h3><ul class="column-list">${colsHtml}</ul></div>`;
+    });
+
+    const trigDiv = document.getElementById('triggers-container');
+    dbData.triggers.forEach(tr => {
+      trigDiv.innerHTML += `<div class="trigger-card"><div class="trigger-title">⚡ ${tr.name} (${tr.table})</div><div style="font-size:0.85rem; color:#c7d2fe;">${tr.desc}</div></div>`;
+    });
+  </script>
+</body>
+</html>
+

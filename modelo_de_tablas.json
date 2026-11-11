@@ -1,0 +1,222 @@
+{
+  "project": "db_test_7b",
+  "version": "1.0",
+  "tables": [
+    {
+      "name": "tb_users",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "email", "type": "VARCHAR(190)" },
+        { "name": "nick", "type": "VARCHAR(50)" },
+        { "name": "password", "type": "VARCHAR(255)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" },
+        { "name": "last_login", "type": "DATETIME" },
+        { "name": "status", "type": "BIT(1)" }
+      ]
+    },
+    {
+      "name": "tb_carts",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "user_ID", "type": "INT", "fk": true, "unique": true, "ref": "tb_users.ID" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tb_products",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "SKU", "type": "VARCHAR(50)", "unique": true },
+        { "name": "name", "type": "VARCHAR(255)" },
+        { "name": "description", "type": "TEXT" },
+        { "name": "current_price", "type": "DECIMAL(10,2)" },
+        { "name": "current_stock", "type": "INT" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tbc_categories",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "name", "type": "VARCHAR(120)" },
+        { "name": "description", "type": "TEXT" },
+        { "name": "sup_id_category", "type": "INT", "fk": true, "ref": "tbc_categories.ID" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tbd_products_categories",
+      "columns": [
+        { "name": "category_ID", "type": "INT", "pk": true, "fk": true, "ref": "tbc_categories.ID" },
+        { "name": "product_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_products.ID" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tbd_products_users",
+      "columns": [
+        { "name": "user_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_users.ID" },
+        { "name": "product_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_products.ID" },
+        { "name": "type_ownership", "type": "ENUM('PURCHASED','FAVORITE')" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "available_date", "type": "DATETIME" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tbd_users_wishlist_products",
+      "columns": [
+        { "name": "user_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_users.ID" },
+        { "name": "product_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_products.ID" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tb_buyer_orders",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "seller_ID", "type": "INT", "fk": true, "ref": "tb_users.ID" },
+        { "name": "subtotal", "type": "DECIMAL(12,2)" },
+        { "name": "shipping_cost", "type": "DECIMAL(12,2)" },
+        { "name": "fulfillment_status", "type": "ENUM('PENDING','SHIPPED','DELIVERED','CANCELLED')" },
+        { "name": "status", "type": "BIT(1)" },
+        { "name": "creation_date", "type": "DATETIME" },
+        { "name": "last_update", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tb_logs",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "table_name", "type": "VARCHAR(80)" },
+        { "name": "table_operation", "type": "ENUM('INSERT','UPDATE','DELETE')" },
+        { "name": "db_user", "type": "VARCHAR(80)" },
+        { "name": "operation_date", "type": "DATETIME" },
+        { "name": "table_descripcion", "type": "TEXT" },
+        { "name": "operation_status", "type": "BIT(1)" }
+      ]
+    },
+    {
+      "name": "tbd_cart_items",
+      "columns": [
+        { "name": "cart_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_carts.ID" },
+        { "name": "product_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_products.ID" },
+        { "name": "quantity", "type": "INT" },
+        { "name": "price_at_addition", "type": "DECIMAL(10,2)" },
+        { "name": "status", "type": "BIT(1)" }
+      ]
+    },
+    {
+      "name": "tbd_order_items",
+      "columns": [
+        { "name": "order_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_buyer_orders.ID" },
+        { "name": "product_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_products.ID" },
+        { "name": "unit_price", "type": "DECIMAL(10,2)" },
+        { "name": "quantity", "type": "INT" }
+      ]
+    },
+    {
+      "name": "tb_addresses",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "user_ID", "type": "INT", "fk": true, "ref": "tb_users.ID" },
+        { "name": "address_line", "type": "VARCHAR(255)" },
+        { "name": "city", "type": "VARCHAR(100)" },
+        { "name": "postal_code", "type": "VARCHAR(20)" },
+        { "name": "status", "type": "BIT(1)" }
+      ]
+    },
+    {
+      "name": "tb_payments",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "order_ID", "type": "INT", "fk": true, "ref": "tb_buyer_orders.ID" },
+        { "name": "payment_method", "type": "VARCHAR(50)" },
+        { "name": "amount", "type": "DECIMAL(12,2)" },
+        { "name": "payment_date", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tb_reviews",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "user_ID", "type": "INT", "fk": true, "ref": "tb_users.ID" },
+        { "name": "product_ID", "type": "INT", "fk": true, "ref": "tb_products.ID" },
+        { "name": "rating", "type": "INT" },
+        { "name": "comment", "type": "TEXT" },
+        { "name": "creation_date", "type": "DATETIME" }
+      ]
+    },
+    {
+      "name": "tb_roles",
+      "columns": [
+        { "name": "ID", "type": "INT", "pk": true, "autoIncrement": true },
+        { "name": "role_name", "type": "VARCHAR(50)" },
+        { "name": "description", "type": "VARCHAR(255)" }
+      ]
+    },
+    {
+      "name": "tbd_user_roles",
+      "columns": [
+        { "name": "user_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_users.ID" },
+        { "name": "role_ID", "type": "INT", "pk": true, "fk": true, "ref": "tb_roles.ID" }
+      ]
+    }
+  ],
+  "triggers": [
+    {
+      "name": "trg_after_insert_buyer_orders",
+      "target_table": "tb_buyer_orders",
+      "timing": "AFTER",
+      "event": "INSERT",
+      "description": "Audita la creación de órdenes de compra registrando ID y fulfillment_status en tb_logs."
+    },
+    {
+      "name": "trg_after_update_buyer_orders",
+      "target_table": "tb_buyer_orders",
+      "timing": "AFTER",
+      "event": "UPDATE",
+      "description": "Audita los cambios en el estado de envío y estatus lógico guardando el estado previo y nuevo en tb_logs."
+    },
+    {
+      "name": "trg_after_delete_buyer_orders",
+      "target_table": "tb_buyer_orders",
+      "timing": "AFTER",
+      "event": "DELETE",
+      "description": "Registra la eliminación física de órdenes de compra en tb_logs."
+    },
+    {
+      "name": "tg_carts_after_insert",
+      "target_table": "tb_carts",
+      "timing": "AFTER",
+      "event": "INSERT",
+      "description": "Inserta un registro de auditoría en tb_logs tras la inserción de un carrito."
+    },
+    {
+      "name": "tg_carts_after_update",
+      "target_table": "tb_carts",
+      "timing": "AFTER",
+      "event": "UPDATE",
+      "description": "Inserta un registro en tb_logs cuando cambia el estado de un carrito."
+    },
+    {
+      "name": "tg_carts_after_delete",
+      "target_table": "tb_carts",
+      "timing": "AFTER",
+      "event": "DELETE",
+      "description": "Registra en tb_logs cuando un carrito es eliminado."
+    }
+  ]
+}

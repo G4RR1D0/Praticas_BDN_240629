@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelo Relacional Interactivo con Triggers (db_test_7b)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg-space: #070a12;
+      --card-bg: rgba(17, 24, 39, 0.92);
+      --card-border: rgba(56, 189, 248, 0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-space);
+      color: #e2e8f0;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    code, .font-mono {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Grid canvas background pattern */
+    .bg-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    }
+
+    /* Custom Glassmorphism Table Card Styling */
+    .erd-card {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.05);
+      border-radius: 12px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.05s ease;
+      touch-action: none;
+    }
+
+    .erd-card:hover {
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .erd-card.is-selected {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5), 0 12px 40px rgba(14, 165, 233, 0.3);
+    }
+
+    .erd-card.is-highlighted {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.6), 0 0 25px rgba(245, 158, 11, 0.3);
+    }
+
+    .erd-card.trigger-glow {
+      border-color: #818cf8 !important;
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.7), 0 0 30px rgba(129, 140, 248, 0.4) !important;
+    }
+
+    .erd-card.is-dimmed {
+      opacity: 0.25;
+      filter: grayscale(0.6);
+    }
+
+    /* SVG Lines & Animation */
+    .relation-line {
+      fill: none;
+      stroke: #64748b;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      transition: stroke 0.2s ease, stroke-width 0.2s ease;
+      cursor: pointer;
+    }
+
+    .relation-line:hover {
+      stroke: #38bdf8;
+      stroke-width: 4;
+    }
+
+    .relation-line.active {
+      stroke: #38bdf8;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+    }
+
+    .relation-line.pulse {
+      stroke-dasharray: 8, 6;
+      animation: dash 1.5s linear infinite;
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -28;
+      }
+    }
+
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.5);
+    }
+  </style>
+</head>
+<body class="w-screen h-screen bg-slate-950 text-slate-100 flex flex-col antialiased">
+
+  <!-- TOP HEADER / CONTROL BAR -->
+  <header class="h-16 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-6 flex items-center justify-between z-30 shrink-0">
+    <!-- Title & Navigation Tabs -->
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+          <i class="fa-solid font-bold fa-diagram-project text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-white tracking-wide flex items-center gap-2">
+            db_test_7b
+            <span class="text-xs bg-sky-950 text-sky-400 border border-sky-800/60 px-2 py-0.5 rounded-full font-medium">ERD & Triggers</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden lg:block">Base de datos relacional con trazado vectorial y automatización</p>
+        </div>
+      </div>
+
+      <!-- View Tabs -->
+      <nav class="hidden md:flex bg-slate-950/80 border border-slate-800 p-1 rounded-lg gap-1">
+        <button id="tabBtnDiagram" onclick="switchMainView('diagram')" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-sky-500 text-slate-950 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-network-wired"></i>
+          <span>Diagrama ER (25 Tablas)</span>
+        </button>
+        <button id="tabBtnTriggers" onclick="switchMainView('triggers')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-indigo-400"></i>
+          <span>Panel de Triggers (56)</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Search Bar & Controls -->
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+        <input type="text" id="searchInput" oninput="handleSearch()" 
+               placeholder="Buscar tabla, FK o trigger..." 
+               class="w-44 sm:w-64 bg-slate-950/80 border border-slate-700/70 focus:border-sky-500 text-xs text-slate-200 pl-9 pr-8 py-2 rounded-lg outline-none transition-all placeholder:text-slate-500">
+        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Canvas Controls -->
+      <div id="canvasControls" class="flex items-center bg-slate-950/80 border border-slate-800 rounded-lg p-1 gap-1">
+        <button onclick="zoomIn()" class="w-8 h-8 rounded text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors" title="Acercar (+)">
+          <i class="fa-solid fa-plus text-xs"></i>
+        </button>
+        <button onclick="zoomOut()" class="w-8 h-8 rounded text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors" title="Alejar (-)">
+          <i class="fa-solid fa-minus text-xs"></i>
+        </button>
+        <button onclick="resetZoom()" class="w-8 h-8 rounded text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors" title="Reiniciar Vista">
+          <i class="fa-solid fa-rotate-right text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Trigger Side Drawer Toggle -->
+      <button onclick="toggleTriggerDrawer()" 
+              class="flex items-center gap-2 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-xs text-indigo-300 font-medium px-3 py-2 rounded-lg transition-all shadow-sm">
+        <i class="fa-solid fa-bolt text-indigo-400"></i>
+        <span class="hidden sm:inline">Triggers</span>
+        <span id="triggerDrawerCount" class="bg-indigo-900/80 text-indigo-200 text-[10px] px-1.5 py-0.2 rounded-full font-bold">56</span>
+      </button>
+
+      <!-- Floating Motion Toggle -->
+      <button id="motionToggleBtn" onclick="toggleMotion()" 
+              class="flex items-center gap-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-xs text-slate-200 font-medium px-3 py-2 rounded-lg transition-all shadow-sm">
+        <i class="fa-solid fa-water text-sky-400" id="motionIcon"></i>
+        <span class="hidden xl:inline" id="motionText">Movimiento Flotante</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="relative flex-1 w-full h-full overflow-hidden">
+    
+    <!-- VIEW 1: DIAGRAM WORKSPACE CANVAS AREA -->
+    <div id="viewport" class="relative w-full h-full overflow-hidden bg-grid cursor-grab active:cursor-grabbing">
+      
+      <!-- SVG Canvas Layer for Connections -->
+      <svg id="svgCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-10">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+          </marker>
+          <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+          </marker>
+        </defs>
+        <g id="svgGroup"></g>
+      </svg>
+
+      <!-- HTML Container for Draggable Table Cards -->
+      <div id="canvasContent" class="absolute top-0 left-0 origin-top-left z-20"></div>
+
+      <!-- Legend Overlay -->
+      <div class="absolute bottom-5 left-5 z-30 bg-slate-900/90 backdrop-blur-md border border-slate-800 text-slate-400 text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-4">
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> PK (Llave Primaria)</div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-400 inline-block"></span> FK (Llave Foránea)</div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-400 inline-block"></span> ⚡ Trigger Asociado</div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: FULLPAGE TRIGGERS PANEL (Grid Mode) -->
+    <div id="fullTriggersView" class="hidden absolute inset-0 bg-slate-950 z-20 overflow-y-auto custom-scroll p-6 md:p-10">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-800 pb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+              <i class="fa-solid fa-bolt text-indigo-400"></i> Catálogo Completo de Triggers (56)
+            </h2>
+            <p class="text-slate-400 text-sm mt-1">Disparadores de auditoría y reglas de negocio automatizadas en la base de datos.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-800 px-3 py-1.5 rounded-lg font-mono">
+              ⚡ 56 Triggers Activos
+            </span>
+          </div>
+        </div>
+
+        <div id="fullTriggersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </div>
+
+    <!-- SIDE DRAWER: QUICK TRIGGERS INSPECTOR -->
+    <div id="triggerDrawer" class="fixed top-16 right-0 bottom-0 w-80 sm:w-96 bg-slate-900/95 backdrop-blur-xl border-l border-slate-800 shadow-2xl z-40 transform translate-x-full transition-transform duration-300 flex flex-col">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-indigo-400"></i>
+          <h3 class="font-bold text-sm text-slate-100" id="drawerTitle">Triggers del Sistema</h3>
+        </div>
+        <button onclick="toggleTriggerDrawer()" class="text-slate-400 hover:text-white text-sm w-7 h-7 rounded-lg hover:bg-slate-800 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-slate-900 border-b border-slate-800">
+        <input type="text" id="drawerSearchInput" oninput="filterDrawerTriggers()" 
+               placeholder="Filtrar por tabla o disparador..." 
+               class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 text-xs text-slate-200 px-3 py-2 rounded-lg outline-none">
+      </div>
+
+      <div id="drawerTriggerList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scroll"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. COMPLETE DATABASE DATA (25 TABLES & 56 TRIGGERS)
+    // -------------------------------------------------------------------------
+    const schemaTables = [
+      { id: "tb_users", name: "tb_users", desc: "Usuarios del sistema", pos: { x: 50, y: 50 }, cols: [{ name: "id_user", type: "INT", key: "PK" }, { name: "username", type: "VARCHAR(50)", key: "UQ" }, { name: "email", type: "VARCHAR(100)", key: "UQ" }, { name: "password_hash", type: "VARCHAR(255)", key: "" }, { name: "status", type: "BIT(1)", key: "" }] },
+      { id: "tb_people", name: "tb_people", desc: "Datos personales de usuario", pos: { x: 440, y: 50 }, cols: [{ name: "id_person", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "first_name", type: "VARCHAR(100)", key: "" }, { name: "last_name", type: "VARCHAR(100)", key: "" }] },
+      { id: "tb_roles", name: "tb_roles", desc: "Catálogo de roles", pos: { x: 50, y: 340 }, cols: [{ name: "id_role", type: "INT", key: "PK" }, { name: "role_name", type: "VARCHAR(50)", key: "UQ" }, { name: "description", type: "VARCHAR(150)", key: "" }] },
+      { id: "tb_user_roles", name: "tb_user_roles", desc: "Asignación Usuario-Rol", pos: { x: 440, y: 340 }, cols: [{ name: "id_user_role", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_role", type: "INT", key: "FK", refTable: "tb_roles", refCol: "id_role" }] },
+      { id: "tb_suppliers", name: "tb_suppliers", desc: "Perfiles de proveedores", pos: { x: 50, y: 600 }, cols: [{ name: "id_supplier", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "company_name", type: "VARCHAR(150)", key: "" }] },
+      { id: "tb_user_addresses", name: "tb_user_addresses", desc: "Direcciones registradas", pos: { x: 830, y: 50 }, cols: [{ name: "id_address", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "address_label", type: "VARCHAR(50)", key: "" }] },
+      { id: "tbd_address_components", name: "tbd_address_components", desc: "Desglose de dirección", pos: { x: 1220, y: 50 }, cols: [{ name: "id_component", type: "INT", key: "PK" }, { name: "id_address", type: "INT", key: "FK", refTable: "tb_user_addresses", refCol: "id_address" }, { name: "street", type: "VARCHAR(150)", key: "" }] },
+      { id: "tbc_payment_methods_types", name: "tbc_payment_methods_types", desc: "Tipos de métodos de pago", pos: { x: 830, y: 340 }, cols: [{ name: "id_payment_type", type: "INT", key: "PK" }, { name: "code", type: "VARCHAR(20)", key: "UQ" }] },
+      { id: "tbd_user_payment_methods", name: "tbd_user_payment_methods", desc: "Métodos de pago guardados", pos: { x: 1220, y: 340 }, cols: [{ name: "id_user_payment", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_payment_type", type: "INT", key: "FK", refTable: "tbc_payment_methods_types", refCol: "id_payment_type" }] },
+      { id: "tb_products", name: "tb_products", desc: "Catálogo de productos", pos: { x: 440, y: 600 }, cols: [{ name: "id_product", type: "INT", key: "PK" }, { name: "sku", type: "VARCHAR(50)", key: "UQ" }, { name: "name", type: "VARCHAR(150)", key: "" }, { name: "price", type: "DECIMAL(10,2)", key: "" }, { name: "stock", type: "INT", key: "" }] },
+      { id: "tb_product_images", name: "tb_product_images", desc: "Imágenes de productos", pos: { x: 830, y: 600 }, cols: [{ name: "id_image", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "image_url", type: "VARCHAR(255)", key: "" }] },
+      { id: "tbc_categories", name: "tbc_categories", desc: "Categorías de productos", pos: { x: 1220, y: 600 }, cols: [{ name: "id_category", type: "INT", key: "PK" }, { name: "category_name", type: "VARCHAR(100)", key: "" }, { name: "parent_id", type: "INT", key: "FK", refTable: "tbc_categories", refCol: "id_category" }] },
+      { id: "tbd_products_categories", name: "tbd_products_categories", desc: "Relación Producto-Categoría", pos: { x: 830, y: 860 }, cols: [{ name: "id_relation", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "id_category", type: "INT", key: "FK", refTable: "tbc_categories", refCol: "id_category" }] },
+      { id: "tbd_products_users_providers", name: "tbd_products_users_providers", desc: "Suministro por Proveedor", pos: { x: 440, y: 860 }, cols: [{ name: "id_relation", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "id_user_provider", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }] },
+      { id: "tb_inventory_movements", name: "tb_inventory_movements", desc: "Movimientos de inventario", pos: { x: 50, y: 860 }, cols: [{ name: "id_movement", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "movement_type", type: "ENUM", key: "" }] },
+      { id: "tb_carts", name: "tb_carts", desc: "Carritos de compra", pos: { x: 1610, y: 50 }, cols: [{ name: "id_cart", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }] },
+      { id: "tbd_carts_items", name: "tbd_carts_items", desc: "Ítems en carrito", pos: { x: 1980, y: 50 }, cols: [{ name: "id_cart_item", type: "INT", key: "PK" }, { name: "id_cart", type: "INT", key: "FK", refTable: "tb_carts", refCol: "id_cart" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }] },
+      { id: "tbd_users_wishlist_products", name: "tbd_users_wishlist_products", desc: "Lista de deseos", pos: { x: 1610, y: 310 }, cols: [{ name: "id_wishlist", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }] },
+      { id: "tb_coupons", name: "tb_coupons", desc: "Cupones de descuento", pos: { x: 1610, y: 570 }, cols: [{ name: "id_coupon", type: "INT", key: "PK" }, { name: "code", type: "VARCHAR(50)", key: "UQ" }] },
+      { id: "tb_buyer_orders", name: "tb_buyer_orders", desc: "Órdenes de compra", pos: { x: 1980, y: 440 }, cols: [{ name: "id_order", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "coupon_id", type: "INT", key: "FK", refTable: "tb_coupons", refCol: "id_coupon" }] },
+      { id: "tbd_order_items", name: "tbd_order_items", desc: "Detalle de orden", pos: { x: 2380, y: 440 }, cols: [{ name: "id_order_item", type: "INT", key: "PK" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }] },
+      { id: "tbd_coupon_usages", name: "tbd_coupon_usages", desc: "Historial uso de cupones", pos: { x: 1980, y: 770 }, cols: [{ name: "id_usage", type: "INT", key: "PK" }, { name: "id_coupon", type: "INT", key: "FK", refTable: "tb_coupons", refCol: "id_coupon" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }] },
+      { id: "tb_order_status_history", name: "tb_order_status_history", desc: "Historial estados de orden", pos: { x: 2380, y: 200 }, cols: [{ name: "id_history", type: "INT", key: "PK" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }, { name: "created_by", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }] },
+      { id: "tb_refunds", name: "tb_refunds", desc: "Solicitudes de devolución", pos: { x: 2380, y: 720 }, cols: [{ name: "id_refund", type: "INT", key: "PK" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }] },
+      { id: "tb_logs", name: "tb_logs", desc: "Auditoría del sistema", pos: { x: 1220, y: 860 }, cols: [{ name: "id_log", type: "INT", key: "PK" }, { name: "table_name", type: "VARCHAR(100)", key: "" }, { name: "action_type", type: "VARCHAR(20)", key: "" }] }
+    ];
+
+    const triggersData = [
+      { name: "trg_after_insert_buyer_orders", table: "tb_buyer_orders", event: "AFTER INSERT", desc: "Actualiza métricas y registra estado inicial en tb_logs." },
+      { name: "trg_after_update_buyer_orders", table: "tb_buyer_orders", event: "AFTER UPDATE", desc: "Registra cambios de total y fulfillment en tb_logs." },
+      { name: "trg_after_delete_buyer_orders", table: "tb_buyer_orders", event: "AFTER DELETE", desc: "Registra la anulación lógica en el historial de auditoría." },
+      { name: "tg_carts_after_insert", table: "tb_carts", event: "AFTER INSERT", desc: "Registra la creación de carrito en tb_logs." },
+      { name: "tg_carts_after_update", table: "tb_carts", event: "AFTER UPDATE", desc: "Captura cambios de estado del carrito." },
+      { name: "tg_carts_after_delete", table: "tb_carts", event: "AFTER DELETE", desc: "Registra abandono/eliminación de carrito." },
+      { name: "trg_tb_coupons_after_insert", table: "tb_coupons", event: "AFTER INSERT", desc: "Audita la emisión de un nuevo cupón." },
+      { name: "trg_tb_coupons_after_update", table: "tb_coupons", event: "AFTER UPDATE", desc: "Audita cambios de valor o vigencia de cupones." },
+      { name: "trg_tb_coupons_after_delete", table: "tb_coupons", event: "AFTER DELETE", desc: "Registra la baja de un cupón de descuento." },
+      { name: "trg_after_insert_inventory_movements", table: "tb_inventory_movements", event: "AFTER INSERT", desc: "Actualiza el stock real de tb_products tras una entrada/salida." },
+      { name: "trg_after_insert_order_status_history", table: "tb_order_status_history", event: "AFTER INSERT", desc: "Audita actualizaciones de estado del pedido." },
+      { name: "trg_tb_people_before_insert", table: "tb_people", event: "BEFORE INSERT", desc: "Valida formato de tax_id antes de insertar." },
+      { name: "trg_tb_people_before_update", table: "tb_people", event: "BEFORE UPDATE", desc: "Actualiza last_update timestamp en tb_people." },
+      { name: "trg_tb_people_after_delete", table: "tb_people", event: "AFTER DELETE", desc: "Registra eliminación de perfil personal." },
+      { name: "trg_after_insert_product_images", table: "tb_product_images", event: "AFTER INSERT", desc: "Garantiza orden secuencial de imágenes de producto." },
+      { name: "trg_products_after_insert", table: "tb_products", event: "AFTER INSERT", desc: "Registra alta de producto en tb_logs." },
+      { name: "trg_products_after_update", table: "tb_products", event: "AFTER UPDATE", desc: "Audita modificaciones de precio o stock." },
+      { name: "trg_products_after_delete", table: "tb_products", event: "AFTER DELETE", desc: "Registra retiro de producto del catálogo." },
+      { name: "trg_after_update_refunds", table: "tb_refunds", event: "AFTER UPDATE", desc: "Notifica cambio de estatus de reembolso en tb_logs." },
+      { name: "trg_after_insert_roles", table: "tb_roles", event: "AFTER INSERT", desc: "Audita creación de nuevos roles de seguridad." },
+      { name: "trg_after_insert_suppliers", table: "tb_suppliers", event: "AFTER INSERT", desc: "Registra alta de empresa proveedora." },
+      { name: "trg_user_addresses_single_default_insert", table: "tb_user_addresses", event: "BEFORE INSERT", desc: "Garantiza una única dirección predeterminada por usuario." },
+      { name: "trg_user_addresses_single_default_update", table: "tb_user_addresses", event: "BEFORE UPDATE", desc: "Desmarca direcciones anteriores si la nueva es default." },
+      { name: "trg_user_addresses_ensure_default_after_delete", table: "tb_user_addresses", event: "AFTER DELETE", desc: "Asigna una nueva dirección default si se borra la principal." },
+      { name: "trg_after_insert_user_roles", table: "tb_user_roles", event: "AFTER INSERT", desc: "Audita la asignación de rol a un usuario." },
+      { name: "trg_users_after_insert", table: "tb_users", event: "AFTER INSERT", desc: "Crea entrada de auditoría para nuevo usuario." },
+      { name: "trg_users_after_update", table: "tb_users", event: "AFTER UPDATE", desc: "Captura cambio de contraseña o estatus de usuario." },
+      { name: "trg_users_after_delete", table: "tb_users", event: "AFTER DELETE", desc: "Registra baja definitiva de usuario." },
+      { name: "trg_tbc_categories_before_insert", table: "tbc_categories", event: "BEFORE INSERT", desc: "Inicializa marcas de tiempo de categoría." },
+      { name: "trg_tbc_categories_before_update", table: "tbc_categories", event: "BEFORE UPDATE", desc: "Actualiza timestamp last_update." },
+      { name: "trg_tbc_categories_after_delete", table: "tbc_categories", event: "AFTER DELETE", desc: "Audita eliminación de categoría." },
+      { name: "trg_payment_methods_types_after_insert", table: "tbc_payment_methods_types", event: "AFTER INSERT", desc: "Audita creación de tipo de pago." },
+      { name: "trg_payment_methods_types_after_update", table: "tbc_payment_methods_types", event: "AFTER UPDATE", desc: "Audita actualización de medio de pago." },
+      { name: "trg_payment_methods_types_after_delete", table: "tbc_payment_methods_types", event: "AFTER DELETE", desc: "Audita eliminación de método de pago." },
+      { name: "trg_tbd_address_components_after_insert", table: "tbd_address_components", event: "AFTER INSERT", desc: "Registra desglose de dirección." },
+      { name: "trg_tbd_address_components_after_update", table: "tbd_address_components", event: "AFTER UPDATE", desc: "Actualiza componentes de dirección." },
+      { name: "trg_tbd_address_components_after_delete", table: "tbd_address_components", event: "AFTER DELETE", desc: "Audita borrado de componente de dirección." },
+      { name: "trg_tbd_carts_items_after_insert", table: "tbd_carts_items", event: "AFTER INSERT", desc: "Audita inserción de ítem en carrito." },
+      { name: "trg_tbd_carts_items_after_update", table: "tbd_carts_items", event: "AFTER UPDATE", desc: "Captura cambios en unidades elegidas." },
+      { name: "trg_tbd_carts_items_after_delete", table: "tbd_carts_items", event: "AFTER DELETE", desc: "Registra remoción de producto del carrito." },
+      { name: "trg_after_insert_coupon_usages", table: "tbd_coupon_usages", event: "AFTER INSERT", desc: "Incrementa current_uses en tb_coupons automáticamente." },
+      { name: "trg_tbd_order_items_after_insert", table: "tbd_order_items", event: "AFTER INSERT", desc: "Audita producto añadido a orden." },
+      { name: "trg_tbd_order_items_after_update", table: "tbd_order_items", event: "AFTER UPDATE", desc: "Ajusta subtotales del pedido." },
+      { name: "trg_tbd_order_items_after_delete", table: "tbd_order_items", event: "AFTER DELETE", desc: "Audita cancelación de ítem en orden." },
+      { name: "trg_tbd_products_categories_after_insert", table: "tbd_products_categories", event: "AFTER INSERT", desc: "Registra clasificación de producto." },
+      { name: "trg_tbd_products_categories_after_update", table: "tbd_products_categories", event: "AFTER UPDATE", desc: "Audita reclasificación de producto." },
+      { name: "trg_tbd_products_categories_after_delete", table: "tbd_products_categories", event: "AFTER DELETE", desc: "Registra desvinculación de categoría." },
+      { name: "tg_products_users_providers_after_insert", table: "tbd_products_users_providers", event: "AFTER INSERT", desc: "Audita vinculación proveedor-producto." },
+      { name: "tg_products_users_providers_after_update", table: "tbd_products_users_providers", event: "AFTER UPDATE", desc: "Captura cambios en costo de suministro." },
+      { name: "tg_products_users_providers_after_delete", table: "tbd_products_users_providers", event: "AFTER DELETE", desc: "Audita desvinculación de proveedor." },
+      { name: "trg_user_payment_methods_after_insert", table: "tbd_user_payment_methods", event: "AFTER INSERT", desc: "Audita incorporación de tarjeta guardada." },
+      { name: "trg_user_payment_methods_after_update", table: "tbd_user_payment_methods", event: "AFTER UPDATE", desc: "Captura actualización de tarjeta." },
+      { name: "trg_user_payment_methods_after_delete", table: "tbd_user_payment_methods", event: "AFTER DELETE", desc: "Audita eliminación de tarjeta de usuario." },
+      { name: "tg_users_wishlist_products_after_insert", table: "tbd_users_wishlist_products", event: "AFTER INSERT", desc: "Audita adición a favoritos." },
+      { name: "tg_users_wishlist_products_after_update", table: "tbd_users_wishlist_products", event: "AFTER UPDATE", desc: "Audita actualización en wishlist." },
+      { name: "tg_users_wishlist_products_after_delete", table: "tbd_users_wishlist_products", event: "AFTER DELETE", desc: "Audita retiro de producto de wishlist." }
+    ];
+
+    // Map table triggers count
+    const tableTriggersMap = {};
+    triggersData.forEach(tr => {
+      tableTriggersMap[tr.table] = (tableTriggersMap[tr.table] || 0) + 1;
+    });
+
+    // -------------------------------------------------------------------------
+    // 2. STATE MANAGEMENT & GLOBALS
+    // -------------------------------------------------------------------------
+    let panX = 40;
+    let panY = 40;
+    let zoomScale = 0.85;
+
+    let isPanning = false;
+    let startPanX = 0;
+    let startPanY = 0;
+
+    let draggedCard = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    let isMotionActive = true;
+    let animFrameId = null;
+    let time = 0;
+    let selectedTableId = null;
+
+    const tableOffsets = {};
+    schemaTables.forEach(t => {
+      tableOffsets[t.id] = {
+        baseX: t.pos.x,
+        baseY: t.pos.y,
+        currentX: t.pos.x,
+        currentY: t.pos.y,
+        seed: Math.random() * 100
+      };
+    });
+
+    // -------------------------------------------------------------------------
+    // 3. RENDERING CARDS WITH TRIGGER BADGES
+    // -------------------------------------------------------------------------
+    const viewport = document.getElementById('viewport');
+    const canvasContent = document.getElementById('canvasContent');
+    const svgGroup = document.getElementById('svgGroup');
+
+    function initDiagram() {
+      renderCards();
+      renderFullTriggersGrid();
+      renderDrawerTriggers();
+      updateTransform();
+      drawConnections();
+      startAnimationLoop();
+
+      // Viewport Drag/Pan Events
+      viewport.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('.erd-card')) return;
+        isPanning = true;
+        startPanX = e.clientX - panX;
+        startPanY = e.clientY - panY;
+        viewport.classList.remove('cursor-grab');
+        viewport.classList.add('cursor-grabbing');
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (isPanning) {
+          panX = e.clientX - startPanX;
+          panY = e.clientY - startPanY;
+          updateTransform();
+        } else if (draggedCard) {
+          const state = tableOffsets[draggedCard.id];
+          const newX = (e.clientX - panX) / zoomScale - dragOffsetX;
+          const newY = (e.clientY - panY) / zoomScale - dragOffsetY;
+          
+          state.baseX = newX;
+          state.baseY = newY;
+          state.currentX = newX;
+          state.currentY = newY;
+
+          draggedCard.style.left = `${newX}px`;
+          draggedCard.style.top = `${newY}px`;
+          drawConnections();
+        }
+      });
+
+      window.addEventListener('pointerup', () => {
+        if (isPanning) {
+          isPanning = false;
+          viewport.classList.remove('cursor-grabbing');
+          viewport.classList.add('cursor-grab');
+        }
+        draggedCard = null;
+      });
+
+      // Zoom Wheel Event
+      viewport.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomFactor = 1.1;
+        let newScale = e.deltaY < 0 ? zoomScale * zoomFactor : zoomScale / zoomFactor;
+        newScale = Math.min(Math.max(0.3, newScale), 2.0);
+
+        const rect = viewport.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        panX = mouseX - (mouseX - panX) * (newScale / zoomScale);
+        panY = mouseY - (mouseY - panY) * (newScale / zoomScale);
+        zoomScale = newScale;
+
+        updateTransform();
+      }, { passive: false });
+    }
+
+    function renderCards() {
+      canvasContent.innerHTML = '';
+      schemaTables.forEach(table => {
+        const card = document.createElement('div');
+        card.id = `card-${table.id}`;
+        card.className = `erd-card absolute w-80 flex flex-col z-20`;
+        card.style.left = `${table.pos.x}px`;
+        card.style.top = `${table.pos.y}px`;
+
+        const triggerCount = tableTriggersMap[table.id] || 0;
+        const triggerBadgeHtml = triggerCount > 0 
+          ? `<button onclick="openTableTriggersDrawer('${table.id}', event)" class="text-[10px] bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition-colors" title="Ver ${triggerCount} triggers asociados">
+               <i class="fa-solid fa-bolt text-indigo-400"></i> ${triggerCount} Triggers
+             </button>`
+          : '';
+
+        let colsHtml = table.cols.map(col => {
+          let badge = '';
+          if (col.key === 'PK') {
+            badge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">PK</span>`;
+          } else if (col.key === 'FK') {
+            badge = `<span class="bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">FK</span>`;
+          } else if (col.key === 'UQ') {
+            badge = `<span class="bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">UQ</span>`;
+          }
+
+          return `
+            <div id="col-${table.id}-${col.name}" class="flex items-center justify-between py-1.5 px-3 hover:bg-slate-800/50 rounded transition-colors text-xs border-b border-slate-800/40 last:border-0">
+              <div class="flex items-center gap-2 overflow-hidden">
+                ${badge}
+                <span class="font-mono font-medium text-slate-200 truncate">${col.name}</span>
+              </div>
+              <span class="font-mono text-[11px] text-slate-400 shrink-0 ml-2">${col.type}</span>
+            </div>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="card-header bg-slate-900/95 border-b border-slate-800 px-3.5 py-2.5 rounded-t-xl flex items-center justify-between cursor-move">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <i class="fa-solid fa-table text-sky-400 text-xs"></i>
+              <h3 class="font-mono font-bold text-sm text-sky-300 truncate">${table.name}</h3>
+            </div>
+            ${triggerBadgeHtml}
+          </div>
+          <div class="p-1 custom-scroll max-h-60 overflow-y-auto">
+            ${colsHtml}
+          </div>
+          <div class="px-3 py-1.5 bg-slate-950/70 border-t border-slate-800/50 rounded-b-xl text-[10px] text-slate-400 italic flex items-center justify-between">
+            <span>${table.desc}</span>
+          </div>
+        `;
+
+        const header = card.querySelector('.card-header');
+        header.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          draggedCard = card;
+          draggedCard.id = table.id;
+          const rect = card.getBoundingClientRect();
+          dragOffsetX = (e.clientX - rect.left) / zoomScale;
+          dragOffsetY = (e.clientY - rect.top) / zoomScale;
+          highlightConnections(table.id);
+        });
+
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          highlightConnections(table.id);
+        });
+
+        canvasContent.appendChild(card);
+      });
+    }
+
+    function updateTransform() {
+      canvasContent.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+      svgGroup.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. DRAW CONNECTIONS
+    // -------------------------------------------------------------------------
+    function drawConnections() {
+      svgGroup.innerHTML = '';
+
+      schemaTables.forEach(sourceTable => {
+        sourceTable.cols.forEach(col => {
+          if (col.key === 'FK' && col.refTable) {
+            const targetTable = schemaTables.find(t => t.id === col.refTable);
+            if (!targetTable) return;
+
+            const srcPos = tableOffsets[sourceTable.id];
+            const tgtPos = tableOffsets[targetTable.id];
+
+            const srcColEl = document.getElementById(`col-${sourceTable.id}-${col.name}`);
+            const tgtColEl = document.getElementById(`col-${targetTable.id}-${col.refCol}`);
+
+            let y1 = srcPos.currentY + 40;
+            let y2 = tgtPos.currentY + 40;
+
+            if (srcColEl) y1 = srcPos.currentY + srcColEl.offsetTop + 42;
+            if (tgtColEl) y2 = tgtPos.currentY + tgtColEl.offsetTop + 42;
+
+            const w = 320;
+            let x1 = srcPos.currentX + w;
+            let x2 = tgtPos.currentX;
+
+            if (srcPos.currentX > tgtPos.currentX + w) {
+              x1 = srcPos.currentX;
+              x2 = tgtPos.currentX + w;
+            } else if (srcPos.currentX + w < tgtPos.currentX) {
+              x1 = srcPos.currentX + w;
+              x2 = tgtPos.currentX;
+            } else {
+              x1 = srcPos.currentX + w / 2;
+              x2 = tgtPos.currentX + w / 2;
+            }
+
+            const dx = Math.abs(x2 - x1) * 0.5;
+            const pathData = `M ${x1} ${y1} C ${x1 + (x1 < x2 ? dx : -dx)} ${y1}, ${x2 + (x2 > x1 ? -dx : dx)} ${y2}, ${x2} ${y2}`;
+
+            const isRelated = selectedTableId === sourceTable.id || selectedTableId === targetTable.id;
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathData);
+            path.setAttribute('class', `relation-line ${isRelated ? 'active pulse' : ''}`);
+            path.setAttribute('marker-end', isRelated ? 'url(#arrow-orange)' : 'url(#arrow)');
+            if (isRelated) path.style.stroke = '#f59e0b';
+
+            path.addEventListener('click', (e) => {
+              e.stopPropagation();
+              highlightConnections(sourceTable.id);
+            });
+
+            svgGroup.appendChild(path);
+          }
+        });
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. TRIGGERS PANELS & DRAWER RENDERING
+    // -------------------------------------------------------------------------
+    function renderFullTriggersGrid() {
+      const grid = document.getElementById('fullTriggersGrid');
+      grid.innerHTML = triggersData.map(tr => `
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 hover:border-indigo-500/50 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-bold text-indigo-400 truncate">${tr.name}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">${tr.event}</span>
+            </div>
+            <p class="text-xs text-slate-300 mb-3">${tr.desc}</p>
+          </div>
+          <div class="pt-2 border-t border-slate-800/60 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Tabla: <code class="text-sky-400 font-bold">${tr.table}</code></span>
+            <button onclick="focusTableFromTrigger('${tr.table}')" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1">
+              Ver en ERD <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderDrawerTriggers(filterTable = null) {
+      const list = document.getElementById('drawerTriggerList');
+      const drawerTitle = document.getElementById('drawerTitle');
+
+      let filtered = triggersData;
+      if (filterTable) {
+        filtered = triggersData.filter(t => t.table === filterTable);
+        drawerTitle.innerText = `Triggers de ${filterTable}`;
+      } else {
+        drawerTitle.innerText = `Triggers del Sistema (56)`;
+      }
+
+      list.innerHTML = filtered.map(tr => `
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 hover:border-indigo-500/60 transition-all">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-mono font-semibold text-indigo-300 truncate">${tr.name}</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/80">${tr.event}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mb-2">${tr.desc}</p>
+          <div class="flex items-center justify-between text-[10px]">
+            <span class="text-slate-500">Tabla: <code class="text-sky-400 font-mono">${tr.table}</code></span>
+            <button onclick="focusTableFromTrigger('${tr.table}')" class="text-indigo-400 hover:text-indigo-300 font-bold">
+              Ir a Tabla →
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openTableTriggersDrawer(tableId, event) {
+      if (event) event.stopPropagation();
+      renderDrawerTriggers(tableId);
+      const drawer = document.getElementById('triggerDrawer');
+      drawer.classList.remove('translate-x-full');
+    }
+
+    function toggleTriggerDrawer() {
+      const drawer = document.getElementById('triggerDrawer');
+      if (drawer.classList.contains('translate-x-full')) {
+        renderDrawerTriggers(null);
+        drawer.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('translate-x-full');
+      }
+    }
+
+    function focusTableFromTrigger(tableId) {
+      switchMainView('diagram');
+      document.getElementById('triggerDrawer').classList.add('translate-x-full');
+      
+      const targetTable = schemaTables.find(t => t.id === tableId);
+      if (!targetTable) return;
+
+      selectedTableId = tableId;
+      highlightConnections(tableId);
+
+      // Center camera view on target table card
+      const rect = viewport.getBoundingClientRect();
+      const state = tableOffsets[tableId];
+      panX = rect.width / 2 - (state.baseX + 160) * zoomScale;
+      panY = rect.height / 2 - (state.baseY + 120) * zoomScale;
+      updateTransform();
+
+      // Trigger temporary glowing effect
+      const card = document.getElementById(`card-${tableId}`);
+      if (card) {
+        card.classList.add('trigger-glow');
+        setTimeout(() => card.classList.remove('trigger-glow'), 2500);
+      }
+    }
+
+    function switchMainView(view) {
+      const diagramView = document.getElementById('viewport');
+      const triggersView = document.getElementById('fullTriggersView');
+      const btnDiagram = document.getElementById('tabBtnDiagram');
+      const btnTriggers = document.getElementById('tabBtnTriggers');
+      const canvasControls = document.getElementById('canvasControls');
+
+      if (view === 'diagram') {
+        diagramView.classList.remove('hidden');
+        triggersView.classList.add('hidden');
+        canvasControls.classList.remove('hidden');
+
+        btnDiagram.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-sky-500 text-slate-950 transition-all flex items-center gap-2';
+        btnTriggers.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2';
+      } else {
+        diagramView.classList.add('hidden');
+        triggersView.classList.remove('hidden');
+        canvasControls.classList.add('hidden');
+
+        btnTriggers.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition-all flex items-center gap-2';
+        btnDiagram.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2';
+      }
+    }
+
+    function filterDrawerTriggers() {
+      const query = document.getElementById('drawerSearchInput').value.toLowerCase().trim();
+      const list = document.getElementById('drawerTriggerList');
+
+      const filtered = triggersData.filter(t => 
+        t.name.toLowerCase().includes(query) || 
+        t.table.toLowerCase().includes(query) ||
+        t.event.toLowerCase().includes(query)
+      );
+
+      list.innerHTML = filtered.map(tr => `
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 hover:border-indigo-500/60 transition-all">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-mono font-semibold text-indigo-300 truncate">${tr.name}</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/80">${tr.event}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mb-2">${tr.desc}</p>
+          <div class="flex items-center justify-between text-[10px]">
+            <span class="text-slate-500">Tabla: <code class="text-sky-400 font-mono">${tr.table}</code></span>
+            <button onclick="focusTableFromTrigger('${tr.table}')" class="text-indigo-400 hover:text-indigo-300 font-bold">
+              Ir a Tabla →
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. HIGHLIGHTING & SEARCH
+    // -------------------------------------------------------------------------
+    function highlightConnections(tableId) {
+      selectedTableId = (selectedTableId === tableId) ? null : tableId;
+
+      const connectedTableIds = new Set();
+      if (selectedTableId) {
+        connectedTableIds.add(selectedTableId);
+        schemaTables.forEach(t => {
+          t.cols.forEach(c => {
+            if (t.id === selectedTableId && c.refTable) connectedTableIds.add(c.refTable);
+            if (c.refTable === selectedTableId) connectedTableIds.add(t.id);
+          });
+        });
+      }
+
+      schemaTables.forEach(t => {
+        const card = document.getElementById(`card-${t.id}`);
+        if (!card) return;
+        card.classList.remove('is-selected', 'is-highlighted', 'is-dimmed');
+
+        if (selectedTableId) {
+          if (t.id === selectedTableId) {
+            card.classList.add('is-selected');
+          } else if (connectedTableIds.has(t.id)) {
+            card.classList.add('is-highlighted');
+          } else {
+            card.classList.add('is-dimmed');
+          }
+        }
+      });
+
+      drawConnections();
+    }
+
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const clearBtn = document.getElementById('clearSearchBtn');
+
+      if (query.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      schemaTables.forEach(t => {
+        const card = document.getElementById(`card-${t.id}`);
+        if (!card) return;
+
+        const matchesName = t.name.toLowerCase().includes(query);
+        const matchesCol = t.cols.some(c => c.name.toLowerCase().includes(query));
+        const matchesTrig = (triggersData.filter(tr => tr.table === t.id && tr.name.toLowerCase().includes(query))).length > 0;
+
+        if (query === '') {
+          card.classList.remove('is-dimmed', 'is-highlighted');
+        } else if (matchesName || matchesCol || matchesTrig) {
+          card.classList.add('is-highlighted');
+          card.classList.remove('is-dimmed');
+        } else {
+          card.classList.add('is-dimmed');
+          card.classList.remove('is-highlighted');
+        }
+      });
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      handleSearch();
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. GENTLE FLOAT MOTION & ZOOM CONTROLS
+    // -------------------------------------------------------------------------
+    function startAnimationLoop() {
+      function animate() {
+        if (isMotionActive) {
+          time += 0.015;
+          schemaTables.forEach(table => {
+            if (draggedCard && draggedCard.id === table.id) return;
+
+            const state = tableOffsets[table.id];
+            const offsetX = Math.sin(time + state.seed) * 5;
+            const offsetY = Math.cos(time * 0.8 + state.seed) * 5;
+
+            state.currentX = state.baseX + offsetX;
+            state.currentY = state.baseY + offsetY;
+
+            const card = document.getElementById(`card-${table.id}`);
+            if (card) {
+              card.style.left = `${state.currentX}px`;
+              card.style.top = `${state.currentY}px`;
+            }
+          });
+
+          drawConnections();
+        }
+        animFrameId = requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    function toggleMotion() {
+      isMotionActive = !isMotionActive;
+      const icon = document.getElementById('motionIcon');
+      const text = document.getElementById('motionText');
+
+      if (isMotionActive) {
+        icon.className = 'fa-solid fa-water text-sky-400';
+        text.innerText = 'Movimiento Flotante';
+      } else {
+        icon.className = 'fa-solid fa-pause text-amber-400';
+        text.innerText = 'Movimiento Pausado';
+        schemaTables.forEach(t => {
+          const state = tableOffsets[t.id];
+          state.currentX = state.baseX;
+          state.currentY = state.baseY;
+          const card = document.getElementById(`card-${t.id}`);
+          if (card) {
+            card.style.left = `${state.currentX}px`;
+            card.style.top = `${state.currentY}px`;
+          }
+        });
+        drawConnections();
+      }
+    }
+
+    function zoomIn() {
+      zoomScale = Math.min(zoomScale * 1.15, 2.0);
+      updateTransform();
+    }
+
+    function zoomOut() {
+      zoomScale = Math.max(zoomScale / 1.15, 0.3);
+      updateTransform();
+    }
+
+    function resetZoom() {
+      zoomScale = 0.85;
+      panX = 40;
+      panY = 40;
+      selectedTableId = null;
+      highlightConnections(null);
+      updateTransform();
+    }
+
+    viewport.addEventListener('click', (e) => {
+      if (!e.target.closest('.erd-card')) {
+        selectedTableId = null;
+        highlightConnections(null);
+      }
+    });
+
+    window.onload = initDiagram;
+  </script>
+</body>
+</html>
+
