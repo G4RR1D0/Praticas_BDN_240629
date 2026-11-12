@@ -10,9 +10,6 @@ CREATE USER IF NOT EXISTS 'app_mobile'@'%' IDENTIFIED BY 'Mobile890';
 /* Asignar los privilegios de super usuario */
 GRANT ALL PRIVILEGES ON *.* TO 'yane.garrido'@'%';
 
-/* Asignar privilegios de seleccion, insercion, actualizacion y eliminacion */
-GRANT SELECT, INSERT, UPDATE, DELETE ON db_test_7b.* TO 'dorian.barrios'@'%';
-
 /* Creacion de roles para el sistema de ecommerce */
 CREATE ROLE IF NOT EXISTS 'superadmin';
 CREATE ROLE IF NOT EXISTS 'admin';
@@ -26,7 +23,13 @@ CREATE ROLE IF NOT EXISTS 'user_not_registered';
 GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
 GRANT ALL PRIVILEGES ON db_test_7b.* TO 'admin';
 
-/* support actualizacion */
+/* Permisos para seller (Vendedor) */
+GRANT SELECT, INSERT, UPDATE ON db_test_7b.tb_products TO 'seller';
+GRANT SELECT ON db_test_7b.tbc_categories TO 'seller';
+GRANT SELECT, INSERT ON db_test_7b.tb_buyer_orders TO 'seller';
+GRANT SELECT, INSERT ON db_test_7b.tbd_order_items TO 'seller';
+
+/* Permisos para support (Soporte) */
 GRANT SELECT, INSERT, UPDATE, DELETE 
 ON db_test_7b.tb_users 
 TO 'support';

@@ -264,24 +264,204 @@
             color: var(--muted);
             margin-top: 20px;
         }
+
+
+        /* Apartado de Totales por Tabla */
+.totals-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+}
+.kpi-box {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 14px rgba(26, 38, 60, .04);
+}
+.kpi-title {
+    color: var(--muted);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+.kpi-num {
+    margin-top: 6px;
+    color: var(--ink);
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+}
+.kpi-note {
+    margin-top: 4px;
+    color: var(--accent);
+    font-size: .78rem;
+    font-weight: 600;
+}
+.totals-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(26, 38, 60, .05);
+    margin-bottom: 36px;
+}
+.totals-card table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+.totals-card thead {
+    background: #f7f8fc;
+}
+.totals-card th {
+    padding: 13px 18px;
+    color: #707b91;
+    font-size: .7rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.totals-card td {
+    padding: 12px 18px;
+    border-top: 1px solid #edf0f5;
+    font-size: .84rem;
+    color: #4e5a70;
+}
+.totals-card tbody tr:hover {
+    background: #fafaff;
+}
+.totals-card tfoot td {
+    background: #f4f3ff;
+    color: #2b3150;
+    font-weight: 750;
+    border-top: 2px solid #dcd8ff;
+}
+.num-right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.pill-count {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+.pill-data {
+    background: #dcfce7;
+    color: #166534;
+}
+.pill-zero {
+    background: #f3f4f6;
+    color: #6b7280;
+}
     </style>
 </head>
 <body>
 
-    <!-- HERO HEADER -->
-    <header class="hero">
-        <div class="hero-inner">
-            <p class="brand">◈ Archify · Data catalog</p>
-            <p class="eyebrow">Documentación Técnica de Base de Datos</p>
-            <h1>Diccionario de Datos & Triggers</h1>
-            <p class="hero-copy">Estructura relacional completa de 25 tablas junto con sus disparadores automáticos de auditoría, control de integridad y eventos.</p>
-            <div class="hero-badges">
-                <span class="hero-badge">📊 25 Tablas de Base de Datos</span>
-                <span class="hero-badge">⚡ 56 Triggers Activos</span>
-                <span class="hero-badge">🛡️ Auditoría y Automatización</span>
-            </div>
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('all', this)">Todas las Secciones</button>
+    <button class="tab-btn" onclick="switchTab('totals', this)">Total de Tablas</button>
+    <button class="tab-btn" onclick="switchTab('tables', this)">25 Tablas</button>
+    <button class="tab-btn" onclick="switchTab('triggers', this)">Triggers</button>
+</div>
+
+<!-- SECCIÓN 0: TOTAL DE TABLAS LLENAS -->
+<div id="section-totals">
+    <div class="section-header">Resumen General y Tablas con Registros (6 de 25 Tablas)</div>
+
+    <div class="totals-kpis">
+        <div class="kpi-box">
+            <div class="kpi-title">Tablas Llenas</div>
+            <div class="kpi-num">6 / 25</div>
+            <div class="kpi-note">Con datos almacenados</div>
         </div>
-    </header>
+        <div class="kpi-box">
+            <div class="kpi-title">Total de Registros</div>
+            <div class="kpi-num">71,531</div>
+            <div class="kpi-note">Filas acumuladas en BD</div>
+        </div>
+        <div class="kpi-box">
+            <div class="kpi-title">Mayor Volumen</div>
+            <div class="kpi-num">tb_logs</div>
+            <div class="kpi-note">36,465 registros (50.98%)</div>
+        </div>
+        <div class="kpi-box">
+            <div class="kpi-title">Campos (Tablas Llenas)</div>
+            <div class="kpi-num">42</div>
+            <div class="kpi-note">Columnas documentadas</div>
+        </div>
+    </div>
+
+    <div class="totals-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tabla</th>
+                    <th>Descripción</th>
+                    <th class="num-right">Campos</th>
+                    <th class="num-right">Registros</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="summary-row">
+                    <td>1</td>
+                    <td class="col-name">tb_logs</td>
+                    <td>Tabla de auditoría central donde los triggers registran inserciones, cambios y borrados.</td>
+                    <td class="num-right">6</td>
+                    <td class="num-right"><span class="pill-count pill-data">36,465</span></td>
+                </tr>
+                <tr class="summary-row">
+                    <td>2</td>
+                    <td class="col-name">tbd_products_categories</td>
+                    <td>Relación de clasificación de productos en sus respectivas categorías.</td>
+                    <td class="num-right">4</td>
+                    <td class="num-right"><span class="pill-count pill-data">10,465</span></td>
+                </tr>
+                <tr class="summary-row">
+                    <td>3</td>
+                    <td class="col-name">tb_users</td>
+                    <td>Almacena los datos principales de credenciales y cuentas de usuario.</td>
+                    <td class="num-right">7</td>
+                    <td class="num-right"><span class="pill-count pill-data">10,000</span></td>
+                </tr>
+                <tr class="summary-row">
+                    <td>4</td>
+                    <td class="col-name">tb_people</td>
+                    <td>Datos personales de las personas físicas o jurídicas asociadas a las cuentas.</td>
+                    <td class="num-right">9</td>
+                    <td class="num-right"><span class="pill-count pill-data">7,500</span></td>
+                </tr>
+                <tr class="summary-row">
+                    <td>5</td>
+                    <td class="col-name">tb_products</td>
+                    <td>Almacena el catálogo general de productos ofertados en la plataforma.</td>
+                    <td class="num-right">9</td>
+                    <td class="num-right"><span class="pill-count pill-data">7,000</span></td>
+                </tr>
+                <tr class="summary-row">
+                    <td>6</td>
+                    <td class="col-name">tbc_categories</td>
+                    <td>Catálogo maestro para la clasificación jerárquica de productos.</td>
+                    <td class="num-right">7</td>
+                    <td class="num-right"><span class="pill-count pill-data">101</span></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">TOTAL GENERAL (6 TABLAS CON DATOS)</td>
+                    <td class="num-right">42</td>
+                    <td class="num-right">71,531</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
     <!-- NAVIGATION & SEARCH -->
     <div class="controls-sticky">
