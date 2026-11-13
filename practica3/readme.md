@@ -2,8 +2,10 @@
 
 ## Enlaces de GitHub Pages
 
-*   [Diccionario de datos](https://G4RR1D0.github.io/Practicas_BDN_240629/practica3/index.html)
-*   [Diagrama entidad-relación](https://G4RR1D0.github.io/Practicas_BDN_240629/practica3/modelo_de_tablas2.html)
+*   [Diccionario de datos](https://github.com/G4RR1D0/Praticas_BDN_240629/blob/f6214dc11a8ae503ff5efe38e908e60562924d95/archify/index.html
+
+)
+*   [Diagrama entidad-relación](hhttps://github.com/G4RR1D0/Praticas_BDN_240629/blob/f6214dc11a8ae503ff5efe38e908e60562924d95/archify/modelo_de_tablas2.html)
 ---
 
 ## Descripción General
