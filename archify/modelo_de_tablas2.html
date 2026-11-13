@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modelo Relacional Interactivo con Triggers (db_test_7b)</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -25,107 +23,78 @@
       user-select: none;
     }
 
-    code, .font-mono {
-      font-family: 'Fira Code', monospace;
-    }
+    code, .font-mono { font-family: 'Fira Code', monospace; }
 
-    /* Grid canvas background pattern */
     .bg-grid {
       background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
     }
 
-    /* Custom Glassmorphism Table Card Styling */
     .erd-card {
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(51, 65, 85, 0.7);
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.05);
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 15px rgba(56,189,248,0.05);
       border-radius: 12px;
       transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.05s ease;
       touch-action: none;
     }
-
     .erd-card:hover {
-      border-color: rgba(56, 189, 248, 0.6);
-      box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
+      border-color: rgba(56,189,248,0.6);
+      box-shadow: 0 12px 36px -8px rgba(0,0,0,0.7), 0 0 20px rgba(56,189,248,0.2);
     }
-
     .erd-card.is-selected {
       border-color: #38bdf8;
-      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5), 0 12px 40px rgba(14, 165, 233, 0.3);
+      box-shadow: 0 0 0 2px rgba(56,189,248,0.5), 0 12px 40px rgba(14,165,233,0.3);
     }
-
     .erd-card.is-highlighted {
       border-color: #f59e0b;
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.6), 0 0 25px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 0 0 2px rgba(245,158,11,0.6), 0 0 25px rgba(245,158,11,0.3);
     }
-
     .erd-card.trigger-glow {
       border-color: #818cf8 !important;
-      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.7), 0 0 30px rgba(129, 140, 248, 0.4) !important;
+      box-shadow: 0 0 0 3px rgba(129,140,248,0.7), 0 0 30px rgba(129,140,248,0.4) !important;
     }
+    .erd-card.is-dimmed { opacity: 0.25; filter: grayscale(0.6); }
 
-    .erd-card.is-dimmed {
-      opacity: 0.25;
-      filter: grayscale(0.6);
-    }
-
-    /* SVG Lines & Animation */
     .relation-line {
-      fill: none;
-      stroke: #64748b;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      transition: stroke 0.2s ease, stroke-width 0.2s ease;
-      cursor: pointer;
+      fill: none; stroke: #64748b; stroke-width: 2.2; stroke-linecap: round;
+      transition: stroke 0.2s ease, stroke-width 0.2s ease; cursor: pointer;
     }
-
-    .relation-line:hover {
-      stroke: #38bdf8;
-      stroke-width: 4;
-    }
-
+    .relation-line:hover { stroke: #38bdf8; stroke-width: 4; }
     .relation-line.active {
-      stroke: #38bdf8;
-      stroke-width: 3.5;
-      filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+      stroke: #38bdf8; stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px rgba(56,189,248,0.8));
+    }
+    .relation-line.pulse { stroke-dasharray: 8, 6; animation: dash 1.5s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -28; } }
+
+    .custom-scroll::-webkit-scrollbar { width: 5px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(15,23,42,0.6); }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(51,65,85,0.8); border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.5); }
+
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translate(-50%, 12px); }
+      to   { opacity: 1; transform: translate(-50%, 0); }
+    }
+    #tableInfoPanel:not(.hidden) {
+      animation: slideUpFade 0.25s ease-out;
     }
 
-    .relation-line.pulse {
-      stroke-dasharray: 8, 6;
-      animation: dash 1.5s linear infinite;
+    @keyframes pulseDot {
+      0%, 100% { opacity: 0.4; }
+      50%      { opacity: 1; }
     }
-
-    @keyframes dash {
-      to {
-        stroke-dashoffset: -28;
-      }
-    }
-
-    /* Custom Scrollbar */
-    .custom-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: rgba(51, 65, 85, 0.8);
-      border-radius: 4px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-      background: rgba(56, 189, 248, 0.5);
-    }
+    .count-loading { animation: pulseDot 1s ease-in-out infinite; }
   </style>
 </head>
 <body class="w-screen h-screen bg-slate-950 text-slate-100 flex flex-col antialiased">
 
   <!-- TOP HEADER / CONTROL BAR -->
   <header class="h-16 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-6 flex items-center justify-between z-30 shrink-0">
-    <!-- Title & Navigation Tabs -->
     <div class="flex items-center gap-6">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
@@ -140,11 +109,15 @@
         </div>
       </div>
 
-      <!-- View Tabs -->
+      <!-- VIEW TABS -->
       <nav class="hidden md:flex bg-slate-950/80 border border-slate-800 p-1 rounded-lg gap-1">
         <button id="tabBtnDiagram" onclick="switchMainView('diagram')" class="px-3 py-1.5 rounded-md text-xs font-semibold bg-sky-500 text-slate-950 transition-all flex items-center gap-2">
           <i class="fa-solid fa-network-wired"></i>
-          <span>Diagrama ER (25 Tablas)</span>
+          <span>Diagrama ER</span>
+        </button>
+        <button id="tabBtnSummary" onclick="switchMainView('summary')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2">
+          <i class="fa-solid fa-table-list text-emerald-400"></i>
+          <span>Resumen de Tablas</span>
         </button>
         <button id="tabBtnTriggers" onclick="switchMainView('triggers')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2">
           <i class="fa-solid fa-bolt text-indigo-400"></i>
@@ -153,19 +126,17 @@
       </nav>
     </div>
 
-    <!-- Search Bar & Controls -->
     <div class="flex items-center gap-3">
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-        <input type="text" id="searchInput" oninput="handleSearch()" 
-               placeholder="Buscar tabla, FK o trigger..." 
+        <input type="text" id="searchInput" oninput="handleSearch()"
+               placeholder="Buscar tabla, FK o trigger..."
                class="w-44 sm:w-64 bg-slate-950/80 border border-slate-700/70 focus:border-sky-500 text-xs text-slate-200 pl-9 pr-8 py-2 rounded-lg outline-none transition-all placeholder:text-slate-500">
         <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Canvas Controls -->
       <div id="canvasControls" class="flex items-center bg-slate-950/80 border border-slate-800 rounded-lg p-1 gap-1">
         <button onclick="zoomIn()" class="w-8 h-8 rounded text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors" title="Acercar (+)">
           <i class="fa-solid fa-plus text-xs"></i>
@@ -176,18 +147,20 @@
         <button onclick="resetZoom()" class="w-8 h-8 rounded text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors" title="Reiniciar Vista">
           <i class="fa-solid fa-rotate-right text-xs"></i>
         </button>
+        <div class="w-px h-5 bg-slate-700 mx-0.5"></div>
+        <button onclick="fetchTableCounts()" class="w-8 h-8 rounded text-emerald-400 hover:text-emerald-300 hover:bg-slate-800 flex items-center justify-center transition-colors" title="Recargar totales desde la BD (Requiere Servidor)">
+          <i class="fa-solid fa-database text-xs"></i>
+        </button>
       </div>
 
-      <!-- Trigger Side Drawer Toggle -->
-      <button onclick="toggleTriggerDrawer()" 
+      <button onclick="toggleTriggerDrawer()"
               class="flex items-center gap-2 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-xs text-indigo-300 font-medium px-3 py-2 rounded-lg transition-all shadow-sm">
         <i class="fa-solid fa-bolt text-indigo-400"></i>
         <span class="hidden sm:inline">Triggers</span>
         <span id="triggerDrawerCount" class="bg-indigo-900/80 text-indigo-200 text-[10px] px-1.5 py-0.2 rounded-full font-bold">56</span>
       </button>
 
-      <!-- Floating Motion Toggle -->
-      <button id="motionToggleBtn" onclick="toggleMotion()" 
+      <button id="motionToggleBtn" onclick="toggleMotion()"
               class="flex items-center gap-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-xs text-slate-200 font-medium px-3 py-2 rounded-lg transition-all shadow-sm">
         <i class="fa-solid fa-water text-sky-400" id="motionIcon"></i>
         <span class="hidden xl:inline" id="motionText">Movimiento Flotante</span>
@@ -195,13 +168,10 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT AREA -->
   <div class="relative flex-1 w-full h-full overflow-hidden">
     
-    <!-- VIEW 1: DIAGRAM WORKSPACE CANVAS AREA -->
+    <!-- VIEW 1: DIAGRAM -->
     <div id="viewport" class="relative w-full h-full overflow-hidden bg-grid cursor-grab active:cursor-grabbing">
-      
-      <!-- SVG Canvas Layer for Connections -->
       <svg id="svgCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-10">
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -214,18 +184,83 @@
         <g id="svgGroup"></g>
       </svg>
 
-      <!-- HTML Container for Draggable Table Cards -->
       <div id="canvasContent" class="absolute top-0 left-0 origin-top-left z-20"></div>
 
-      <!-- Legend Overlay -->
       <div class="absolute bottom-5 left-5 z-30 bg-slate-900/90 backdrop-blur-md border border-slate-800 text-slate-400 text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-4">
         <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> PK (Llave Primaria)</div>
         <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-400 inline-block"></span> FK (Llave Foránea)</div>
         <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-400 inline-block"></span> ⚡ Trigger Asociado</div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> 📊 Registros en BD</div>
+      </div>
+
+      <!-- PANEL FLOTANTE DE INFORMACIÓN -->
+      <div id="tableInfoPanel"
+           class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 backdrop-blur-xl border border-emerald-500/40 rounded-2xl shadow-2xl shadow-emerald-500/10 p-4 w-[340px]">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div class="min-w-0">
+            <p class="text-[9px] uppercase tracking-wider text-emerald-400 font-bold mb-0.5">Tabla seleccionada</p>
+            <h3 id="infoTableName" class="font-mono text-sm font-bold text-white truncate">—</h3>
+            <p id="infoTableDesc" class="text-[10px] text-slate-400 truncate">—</p>
+          </div>
+          <button onclick="closeInfoPanel(event)" class="text-slate-400 hover:text-white text-xs w-6 h-6 rounded hover:bg-slate-800 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 text-center">
+            <p class="text-[9px] text-slate-500 mb-0.5 uppercase tracking-wide">Registros</p>
+            <p id="infoRecords" class="font-bold text-emerald-400 text-base leading-tight">—</p>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 text-center">
+            <p class="text-[9px] text-slate-500 mb-0.5 uppercase tracking-wide">Columnas</p>
+            <p id="infoCols" class="font-bold text-sky-400 text-base leading-tight">—</p>
+          </div>
+          <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2 text-center">
+            <p class="text-[9px] text-slate-500 mb-0.5 uppercase tracking-wide">Triggers</p>
+            <p id="infoTriggers" class="font-bold text-indigo-400 text-base leading-tight">—</p>
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-500 mt-2 text-center" id="infoTimestamp">—</p>
       </div>
     </div>
 
-    <!-- VIEW 2: FULLPAGE TRIGGERS PANEL (Grid Mode) -->
+    <!-- VIEW 2: SUMMARY TABLE -->
+    <div id="summaryView" class="hidden absolute inset-0 bg-slate-950 z-20 overflow-y-auto custom-scroll p-6 md:p-10">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-800 pb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+              <i class="fa-solid fa-table-list text-emerald-400"></i> Resumen de Tablas Principales
+            </h2>
+            <p class="text-slate-400 text-sm mt-1">Totales exactos de registros y campos según la base de datos en producción.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-3 py-1.5 rounded-lg font-mono">
+              📊 Datos precargados
+            </span>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-950 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="px-6 py-4 font-semibold w-16">#</th>
+                <th class="px-6 py-4 font-semibold">Tabla</th>
+                <th class="px-6 py-4 font-semibold w-1/3">Descripción</th>
+                <th class="px-6 py-4 font-semibold text-center w-24">Campos</th>
+                <th class="px-6 py-4 font-semibold text-center w-32">Registros</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-sm text-slate-300">
+              <!-- Los datos se inyectan con JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: FULLPAGE TRIGGERS -->
     <div id="fullTriggersView" class="hidden absolute inset-0 bg-slate-950 z-20 overflow-y-auto custom-scroll p-6 md:p-10">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-800 pb-6">
@@ -241,7 +276,6 @@
             </span>
           </div>
         </div>
-
         <div id="fullTriggersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
     </div>
@@ -257,22 +291,19 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-
       <div class="p-3 bg-slate-900 border-b border-slate-800">
-        <input type="text" id="drawerSearchInput" oninput="filterDrawerTriggers()" 
-               placeholder="Filtrar por tabla o disparador..." 
+        <input type="text" id="drawerSearchInput" oninput="filterDrawerTriggers()"
+               placeholder="Filtrar por tabla o disparador..."
                class="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 text-xs text-slate-200 px-3 py-2 rounded-lg outline-none">
       </div>
-
       <div id="drawerTriggerList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scroll"></div>
     </div>
-
   </div>
 
   <script>
-    // -------------------------------------------------------------------------
-    // 1. COMPLETE DATABASE DATA (25 TABLES & 56 TRIGGERS)
-    // -------------------------------------------------------------------------
+    // =====================================================================
+    // 1. DATOS DEL ERD Y TRIGGERS
+    // =====================================================================
     const schemaTables = [
       { id: "tb_users", name: "tb_users", desc: "Usuarios del sistema", pos: { x: 50, y: 50 }, cols: [{ name: "id_user", type: "INT", key: "PK" }, { name: "username", type: "VARCHAR(50)", key: "UQ" }, { name: "email", type: "VARCHAR(100)", key: "UQ" }, { name: "password_hash", type: "VARCHAR(255)", key: "" }, { name: "status", type: "BIT(1)", key: "" }] },
       { id: "tb_people", name: "tb_people", desc: "Datos personales de usuario", pos: { x: 440, y: 50 }, cols: [{ name: "id_person", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "first_name", type: "VARCHAR(100)", key: "" }, { name: "last_name", type: "VARCHAR(100)", key: "" }] },
@@ -360,59 +391,75 @@
       { name: "tg_users_wishlist_products_after_delete", table: "tbd_users_wishlist_products", event: "AFTER DELETE", desc: "Audita retiro de producto de wishlist." }
     ];
 
-    // Map table triggers count
+    const summaryData = [
+      { id: 1, tabla: "tb_logs", desc: "Tabla de auditoría central donde los triggers registran inserciones, cambios y borrados.", campos: 6, registros: 36465 },
+      { id: 2, tabla: "tbd_products_categories", desc: "Relación de clasificación de productos en sus respectivas categorías.", campos: 4, registros: 10465 },
+      { id: 3, tabla: "tb_users", desc: "Almacena los datos principales de credenciales y cuentas de usuario.", campos: 7, registros: 10000 },
+      { id: 4, tabla: "tb_people", desc: "Datos personales de las personas físicas o jurídicas asociadas a las cuentas.", campos: 9, registros: 7500 },
+      { id: 5, tabla: "tb_products", desc: "Almacena el catálogo general de productos ofertados en la plataforma.", campos: 9, registros: 7000 },
+      { id: 6, tabla: "tbc_categories", desc: "Catálogo maestro para la clasificación jerárquica de productos.", campos: 7, registros: 101 }
+    ];
+
     const tableTriggersMap = {};
     triggersData.forEach(tr => {
       tableTriggersMap[tr.table] = (tableTriggersMap[tr.table] || 0) + 1;
     });
 
-    // -------------------------------------------------------------------------
-    // 2. STATE MANAGEMENT & GLOBALS
-    // -------------------------------------------------------------------------
-    let panX = 40;
-    let panY = 40;
-    let zoomScale = 0.85;
-
-    let isPanning = false;
-    let startPanX = 0;
-    let startPanY = 0;
-
-    let draggedCard = null;
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
-
-    let isMotionActive = true;
-    let animFrameId = null;
-    let time = 0;
+    // =====================================================================
+    // 2. ESTADO GLOBAL
+    // =====================================================================
+    let panX = 40, panY = 40, zoomScale = 0.85;
+    let isPanning = false, startPanX = 0, startPanY = 0;
+    let draggedCard = null, dragOffsetX = 0, dragOffsetY = 0;
+    let isMotionActive = true, animFrameId = null, time = 0;
     let selectedTableId = null;
+
+    // 🔥 AQUÍ PRECARGAMOS LOS DATOS DE TU IMAGEN
+    let tableCounts = {
+      'tb_logs': 36465,
+      'tbd_products_categories': 10465,
+      'tb_users': 10000,
+      'tb_people': 7500,
+      'tb_products': 7000,
+      'tbc_categories': 101
+    };        
+    let countsLastUpdate = 'Datos precargados (Desde imagen)'; 
+    let countsFetching = false;  
 
     const tableOffsets = {};
     schemaTables.forEach(t => {
       tableOffsets[t.id] = {
-        baseX: t.pos.x,
-        baseY: t.pos.y,
-        currentX: t.pos.x,
-        currentY: t.pos.y,
+        baseX: t.pos.x, baseY: t.pos.y,
+        currentX: t.pos.x, currentY: t.pos.y,
         seed: Math.random() * 100
       };
     });
 
-    // -------------------------------------------------------------------------
-    // 3. RENDERING CARDS WITH TRIGGER BADGES
-    // -------------------------------------------------------------------------
     const viewport = document.getElementById('viewport');
     const canvasContent = document.getElementById('canvasContent');
     const svgGroup = document.getElementById('svgGroup');
 
+    // =====================================================================
+    // 3. INICIALIZACIÓN
+    // =====================================================================
     function initDiagram() {
       renderCards();
       renderFullTriggersGrid();
       renderDrawerTriggers();
+      renderSummaryTable();
       updateTransform();
       drawConnections();
       startAnimationLoop();
 
-      // Viewport Drag/Pan Events
+      // Mostrar los datos precargados inmediatamente
+      updateCountBadges();
+
+      // Solo intentar conectar si NO es file://
+      if (location.protocol !== 'file:') {
+        fetchTableCounts();
+      }
+
+      // Pan
       viewport.addEventListener('pointerdown', (e) => {
         if (e.target.closest('.erd-card')) return;
         isPanning = true;
@@ -431,12 +478,8 @@
           const state = tableOffsets[draggedCard.id];
           const newX = (e.clientX - panX) / zoomScale - dragOffsetX;
           const newY = (e.clientY - panY) / zoomScale - dragOffsetY;
-          
-          state.baseX = newX;
-          state.baseY = newY;
-          state.currentX = newX;
-          state.currentY = newY;
-
+          state.baseX = newX; state.baseY = newY;
+          state.currentX = newX; state.currentY = newY;
           draggedCard.style.left = `${newX}px`;
           draggedCard.style.top = `${newY}px`;
           drawConnections();
@@ -452,25 +495,25 @@
         draggedCard = null;
       });
 
-      // Zoom Wheel Event
+      // Wheel zoom
       viewport.addEventListener('wheel', (e) => {
         e.preventDefault();
         const zoomFactor = 1.1;
         let newScale = e.deltaY < 0 ? zoomScale * zoomFactor : zoomScale / zoomFactor;
         newScale = Math.min(Math.max(0.3, newScale), 2.0);
-
         const rect = viewport.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-
         panX = mouseX - (mouseX - panX) * (newScale / zoomScale);
         panY = mouseY - (mouseY - panY) * (newScale / zoomScale);
         zoomScale = newScale;
-
         updateTransform();
       }, { passive: false });
     }
 
+    // =====================================================================
+    // 4. RENDERIZADO
+    // =====================================================================
     function renderCards() {
       canvasContent.innerHTML = '';
       schemaTables.forEach(table => {
@@ -481,21 +524,26 @@
         card.style.top = `${table.pos.y}px`;
 
         const triggerCount = tableTriggersMap[table.id] || 0;
-        const triggerBadgeHtml = triggerCount > 0 
-          ? `<button onclick="openTableTriggersDrawer('${table.id}', event)" class="text-[10px] bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition-colors" title="Ver ${triggerCount} triggers asociados">
-               <i class="fa-solid fa-bolt text-indigo-400"></i> ${triggerCount} Triggers
+        const triggerBadgeHtml = triggerCount > 0
+          ? `<button onclick="openTableTriggersDrawer('${table.id}', event)"
+                     class="text-[10px] bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 transition-colors shrink-0"
+                     title="Ver ${triggerCount} triggers asociados">
+               <i class="fa-solid fa-bolt text-indigo-400"></i> ${triggerCount}
              </button>`
           : '';
 
+        const countBadgeHtml = `
+          <span class="count-badge text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 shrink-0"
+                data-table="${table.id}" title="Total de registros en la BD">
+            <i class="fa-solid fa-database text-emerald-400" style="font-size:9px"></i>
+            <span class="count-val count-loading">…</span>
+          </span>`;
+
         let colsHtml = table.cols.map(col => {
           let badge = '';
-          if (col.key === 'PK') {
-            badge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">PK</span>`;
-          } else if (col.key === 'FK') {
-            badge = `<span class="bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">FK</span>`;
-          } else if (col.key === 'UQ') {
-            badge = `<span class="bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">UQ</span>`;
-          }
+          if (col.key === 'PK') badge = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">PK</span>`;
+          else if (col.key === 'FK') badge = `<span class="bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">FK</span>`;
+          else if (col.key === 'UQ') badge = `<span class="bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-bold px-1.5 py-0.5 rounded">UQ</span>`;
 
           return `
             <div id="col-${table.id}-${col.name}" class="flex items-center justify-between py-1.5 px-3 hover:bg-slate-800/50 rounded transition-colors text-xs border-b border-slate-800/40 last:border-0">
@@ -504,21 +552,21 @@
                 <span class="font-mono font-medium text-slate-200 truncate">${col.name}</span>
               </div>
               <span class="font-mono text-[11px] text-slate-400 shrink-0 ml-2">${col.type}</span>
-            </div>
-          `;
+            </div>`;
         }).join('');
 
         card.innerHTML = `
-          <div class="card-header bg-slate-900/95 border-b border-slate-800 px-3.5 py-2.5 rounded-t-xl flex items-center justify-between cursor-move">
-            <div class="flex items-center gap-2 overflow-hidden">
-              <i class="fa-solid fa-table text-sky-400 text-xs"></i>
-              <h3 class="font-mono font-bold text-sm text-sky-300 truncate">${table.name}</h3>
+          <div class="card-header bg-slate-900/95 border-b border-slate-800 px-3 py-2 rounded-t-xl flex items-center justify-between gap-1.5 cursor-move">
+            <div class="flex items-center gap-1.5 overflow-hidden min-w-0">
+              <i class="fa-solid fa-table text-sky-400 text-xs shrink-0"></i>
+              <h3 class="font-mono font-bold text-xs text-sky-300 truncate">${table.name}</h3>
             </div>
-            ${triggerBadgeHtml}
+            <div class="flex items-center gap-1 shrink-0">
+              ${countBadgeHtml}
+              ${triggerBadgeHtml}
+            </div>
           </div>
-          <div class="p-1 custom-scroll max-h-60 overflow-y-auto">
-            ${colsHtml}
-          </div>
+          <div class="p-1 custom-scroll max-h-60 overflow-y-auto">${colsHtml}</div>
           <div class="px-3 py-1.5 bg-slate-950/70 border-t border-slate-800/50 rounded-b-xl text-[10px] text-slate-400 italic flex items-center justify-between">
             <span>${table.desc}</span>
           </div>
@@ -546,73 +594,68 @@
 
     function updateTransform() {
       canvasContent.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
-      svgGroup.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+      svgGroup.style.transform      = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
     }
 
-    // -------------------------------------------------------------------------
-    // 4. DRAW CONNECTIONS
-    // -------------------------------------------------------------------------
+    function renderSummaryTable() {
+      const tbody = document.querySelector('#summaryView tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = summaryData.map(row => `
+        <tr class="hover:bg-slate-800/40 transition-colors">
+          <td class="px-6 py-4 text-slate-500 font-mono text-xs">${row.id}</td>
+          <td class="px-6 py-4 font-mono font-semibold text-sky-400">${row.tabla}</td>
+          <td class="px-6 py-4 text-slate-300">${row.desc}</td>
+          <td class="px-6 py-4 text-center font-mono text-slate-400">${row.campos}</td>
+          <td class="px-6 py-4 text-center">
+            <span class="inline-block bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold text-xs shadow-sm shadow-emerald-500/10">
+              ${row.registros.toLocaleString('es-MX')}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // =====================================================================
+    // 5. CONEXIONES
+    // =====================================================================
     function drawConnections() {
       svgGroup.innerHTML = '';
-
       schemaTables.forEach(sourceTable => {
         sourceTable.cols.forEach(col => {
           if (col.key === 'FK' && col.refTable) {
             const targetTable = schemaTables.find(t => t.id === col.refTable);
             if (!targetTable) return;
-
             const srcPos = tableOffsets[sourceTable.id];
             const tgtPos = tableOffsets[targetTable.id];
-
             const srcColEl = document.getElementById(`col-${sourceTable.id}-${col.name}`);
             const tgtColEl = document.getElementById(`col-${targetTable.id}-${col.refCol}`);
-
-            let y1 = srcPos.currentY + 40;
-            let y2 = tgtPos.currentY + 40;
-
+            let y1 = srcPos.currentY + 40, y2 = tgtPos.currentY + 40;
             if (srcColEl) y1 = srcPos.currentY + srcColEl.offsetTop + 42;
             if (tgtColEl) y2 = tgtPos.currentY + tgtColEl.offsetTop + 42;
-
             const w = 320;
-            let x1 = srcPos.currentX + w;
-            let x2 = tgtPos.currentX;
-
-            if (srcPos.currentX > tgtPos.currentX + w) {
-              x1 = srcPos.currentX;
-              x2 = tgtPos.currentX + w;
-            } else if (srcPos.currentX + w < tgtPos.currentX) {
-              x1 = srcPos.currentX + w;
-              x2 = tgtPos.currentX;
-            } else {
-              x1 = srcPos.currentX + w / 2;
-              x2 = tgtPos.currentX + w / 2;
-            }
-
+            let x1 = srcPos.currentX + w, x2 = tgtPos.currentX;
+            if (srcPos.currentX > tgtPos.currentX + w) { x1 = srcPos.currentX; x2 = tgtPos.currentX + w; }
+            else if (srcPos.currentX + w < tgtPos.currentX) { x1 = srcPos.currentX + w; x2 = tgtPos.currentX; }
+            else { x1 = srcPos.currentX + w / 2; x2 = tgtPos.currentX + w / 2; }
             const dx = Math.abs(x2 - x1) * 0.5;
             const pathData = `M ${x1} ${y1} C ${x1 + (x1 < x2 ? dx : -dx)} ${y1}, ${x2 + (x2 > x1 ? -dx : dx)} ${y2}, ${x2} ${y2}`;
-
             const isRelated = selectedTableId === sourceTable.id || selectedTableId === targetTable.id;
-
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             path.setAttribute('d', pathData);
             path.setAttribute('class', `relation-line ${isRelated ? 'active pulse' : ''}`);
             path.setAttribute('marker-end', isRelated ? 'url(#arrow-orange)' : 'url(#arrow)');
             if (isRelated) path.style.stroke = '#f59e0b';
-
-            path.addEventListener('click', (e) => {
-              e.stopPropagation();
-              highlightConnections(sourceTable.id);
-            });
-
+            path.addEventListener('click', (e) => { e.stopPropagation(); highlightConnections(sourceTable.id); });
             svgGroup.appendChild(path);
           }
         });
       });
     }
 
-    // -------------------------------------------------------------------------
-    // 5. TRIGGERS PANELS & DRAWER RENDERING
-    // -------------------------------------------------------------------------
+    // =====================================================================
+    // 6. TRIGGERS PANELS
+    // =====================================================================
     function renderFullTriggersGrid() {
       const grid = document.getElementById('fullTriggersGrid');
       grid.innerHTML = triggersData.map(tr => `
@@ -637,7 +680,6 @@
     function renderDrawerTriggers(filterTable = null) {
       const list = document.getElementById('drawerTriggerList');
       const drawerTitle = document.getElementById('drawerTitle');
-
       let filtered = triggersData;
       if (filterTable) {
         filtered = triggersData.filter(t => t.table === filterTable);
@@ -645,7 +687,6 @@
       } else {
         drawerTitle.innerText = `Triggers del Sistema (56)`;
       }
-
       list.innerHTML = filtered.map(tr => `
         <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 hover:border-indigo-500/60 transition-all">
           <div class="flex items-center justify-between mb-1">
@@ -666,8 +707,7 @@
     function openTableTriggersDrawer(tableId, event) {
       if (event) event.stopPropagation();
       renderDrawerTriggers(tableId);
-      const drawer = document.getElementById('triggerDrawer');
-      drawer.classList.remove('translate-x-full');
+      document.getElementById('triggerDrawer').classList.remove('translate-x-full');
     }
 
     function toggleTriggerDrawer() {
@@ -683,21 +723,15 @@
     function focusTableFromTrigger(tableId) {
       switchMainView('diagram');
       document.getElementById('triggerDrawer').classList.add('translate-x-full');
-      
       const targetTable = schemaTables.find(t => t.id === tableId);
       if (!targetTable) return;
-
       selectedTableId = tableId;
       highlightConnections(tableId);
-
-      // Center camera view on target table card
       const rect = viewport.getBoundingClientRect();
       const state = tableOffsets[tableId];
       panX = rect.width / 2 - (state.baseX + 160) * zoomScale;
       panY = rect.height / 2 - (state.baseY + 120) * zoomScale;
       updateTransform();
-
-      // Trigger temporary glowing effect
       const card = document.getElementById(`card-${tableId}`);
       if (card) {
         card.classList.add('trigger-glow');
@@ -705,40 +739,51 @@
       }
     }
 
+    // =====================================================================
+    // 7. CONTROL DE VISTAS
+    // =====================================================================
     function switchMainView(view) {
-      const diagramView = document.getElementById('viewport');
-      const triggersView = document.getElementById('fullTriggersView');
-      const btnDiagram = document.getElementById('tabBtnDiagram');
-      const btnTriggers = document.getElementById('tabBtnTriggers');
-      const canvasControls = document.getElementById('canvasControls');
+      const diagramView   = document.getElementById('viewport');
+      const summaryView   = document.getElementById('summaryView');
+      const triggersView  = document.getElementById('fullTriggersView');
+      
+      const btnDiagram    = document.getElementById('tabBtnDiagram');
+      const btnSummary    = document.getElementById('tabBtnSummary');
+      const btnTriggers   = document.getElementById('tabBtnTriggers');
+      const canvasControls= document.getElementById('canvasControls');
+
+      const inactiveClass = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2';
+      btnDiagram.className = inactiveClass;
+      btnSummary.className = inactiveClass;
+      btnTriggers.className = inactiveClass;
+
+      diagramView.classList.add('hidden');
+      summaryView.classList.add('hidden');
+      triggersView.classList.add('hidden');
 
       if (view === 'diagram') {
         diagramView.classList.remove('hidden');
-        triggersView.classList.add('hidden');
         canvasControls.classList.remove('hidden');
-
         btnDiagram.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-sky-500 text-slate-950 transition-all flex items-center gap-2';
-        btnTriggers.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2';
-      } else {
-        diagramView.classList.add('hidden');
+      } else if (view === 'summary') {
+        summaryView.classList.remove('hidden');
+        canvasControls.classList.add('hidden');
+        btnSummary.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-500 text-slate-950 transition-all flex items-center gap-2';
+      } else if (view === 'triggers') {
         triggersView.classList.remove('hidden');
         canvasControls.classList.add('hidden');
-
         btnTriggers.className = 'px-3 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition-all flex items-center gap-2';
-        btnDiagram.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2';
       }
     }
 
     function filterDrawerTriggers() {
       const query = document.getElementById('drawerSearchInput').value.toLowerCase().trim();
       const list = document.getElementById('drawerTriggerList');
-
-      const filtered = triggersData.filter(t => 
-        t.name.toLowerCase().includes(query) || 
+      const filtered = triggersData.filter(t =>
+        t.name.toLowerCase().includes(query) ||
         t.table.toLowerCase().includes(query) ||
         t.event.toLowerCase().includes(query)
       );
-
       list.innerHTML = filtered.map(tr => `
         <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 hover:border-indigo-500/60 transition-all">
           <div class="flex items-center justify-between mb-1">
@@ -748,20 +793,17 @@
           <p class="text-[11px] text-slate-400 mb-2">${tr.desc}</p>
           <div class="flex items-center justify-between text-[10px]">
             <span class="text-slate-500">Tabla: <code class="text-sky-400 font-mono">${tr.table}</code></span>
-            <button onclick="focusTableFromTrigger('${tr.table}')" class="text-indigo-400 hover:text-indigo-300 font-bold">
-              Ir a Tabla →
-            </button>
+            <button onclick="focusTableFromTrigger('${tr.table}')" class="text-indigo-400 hover:text-indigo-300 font-bold">Ir a Tabla →</button>
           </div>
         </div>
       `).join('');
     }
 
-    // -------------------------------------------------------------------------
-    // 6. HIGHLIGHTING & SEARCH
-    // -------------------------------------------------------------------------
+    // =====================================================================
+    // 8. HIGHLIGHT + INFO PANEL + SEARCH
+    // =====================================================================
     function highlightConnections(tableId) {
       selectedTableId = (selectedTableId === tableId) ? null : tableId;
-
       const connectedTableIds = new Set();
       if (selectedTableId) {
         connectedTableIds.add(selectedTableId);
@@ -772,44 +814,72 @@
           });
         });
       }
-
       schemaTables.forEach(t => {
         const card = document.getElementById(`card-${t.id}`);
         if (!card) return;
         card.classList.remove('is-selected', 'is-highlighted', 'is-dimmed');
-
         if (selectedTableId) {
-          if (t.id === selectedTableId) {
-            card.classList.add('is-selected');
-          } else if (connectedTableIds.has(t.id)) {
-            card.classList.add('is-highlighted');
-          } else {
-            card.classList.add('is-dimmed');
-          }
+          if (t.id === selectedTableId)                card.classList.add('is-selected');
+          else if (connectedTableIds.has(t.id))        card.classList.add('is-highlighted');
+          else                                         card.classList.add('is-dimmed');
         }
       });
-
       drawConnections();
+
+      if (selectedTableId) showTableInfo(selectedTableId);
+      else                 hideTableInfo();
+    }
+
+    function showTableInfo(tableId) {
+      const table = schemaTables.find(t => t.id === tableId);
+      if (!table) return;
+      const panel   = document.getElementById('tableInfoPanel');
+      const count   = tableCounts[tableId];
+      const trigCnt = tableTriggersMap[tableId] || 0;
+
+      document.getElementById('infoTableName').textContent = table.name;
+      document.getElementById('infoTableDesc').textContent = table.desc;
+      document.getElementById('infoCols').textContent      = table.cols.length;
+      document.getElementById('infoTriggers').textContent  = trigCnt;
+
+      const recEl = document.getElementById('infoRecords');
+      recEl.classList.remove('text-amber-400', 'text-slate-500');
+      if (count === undefined) {
+        recEl.textContent = 'N/D';
+        recEl.classList.add('text-amber-400');
+        recEl.title = 'La tabla no existe en la base de datos';
+      } else {
+        recEl.textContent = count.toLocaleString('es-MX');
+        recEl.title = `${count.toLocaleString('es-MX')} registros`;
+      }
+
+      const tsEl = document.getElementById('infoTimestamp');
+      tsEl.textContent = countsLastUpdate || 'Datos no disponibles';
+
+      panel.classList.remove('hidden');
+    }
+
+    function hideTableInfo() {
+      document.getElementById('tableInfoPanel').classList.add('hidden');
+    }
+
+    function closeInfoPanel(event) {
+      if (event) event.stopPropagation();
+      selectedTableId = null;
+      highlightConnections(null);
     }
 
     function handleSearch() {
       const query = document.getElementById('searchInput').value.toLowerCase().trim();
       const clearBtn = document.getElementById('clearSearchBtn');
-
-      if (query.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
-
+      if (query.length > 0) clearBtn.classList.remove('hidden');
+      else                  clearBtn.classList.add('hidden');
       schemaTables.forEach(t => {
         const card = document.getElementById(`card-${t.id}`);
         if (!card) return;
-
         const matchesName = t.name.toLowerCase().includes(query);
-        const matchesCol = t.cols.some(c => c.name.toLowerCase().includes(query));
-        const matchesTrig = (triggersData.filter(tr => tr.table === t.id && tr.name.toLowerCase().includes(query))).length > 0;
-
+        const matchesCol  = t.cols.some(c => c.name.toLowerCase().includes(query));
+        const matchesTrig = triggersData.some(tr => tr.table === t.id && tr.name.toLowerCase().includes(query));
         if (query === '') {
           card.classList.remove('is-dimmed', 'is-highlighted');
         } else if (matchesName || matchesCol || matchesTrig) {
@@ -827,30 +897,88 @@
       handleSearch();
     }
 
-    // -------------------------------------------------------------------------
-    // 7. GENTLE FLOAT MOTION & ZOOM CONTROLS
-    // -------------------------------------------------------------------------
+    // =====================================================================
+    // 9. CONTEOS REALES DESDE LA BD (Solo si se abre en servidor)
+    // =====================================================================
+    async function fetchTableCounts() {
+      if (countsFetching) return;
+      if (location.protocol === 'file:') {
+        alert("Para consultar datos en tiempo real, debes usar un servidor local (XAMPP/WAMP) y tener el archivo contar.php. Por ahora se muestran los datos precargados.");
+        return;
+      }
+      
+      countsFetching = true;
+      document.querySelectorAll('.count-badge .count-val').forEach(el => {
+        el.textContent = '…';
+        el.classList.add('count-loading');
+      });
+
+      try {
+        const res = await fetch('contar.php', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.success || !data.counts) throw new Error(data.error || 'Respuesta inválida');
+
+        tableCounts      = data.counts;
+        countsLastUpdate = data.timestamp || new Date().toLocaleString('es-MX');
+
+        updateCountBadges();
+        if (selectedTableId) showTableInfo(selectedTableId);
+
+      } catch (err) {
+        console.warn('⚠️ No se pudieron cargar los conteos:', err);
+        countsLastUpdate = 'Error al conectar con la BD';
+        updateCountBadges();
+        if (selectedTableId) showTableInfo(selectedTableId);
+      } finally {
+        countsFetching = false;
+      }
+    }
+
+    function updateCountBadges() {
+      schemaTables.forEach(t => {
+        const badge = document.querySelector(`.count-badge[data-table="${t.id}"]`);
+        if (!badge) return;
+        const valEl = badge.querySelector('.count-val');
+        if (!valEl) return;
+
+        const c = tableCounts[t.id];
+        valEl.classList.remove('count-loading');
+
+        if (c === undefined) {
+          valEl.textContent = 'N/D';
+          valEl.style.color = '#fbbf24';
+          badge.title = 'La tabla no existe o no tiene registros';
+          badge.style.borderColor = 'rgba(251,191,36,0.55)';
+        } else {
+          valEl.textContent = c.toLocaleString('es-MX');
+          valEl.style.color = '';
+          badge.title = `${c.toLocaleString('es-MX')} registros en la BD`;
+          badge.style.borderColor = 'rgba(16,185,129,0.6)';
+        }
+      });
+    }
+
+    // =====================================================================
+    // 10. ANIMACIÓN / ZOOM
+    // =====================================================================
     function startAnimationLoop() {
       function animate() {
         if (isMotionActive) {
           time += 0.015;
           schemaTables.forEach(table => {
             if (draggedCard && draggedCard.id === table.id) return;
-
             const state = tableOffsets[table.id];
             const offsetX = Math.sin(time + state.seed) * 5;
             const offsetY = Math.cos(time * 0.8 + state.seed) * 5;
-
             state.currentX = state.baseX + offsetX;
             state.currentY = state.baseY + offsetY;
-
             const card = document.getElementById(`card-${table.id}`);
             if (card) {
               card.style.left = `${state.currentX}px`;
-              card.style.top = `${state.currentY}px`;
+              card.style.top  = `${state.currentY}px`;
             }
           });
-
           drawConnections();
         }
         animFrameId = requestAnimationFrame(animate);
@@ -862,7 +990,6 @@
       isMotionActive = !isMotionActive;
       const icon = document.getElementById('motionIcon');
       const text = document.getElementById('motionText');
-
       if (isMotionActive) {
         icon.className = 'fa-solid fa-water text-sky-400';
         text.innerText = 'Movimiento Flotante';
@@ -876,34 +1003,24 @@
           const card = document.getElementById(`card-${t.id}`);
           if (card) {
             card.style.left = `${state.currentX}px`;
-            card.style.top = `${state.currentY}px`;
+            card.style.top  = `${state.currentY}px`;
           }
         });
         drawConnections();
       }
     }
 
-    function zoomIn() {
-      zoomScale = Math.min(zoomScale * 1.15, 2.0);
-      updateTransform();
-    }
-
-    function zoomOut() {
-      zoomScale = Math.max(zoomScale / 1.15, 0.3);
-      updateTransform();
-    }
-
+    function zoomIn()  { zoomScale = Math.min(zoomScale * 1.15, 2.0); updateTransform(); }
+    function zoomOut() { zoomScale = Math.max(zoomScale / 1.15, 0.3); updateTransform(); }
     function resetZoom() {
-      zoomScale = 0.85;
-      panX = 40;
-      panY = 40;
+      zoomScale = 0.85; panX = 40; panY = 40;
       selectedTableId = null;
       highlightConnections(null);
       updateTransform();
     }
 
     viewport.addEventListener('click', (e) => {
-      if (!e.target.closest('.erd-card')) {
+      if (!e.target.closest('.erd-card') && !e.target.closest('#tableInfoPanel')) {
         selectedTableId = null;
         highlightConnections(null);
       }
@@ -913,4 +1030,3 @@
   </script>
 </body>
 </html>
-
