@@ -3,7 +3,7 @@
 ## Enlaces de GitHub Pages
 
 *   [Diccionario de datos](https://g4rr1d0.github.io/Praticas_BDN_240629/archify/index.html)
-*   [Diagrama entidad-relación](hhttps://github.com/G4RR1D0/Praticas_BDN_240629/blob/f6214dc11a8ae503ff5efe38e908e60562924d95/archify/modelo_de_tablas2.html)
+*   [Diagrama entidad-relación](https://g4rr1d0.github.io/Praticas_BDN_240629/archify/modelo_de_tablas2.html)
 ---
 
 ## Descripción General
