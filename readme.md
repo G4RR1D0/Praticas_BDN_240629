@@ -6,6 +6,7 @@
 
 
 [Diccionario de datos](https://g4rr1d0.github.io/Praticas_BDN_240629/archify/index.html)
+
 [Diagrama entidad-relación](https://g4rr1d0.github.io/Praticas_BDN_240629/archify/modelo_de_tablas2.html)
 ---
 
