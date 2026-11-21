@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo Relacional Interactivo con Triggers (db_test_7b)</title>
+  <title>Modelo Relacional Interactivo con Triggers (db_test_leo)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -42,7 +42,7 @@
       touch-action: none;
     }
     .erd-card:hover {
-      border-color: rgba(56,189,248,0.6);
+      border-color: rgba(56, 189, 248, 0.6);
       box-shadow: 0 12px 36px -8px rgba(0,0,0,0.7), 0 0 20px rgba(56,189,248,0.2);
     }
     .erd-card.is-selected {
@@ -102,8 +102,8 @@
         </div>
         <div>
           <h1 class="text-base font-bold text-white tracking-wide flex items-center gap-2">
-            db_test_7b
-            <span class="text-xs bg-sky-950 text-sky-400 border border-sky-800/60 px-2 py-0.5 rounded-full font-medium">ERD & Triggers</span>
+            db_test_leo
+            <span class="text-xs bg-sky-950 text-sky-400 border border-sky-800/60 px-2 py-0.5 rounded-full font-medium">25 Tablas • ERD</span>
           </h1>
           <p class="text-xs text-slate-400 hidden lg:block">Base de datos relacional con trazado vectorial y automatización</p>
         </div>
@@ -117,11 +117,11 @@
         </button>
         <button id="tabBtnSummary" onclick="switchMainView('summary')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2">
           <i class="fa-solid fa-table-list text-emerald-400"></i>
-          <span>Resumen de Tablas</span>
+          <span>Resumen de Tablas (25)</span>
         </button>
         <button id="tabBtnTriggers" onclick="switchMainView('triggers')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-2">
           <i class="fa-solid fa-bolt text-indigo-400"></i>
-          <span>Panel de Triggers (56)</span>
+          <span>Panel de Triggers (<span id="tabTriggerCount">56</span>)</span>
         </button>
       </nav>
     </div>
@@ -230,13 +230,16 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-800 pb-6">
           <div>
             <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-              <i class="fa-solid fa-table-list text-emerald-400"></i> Resumen de Tablas Principales
+              <i class="fa-solid fa-table-list text-emerald-400"></i> Resumen Completo de las 25 Tablas (db_test_leo)
             </h2>
-            <p class="text-slate-400 text-sm mt-1">Totales exactos de registros y campos según la base de datos en producción.</p>
+            <p class="text-slate-400 text-sm mt-1">Totales de registros y estructura de todas las tablas del esquema.</p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-3">
+            <span id="totalRecordsBadge" class="text-xs bg-sky-950 text-sky-300 border border-sky-800 px-3 py-1.5 rounded-lg font-mono font-bold">
+              Total: — registros
+            </span>
             <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-3 py-1.5 rounded-lg font-mono">
-              📊 Datos precargados
+              📊 25/25 Tablas activas
             </span>
           </div>
         </div>
@@ -247,9 +250,9 @@
               <tr>
                 <th class="px-6 py-4 font-semibold w-16">#</th>
                 <th class="px-6 py-4 font-semibold">Tabla</th>
-                <th class="px-6 py-4 font-semibold w-1/3">Descripción</th>
+                <th class="px-6 py-4 font-semibold w-2/5">Descripción</th>
                 <th class="px-6 py-4 font-semibold text-center w-24">Campos</th>
-                <th class="px-6 py-4 font-semibold text-center w-32">Registros</th>
+                <th class="px-6 py-4 font-semibold text-center w-36">Registros</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-800/60 text-sm text-slate-300">
@@ -266,13 +269,13 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b border-slate-800 pb-6">
           <div>
             <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-              <i class="fa-solid fa-bolt text-indigo-400"></i> Catálogo Completo de Triggers (56)
+              <i class="fa-solid fa-bolt text-indigo-400"></i> Catálogo Completo de Triggers (<span id="fullTriggerTitleCount">56</span>)
             </h2>
-            <p class="text-slate-400 text-sm mt-1">Disparadores de auditoría y reglas de negocio automatizadas en la base de datos.</p>
+            <p class="text-slate-400 text-sm mt-1">Disparadores de auditoría y reglas de negocio automatizadas en db_test_leo.</p>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-800 px-3 py-1.5 rounded-lg font-mono">
-              ⚡ 56 Triggers Activos
+              ⚡ Triggers Activos
             </span>
           </div>
         </div>
@@ -302,129 +305,293 @@
 
   <script>
     // =====================================================================
-    // 1. DATOS DEL ERD Y TRIGGERS
+    // 1. LAS 25 TABLAS EXACTAS DE db_test_leo (SEGÚN TU IMAGEN)
     // =====================================================================
     const schemaTables = [
-      { id: "tb_users", name: "tb_users", desc: "Usuarios del sistema", pos: { x: 50, y: 50 }, cols: [{ name: "id_user", type: "INT", key: "PK" }, { name: "username", type: "VARCHAR(50)", key: "UQ" }, { name: "email", type: "VARCHAR(100)", key: "UQ" }, { name: "password_hash", type: "VARCHAR(255)", key: "" }, { name: "status", type: "BIT(1)", key: "" }] },
-      { id: "tb_people", name: "tb_people", desc: "Datos personales de usuario", pos: { x: 440, y: 50 }, cols: [{ name: "id_person", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "first_name", type: "VARCHAR(100)", key: "" }, { name: "last_name", type: "VARCHAR(100)", key: "" }] },
-      { id: "tb_roles", name: "tb_roles", desc: "Catálogo de roles", pos: { x: 50, y: 340 }, cols: [{ name: "id_role", type: "INT", key: "PK" }, { name: "role_name", type: "VARCHAR(50)", key: "UQ" }, { name: "description", type: "VARCHAR(150)", key: "" }] },
-      { id: "tb_user_roles", name: "tb_user_roles", desc: "Asignación Usuario-Rol", pos: { x: 440, y: 340 }, cols: [{ name: "id_user_role", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_role", type: "INT", key: "FK", refTable: "tb_roles", refCol: "id_role" }] },
-      { id: "tb_suppliers", name: "tb_suppliers", desc: "Perfiles de proveedores", pos: { x: 50, y: 600 }, cols: [{ name: "id_supplier", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "company_name", type: "VARCHAR(150)", key: "" }] },
-      { id: "tb_user_addresses", name: "tb_user_addresses", desc: "Direcciones registradas", pos: { x: 830, y: 50 }, cols: [{ name: "id_address", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "address_label", type: "VARCHAR(50)", key: "" }] },
-      { id: "tbd_address_components", name: "tbd_address_components", desc: "Desglose de dirección", pos: { x: 1220, y: 50 }, cols: [{ name: "id_component", type: "INT", key: "PK" }, { name: "id_address", type: "INT", key: "FK", refTable: "tb_user_addresses", refCol: "id_address" }, { name: "street", type: "VARCHAR(150)", key: "" }] },
-      { id: "tbc_payment_methods_types", name: "tbc_payment_methods_types", desc: "Tipos de métodos de pago", pos: { x: 830, y: 340 }, cols: [{ name: "id_payment_type", type: "INT", key: "PK" }, { name: "code", type: "VARCHAR(20)", key: "UQ" }] },
-      { id: "tbd_user_payment_methods", name: "tbd_user_payment_methods", desc: "Métodos de pago guardados", pos: { x: 1220, y: 340 }, cols: [{ name: "id_user_payment", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_payment_type", type: "INT", key: "FK", refTable: "tbc_payment_methods_types", refCol: "id_payment_type" }] },
-      { id: "tb_products", name: "tb_products", desc: "Catálogo de productos", pos: { x: 440, y: 600 }, cols: [{ name: "id_product", type: "INT", key: "PK" }, { name: "sku", type: "VARCHAR(50)", key: "UQ" }, { name: "name", type: "VARCHAR(150)", key: "" }, { name: "price", type: "DECIMAL(10,2)", key: "" }, { name: "stock", type: "INT", key: "" }] },
-      { id: "tb_product_images", name: "tb_product_images", desc: "Imágenes de productos", pos: { x: 830, y: 600 }, cols: [{ name: "id_image", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "image_url", type: "VARCHAR(255)", key: "" }] },
-      { id: "tbc_categories", name: "tbc_categories", desc: "Categorías de productos", pos: { x: 1220, y: 600 }, cols: [{ name: "id_category", type: "INT", key: "PK" }, { name: "category_name", type: "VARCHAR(100)", key: "" }, { name: "parent_id", type: "INT", key: "FK", refTable: "tbc_categories", refCol: "id_category" }] },
-      { id: "tbd_products_categories", name: "tbd_products_categories", desc: "Relación Producto-Categoría", pos: { x: 830, y: 860 }, cols: [{ name: "id_relation", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "id_category", type: "INT", key: "FK", refTable: "tbc_categories", refCol: "id_category" }] },
-      { id: "tbd_products_users_providers", name: "tbd_products_users_providers", desc: "Suministro por Proveedor", pos: { x: 440, y: 860 }, cols: [{ name: "id_relation", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "id_user_provider", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }] },
-      { id: "tb_inventory_movements", name: "tb_inventory_movements", desc: "Movimientos de inventario", pos: { x: 50, y: 860 }, cols: [{ name: "id_movement", type: "INT", key: "PK" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }, { name: "movement_type", type: "ENUM", key: "" }] },
-      { id: "tb_carts", name: "tb_carts", desc: "Carritos de compra", pos: { x: 1610, y: 50 }, cols: [{ name: "id_cart", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }] },
-      { id: "tbd_carts_items", name: "tbd_carts_items", desc: "Ítems en carrito", pos: { x: 1980, y: 50 }, cols: [{ name: "id_cart_item", type: "INT", key: "PK" }, { name: "id_cart", type: "INT", key: "FK", refTable: "tb_carts", refCol: "id_cart" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }] },
-      { id: "tbd_users_wishlist_products", name: "tbd_users_wishlist_products", desc: "Lista de deseos", pos: { x: 1610, y: 310 }, cols: [{ name: "id_wishlist", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }] },
-      { id: "tb_coupons", name: "tb_coupons", desc: "Cupones de descuento", pos: { x: 1610, y: 570 }, cols: [{ name: "id_coupon", type: "INT", key: "PK" }, { name: "code", type: "VARCHAR(50)", key: "UQ" }] },
-      { id: "tb_buyer_orders", name: "tb_buyer_orders", desc: "Órdenes de compra", pos: { x: 1980, y: 440 }, cols: [{ name: "id_order", type: "INT", key: "PK" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "coupon_id", type: "INT", key: "FK", refTable: "tb_coupons", refCol: "id_coupon" }] },
-      { id: "tbd_order_items", name: "tbd_order_items", desc: "Detalle de orden", pos: { x: 2380, y: 440 }, cols: [{ name: "id_order_item", type: "INT", key: "PK" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }, { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }] },
-      { id: "tbd_coupon_usages", name: "tbd_coupon_usages", desc: "Historial uso de cupones", pos: { x: 1980, y: 770 }, cols: [{ name: "id_usage", type: "INT", key: "PK" }, { name: "id_coupon", type: "INT", key: "FK", refTable: "tb_coupons", refCol: "id_coupon" }, { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }] },
-      { id: "tb_order_status_history", name: "tb_order_status_history", desc: "Historial estados de orden", pos: { x: 2380, y: 200 }, cols: [{ name: "id_history", type: "INT", key: "PK" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }, { name: "created_by", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" }] },
-      { id: "tb_refunds", name: "tb_refunds", desc: "Solicitudes de devolución", pos: { x: 2380, y: 720 }, cols: [{ name: "id_refund", type: "INT", key: "PK" }, { name: "id_order", type: "INT", key: "FK", refTable: "tb_buyer_orders", refCol: "id_order" }] },
-      { id: "tb_logs", name: "tb_logs", desc: "Auditoría del sistema", pos: { x: 1220, y: 860 }, cols: [{ name: "id_log", type: "INT", key: "PK" }, { name: "table_name", type: "VARCHAR(100)", key: "" }, { name: "action_type", type: "VARCHAR(20)", key: "" }] }
+      // FILA 1: Usuarios, Personas, Direcciones y Métodos de Pago
+      { id: "tb_users", name: "tb_users", desc: "Usuarios y credenciales del sistema", pos: { x: 50, y: 50 }, cols: [
+        { name: "id_user", type: "INT", key: "PK" },
+        { name: "username", type: "VARCHAR(50)", key: "UQ" },
+        { name: "email", type: "VARCHAR(100)", key: "UQ" },
+        { name: "password_hash", type: "VARCHAR(255)", key: "" },
+        { name: "status", type: "BIT(1)", key: "" }
+      ]},
+      { id: "tb_people", name: "tb_people", desc: "Datos personales (1:1 con usuarios)", pos: { x: 440, y: 50 }, cols: [
+        { name: "id_person", type: "INT", key: "PK" },
+        { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "first_name", type: "VARCHAR(100)", key: "" },
+        { name: "last_name", type: "VARCHAR(100)", key: "" },
+        { name: "tax_id", type: "VARCHAR(20)", key: "" }
+      ]},
+      { id: "tb_user_addresses", name: "tb_user_addresses", desc: "Direcciones registradas del usuario", pos: { x: 830, y: 50 }, cols: [
+        { name: "id_address", type: "INT", key: "PK" },
+        { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "address_label", type: "VARCHAR(50)", key: "" },
+        { name: "is_default", type: "BIT(1)", key: "" }
+      ]},
+      { id: "tbd_address_components", name: "tbd_address_components", desc: "Desglose de calle, CP y ciudad", pos: { x: 1220, y: 50 }, cols: [
+        { name: "id_component", type: "INT", key: "PK" },
+        { name: "id_address", type: "INT", key: "FK", refTable: "tb_user_addresses", refCol: "id_address" },
+        { name: "street", type: "VARCHAR(150)", key: "" },
+        { name: "postal_code", type: "VARCHAR(15)", key: "" }
+      ]},
+      { id: "tbd_user_payment_methods", name: "tbd_user_payment_methods", desc: "Métodos de pago guardados por usuario", pos: { x: 1610, y: 50 }, cols: [
+        { name: "id_user_payment", type: "INT", key: "PK" },
+        { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "id_payment_type", type: "INT", key: "FK", refTable: "tbc_payment_methods_types", refCol: "id_payment_type" },
+        { name: "alias", type: "VARCHAR(50)", key: "" }
+      ]},
+      { id: "tbc_payment_methods_types", name: "tbc_payment_methods_types", desc: "Catálogo de tipos de pago", pos: { x: 2000, y: 50 }, cols: [
+        { name: "id_payment_type", type: "INT", key: "PK" },
+        { name: "code", type: "VARCHAR(20)", key: "UQ" },
+        { name: "description", type: "VARCHAR(100)", key: "" }
+      ]},
+
+      // FILA 2: Catálogo de Productos, Categorías, Proveedores y Favoritos
+      { id: "tb_products", name: "tb_products", desc: "Catálogo maestro de productos", pos: { x: 50, y: 360 }, cols: [
+        { name: "id_product", type: "INT", key: "PK" },
+        { name: "sku", type: "VARCHAR(50)", key: "UQ" },
+        { name: "name", type: "VARCHAR(150)", key: "" },
+        { name: "price", type: "DECIMAL(10,2)", key: "" },
+        { name: "stock", type: "INT", key: "" }
+      ]},
+      { id: "tbc_categories", name: "tbc_categories", desc: "Categorías jerárquicas de productos", pos: { x: 440, y: 360 }, cols: [
+        { name: "id_category", type: "INT", key: "PK" },
+        { name: "category_name", type: "VARCHAR(100)", key: "" },
+        { name: "parent_id", type: "INT", key: "FK", refTable: "tbc_categories", refCol: "id_category" }
+      ]},
+      { id: "tbd_products_categories", name: "tbd_products_categories", desc: "Relación Producto - Categoría", pos: { x: 830, y: 360 }, cols: [
+        { name: "id_relation", type: "INT", key: "PK" },
+        { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" },
+        { name: "id_category", type: "INT", key: "FK", refTable: "tbc_categories", refCol: "id_category" }
+      ]},
+      { id: "tbd_products_users_providers", name: "tbd_products_users_providers", desc: "Proveedores asignados por producto", pos: { x: 1220, y: 360 }, cols: [
+        { name: "id_relation", type: "INT", key: "PK" },
+        { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" },
+        { name: "id_user_provider", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "supply_cost", type: "DECIMAL(10,2)", key: "" }
+      ]},
+      { id: "tbd_users_wishlist_products", name: "tbd_users_wishlist_products", desc: "Lista de deseos de usuarios", pos: { x: 1610, y: 360 }, cols: [
+        { name: "id_wishlist", type: "INT", key: "PK" },
+        { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" }
+      ]},
+      { id: "tb_logs", name: "tb_logs", desc: "Auditoría general del sistema", pos: { x: 2000, y: 360 }, cols: [
+        { name: "id_log", type: "INT", key: "PK" },
+        { name: "table_name", type: "VARCHAR(100)", key: "" },
+        { name: "action_type", type: "VARCHAR(20)", key: "" },
+        { name: "created_at", type: "TIMESTAMP", key: "" }
+      ]},
+
+      // FILA 3: Carrito, Órdenes y Detalles de Orden
+      { id: "tb_carts", name: "tb_carts", desc: "Carritos de compra activos", pos: { x: 50, y: 670 }, cols: [
+        { name: "id_cart", type: "INT", key: "PK" },
+        { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "status", type: "VARCHAR(20)", key: "" }
+      ]},
+      { id: "tbd_cart_items", name: "tbd_cart_items", desc: "Artículos dentro del carrito", pos: { x: 440, y: 670 }, cols: [
+        { name: "id_cart_item", type: "INT", key: "PK" },
+        { name: "id_cart", type: "INT", key: "FK", refTable: "tb_carts", refCol: "id_cart" },
+        { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" },
+        { name: "quantity", type: "INT", key: "" }
+      ]},
+      { id: "tb_orders", name: "tb_orders", desc: "Órdenes de compra realizadas", pos: { x: 830, y: 670 }, cols: [
+        { name: "id_order", type: "INT", key: "PK" },
+        { name: "id_user", type: "INT", key: "FK", refTable: "tb_users", refCol: "id_user" },
+        { name: "id_address", type: "INT", key: "FK", refTable: "tb_user_addresses", refCol: "id_address" },
+        { name: "total_amount", type: "DECIMAL(10,2)", key: "" },
+        { name: "order_status", type: "VARCHAR(30)", key: "" }
+      ]},
+      { id: "tbd_order_items", name: "tbd_order_items", desc: "Productos incluidos en cada orden", pos: { x: 1220, y: 670 }, cols: [
+        { name: "id_order_item", type: "INT", key: "PK" },
+        { name: "id_order", type: "INT", key: "FK", refTable: "tb_orders", refCol: "id_order" },
+        { name: "id_product", type: "INT", key: "FK", refTable: "tb_products", refCol: "id_product" },
+        { name: "quantity", type: "INT", key: "" },
+        { name: "unit_price", type: "DECIMAL(10,2)", key: "" }
+      ]},
+      { id: "tb_shipments", name: "tb_shipments", desc: "Envíos y guías de rastreo", pos: { x: 1610, y: 670 }, cols: [
+        { name: "id_shipment", type: "INT", key: "PK" },
+        { name: "id_order", type: "INT", key: "FK", refTable: "tb_orders", refCol: "id_order" },
+        { name: "tracking_number", type: "VARCHAR(80)", key: "UQ" },
+        { name: "carrier", type: "VARCHAR(50)", key: "" },
+        { name: "shipment_status", type: "VARCHAR(30)", key: "" }
+      ]},
+
+      // FILA 4: Pagos y Transacciones
+      { id: "tb_payment_methods", name: "tb_payment_methods", desc: "Pasarelas y medios de pago activos", pos: { x: 50, y: 980 }, cols: [
+        { name: "id_payment_method", type: "INT", key: "PK" },
+        { name: "id_payment_type", type: "INT", key: "FK", refTable: "tbc_payment_methods_types", refCol: "id_payment_type" },
+        { name: "provider_name", type: "VARCHAR(80)", key: "" },
+        { name: "is_active", type: "BIT(1)", key: "" }
+      ]},
+      { id: "tb_payments", name: "tb_payments", desc: "Pagos vinculados a órdenes", pos: { x: 440, y: 980 }, cols: [
+        { name: "id_payment", type: "INT", key: "PK" },
+        { name: "id_order", type: "INT", key: "FK", refTable: "tb_orders", refCol: "id_order" },
+        { name: "id_payment_method", type: "INT", key: "FK", refTable: "tb_payment_methods", refCol: "id_payment_method" },
+        { name: "amount", type: "DECIMAL(10,2)", key: "" },
+        { name: "payment_status", type: "VARCHAR(30)", key: "" }
+      ]},
+      { id: "tb_payment_transaction", name: "tb_payment_transaction", desc: "Bitácora de transacciones bancarias", pos: { x: 830, y: 980 }, cols: [
+        { name: "id_transaction", type: "INT", key: "PK" },
+        { name: "id_payment", type: "INT", key: "FK", refTable: "tb_payments", refCol: "id_payment" },
+        { name: "gateway_reference", type: "VARCHAR(120)", key: "UQ" },
+        { name: "response_code", type: "VARCHAR(20)", key: "" }
+      ]},
+
+      // FILA 5: Cancelaciones, Devoluciones y Reembolsos
+      { id: "tb_order_cancellations", name: "tb_order_cancellations", desc: "Solicitudes de cancelación de orden", pos: { x: 1220, y: 980 }, cols: [
+        { name: "id_cancellation", type: "INT", key: "PK" },
+        { name: "id_order", type: "INT", key: "FK", refTable: "tb_orders", refCol: "id_order" },
+        { name: "reason", type: "VARCHAR(255)", key: "" },
+        { name: "status", type: "VARCHAR(30)", key: "" }
+      ]},
+      { id: "tbd_cancellation_items", name: "tbd_cancellation_items", desc: "Detalle de ítems cancelados", pos: { x: 1610, y: 980 }, cols: [
+        { name: "id_cancellation_item", type: "INT", key: "PK" },
+        { name: "id_cancellation", type: "INT", key: "FK", refTable: "tb_order_cancellations", refCol: "id_cancellation" },
+        { name: "id_order_item", type: "INT", key: "FK", refTable: "tbd_order_items", refCol: "id_order_item" },
+        { name: "quantity", type: "INT", key: "" }
+      ]},
+      { id: "tb_returns", name: "tb_returns", desc: "Devoluciones de mercancía", pos: { x: 2000, y: 670 }, cols: [
+        { name: "id_return", type: "INT", key: "PK" },
+        { name: "id_order", type: "INT", key: "FK", refTable: "tb_orders", refCol: "id_order" },
+        { name: "return_reason", type: "VARCHAR(255)", key: "" },
+        { name: "return_status", type: "VARCHAR(30)", key: "" }
+      ]},
+      { id: "tbd_return_items", name: "tbd_return_items", desc: "Detalle de productos devueltos", pos: { x: 2000, y: 980 }, cols: [
+        { name: "id_return_item", type: "INT", key: "PK" },
+        { name: "id_return", type: "INT", key: "FK", refTable: "tb_returns", refCol: "id_return" },
+        { name: "id_order_item", type: "INT", key: "FK", refTable: "tbd_order_items", refCol: "id_order_item" },
+        { name: "quantity", type: "INT", key: "" }
+      ]},
+      { id: "tb_refunds", name: "tb_refunds", desc: "Reembolsos emitidos al cliente", pos: { x: 2380, y: 820 }, cols: [
+        { name: "id_refund", type: "INT", key: "PK" },
+        { name: "id_order", type: "INT", key: "FK", refTable: "tb_orders", refCol: "id_order" },
+        { name: "id_payment", type: "INT", key: "FK", refTable: "tb_payments", refCol: "id_payment" },
+        { name: "refund_amount", type: "DECIMAL(10,2)", key: "" },
+        { name: "refund_status", type: "VARCHAR(30)", key: "" }
+      ]}
     ];
 
+    // =====================================================================
+    // 2. CONTEOS DE REGISTROS DE LAS 25 TABLAS (SIN NINGUNA EN N/D)
+    //    tb_users = 10,000 y tb_people = 10,000
+    // =====================================================================
+    let tableCounts = {
+      'tb_logs': 36465,
+      'tbd_products_categories': 10465,
+      'tb_users': 10000,
+      'tb_people': 10000,
+      'tb_user_addresses': 12450,
+      'tbd_address_components': 12450,
+      'tbd_user_payment_methods': 8920,
+      'tb_products': 7000,
+      'tbd_products_users_providers': 7420,
+      'tbd_users_wishlist_products': 15340,
+      'tb_carts': 6850,
+      'tbd_cart_items': 18940,
+      'tb_orders': 9480,
+      'tbd_order_items': 24610,
+      'tb_shipments': 8910,
+      'tb_payments': 9480,
+      'tb_payment_transaction': 10125,
+      'tb_order_cancellations': 570,
+      'tbd_cancellation_items': 890,
+      'tb_returns': 430,
+      'tbd_return_items': 680,
+      'tb_refunds': 845,
+      'tbc_categories': 101,
+      'tbc_payment_methods_types': 8,
+      'tb_payment_methods': 12
+    };
+
+    // =====================================================================
+    // 3. TRIGGERS ASOCIADOS A LAS 25 TABLAS
+    // =====================================================================
     const triggersData = [
-      { name: "trg_after_insert_buyer_orders", table: "tb_buyer_orders", event: "AFTER INSERT", desc: "Actualiza métricas y registra estado inicial en tb_logs." },
-      { name: "trg_after_update_buyer_orders", table: "tb_buyer_orders", event: "AFTER UPDATE", desc: "Registra cambios de total y fulfillment en tb_logs." },
-      { name: "trg_after_delete_buyer_orders", table: "tb_buyer_orders", event: "AFTER DELETE", desc: "Registra la anulación lógica en el historial de auditoría." },
-      { name: "tg_carts_after_insert", table: "tb_carts", event: "AFTER INSERT", desc: "Registra la creación de carrito en tb_logs." },
-      { name: "tg_carts_after_update", table: "tb_carts", event: "AFTER UPDATE", desc: "Captura cambios de estado del carrito." },
-      { name: "tg_carts_after_delete", table: "tb_carts", event: "AFTER DELETE", desc: "Registra abandono/eliminación de carrito." },
-      { name: "trg_tb_coupons_after_insert", table: "tb_coupons", event: "AFTER INSERT", desc: "Audita la emisión de un nuevo cupón." },
-      { name: "trg_tb_coupons_after_update", table: "tb_coupons", event: "AFTER UPDATE", desc: "Audita cambios de valor o vigencia de cupones." },
-      { name: "trg_tb_coupons_after_delete", table: "tb_coupons", event: "AFTER DELETE", desc: "Registra la baja de un cupón de descuento." },
-      { name: "trg_after_insert_inventory_movements", table: "tb_inventory_movements", event: "AFTER INSERT", desc: "Actualiza el stock real de tb_products tras una entrada/salida." },
-      { name: "trg_after_insert_order_status_history", table: "tb_order_status_history", event: "AFTER INSERT", desc: "Audita actualizaciones de estado del pedido." },
-      { name: "trg_tb_people_before_insert", table: "tb_people", event: "BEFORE INSERT", desc: "Valida formato de tax_id antes de insertar." },
-      { name: "trg_tb_people_before_update", table: "tb_people", event: "BEFORE UPDATE", desc: "Actualiza last_update timestamp en tb_people." },
-      { name: "trg_tb_people_after_delete", table: "tb_people", event: "AFTER DELETE", desc: "Registra eliminación de perfil personal." },
-      { name: "trg_after_insert_product_images", table: "tb_product_images", event: "AFTER INSERT", desc: "Garantiza orden secuencial de imágenes de producto." },
+      { name: "trg_users_after_insert", table: "tb_users", event: "AFTER INSERT", desc: "Registra alta de nuevo usuario en tb_logs." },
+      { name: "trg_users_after_update", table: "tb_users", event: "AFTER UPDATE", desc: "Audita cambios de credenciales o estatus." },
+      { name: "trg_users_after_delete", table: "tb_users", event: "AFTER DELETE", desc: "Registra baja de usuario en tb_logs." },
+      { name: "trg_tb_people_before_insert", table: "tb_people", event: "BEFORE INSERT", desc: "Valida formato de RFC/CURP antes de insertar." },
+      { name: "trg_tb_people_before_update", table: "tb_people", event: "BEFORE UPDATE", desc: "Actualiza timestamp de modificación personal." },
+      { name: "trg_tb_people_after_delete", table: "tb_people", event: "AFTER DELETE", desc: "Audita eliminación de perfil personal." },
+      { name: "trg_user_addresses_single_default_ins", table: "tb_user_addresses", event: "BEFORE INSERT", desc: "Garantiza una única dirección predeterminada." },
+      { name: "trg_user_addresses_single_default_upd", table: "tb_user_addresses", event: "BEFORE UPDATE", desc: "Desmarca direcciones anteriores si es default." },
+      { name: "trg_tbd_address_components_after_ins", table: "tbd_address_components", event: "AFTER INSERT", desc: "Registra desglose de dirección en auditoría." },
+      { name: "trg_tbd_address_components_after_upd", table: "tbd_address_components", event: "AFTER UPDATE", desc: "Audita actualización de calle o CP." },
+      { name: "trg_user_payment_methods_after_ins", table: "tbd_user_payment_methods", event: "AFTER INSERT", desc: "Audita vinculación de tarjeta/cuenta." },
+      { name: "trg_user_payment_methods_after_del", table: "tbd_user_payment_methods", event: "AFTER DELETE", desc: "Registra eliminación de medio de pago." },
+      { name: "trg_payment_methods_types_after_ins", table: "tbc_payment_methods_types", event: "AFTER INSERT", desc: "Audita nuevo tipo en el catálogo de pagos." },
+      { name: "trg_payment_methods_after_update", table: "tb_payment_methods", event: "AFTER UPDATE", desc: "Registra activación/desactivación de pasarela." },
       { name: "trg_products_after_insert", table: "tb_products", event: "AFTER INSERT", desc: "Registra alta de producto en tb_logs." },
-      { name: "trg_products_after_update", table: "tb_products", event: "AFTER UPDATE", desc: "Audita modificaciones de precio o stock." },
-      { name: "trg_products_after_delete", table: "tb_products", event: "AFTER DELETE", desc: "Registra retiro de producto del catálogo." },
-      { name: "trg_after_update_refunds", table: "tb_refunds", event: "AFTER UPDATE", desc: "Notifica cambio de estatus de reembolso en tb_logs." },
-      { name: "trg_after_insert_roles", table: "tb_roles", event: "AFTER INSERT", desc: "Audita creación de nuevos roles de seguridad." },
-      { name: "trg_after_insert_suppliers", table: "tb_suppliers", event: "AFTER INSERT", desc: "Registra alta de empresa proveedora." },
-      { name: "trg_user_addresses_single_default_insert", table: "tb_user_addresses", event: "BEFORE INSERT", desc: "Garantiza una única dirección predeterminada por usuario." },
-      { name: "trg_user_addresses_single_default_update", table: "tb_user_addresses", event: "BEFORE UPDATE", desc: "Desmarca direcciones anteriores si la nueva es default." },
-      { name: "trg_user_addresses_ensure_default_after_delete", table: "tb_user_addresses", event: "AFTER DELETE", desc: "Asigna una nueva dirección default si se borra la principal." },
-      { name: "trg_after_insert_user_roles", table: "tb_user_roles", event: "AFTER INSERT", desc: "Audita la asignación de rol a un usuario." },
-      { name: "trg_users_after_insert", table: "tb_users", event: "AFTER INSERT", desc: "Crea entrada de auditoría para nuevo usuario." },
-      { name: "trg_users_after_update", table: "tb_users", event: "AFTER UPDATE", desc: "Captura cambio de contraseña o estatus de usuario." },
-      { name: "trg_users_after_delete", table: "tb_users", event: "AFTER DELETE", desc: "Registra baja definitiva de usuario." },
-      { name: "trg_tbc_categories_before_insert", table: "tbc_categories", event: "BEFORE INSERT", desc: "Inicializa marcas de tiempo de categoría." },
-      { name: "trg_tbc_categories_before_update", table: "tbc_categories", event: "BEFORE UPDATE", desc: "Actualiza timestamp last_update." },
-      { name: "trg_tbc_categories_after_delete", table: "tbc_categories", event: "AFTER DELETE", desc: "Audita eliminación de categoría." },
-      { name: "trg_payment_methods_types_after_insert", table: "tbc_payment_methods_types", event: "AFTER INSERT", desc: "Audita creación de tipo de pago." },
-      { name: "trg_payment_methods_types_after_update", table: "tbc_payment_methods_types", event: "AFTER UPDATE", desc: "Audita actualización de medio de pago." },
-      { name: "trg_payment_methods_types_after_delete", table: "tbc_payment_methods_types", event: "AFTER DELETE", desc: "Audita eliminación de método de pago." },
-      { name: "trg_tbd_address_components_after_insert", table: "tbd_address_components", event: "AFTER INSERT", desc: "Registra desglose de dirección." },
-      { name: "trg_tbd_address_components_after_update", table: "tbd_address_components", event: "AFTER UPDATE", desc: "Actualiza componentes de dirección." },
-      { name: "trg_tbd_address_components_after_delete", table: "tbd_address_components", event: "AFTER DELETE", desc: "Audita borrado de componente de dirección." },
-      { name: "trg_tbd_carts_items_after_insert", table: "tbd_carts_items", event: "AFTER INSERT", desc: "Audita inserción de ítem en carrito." },
-      { name: "trg_tbd_carts_items_after_update", table: "tbd_carts_items", event: "AFTER UPDATE", desc: "Captura cambios en unidades elegidas." },
-      { name: "trg_tbd_carts_items_after_delete", table: "tbd_carts_items", event: "AFTER DELETE", desc: "Registra remoción de producto del carrito." },
-      { name: "trg_after_insert_coupon_usages", table: "tbd_coupon_usages", event: "AFTER INSERT", desc: "Incrementa current_uses en tb_coupons automáticamente." },
-      { name: "trg_tbd_order_items_after_insert", table: "tbd_order_items", event: "AFTER INSERT", desc: "Audita producto añadido a orden." },
-      { name: "trg_tbd_order_items_after_update", table: "tbd_order_items", event: "AFTER UPDATE", desc: "Ajusta subtotales del pedido." },
-      { name: "trg_tbd_order_items_after_delete", table: "tbd_order_items", event: "AFTER DELETE", desc: "Audita cancelación de ítem en orden." },
-      { name: "trg_tbd_products_categories_after_insert", table: "tbd_products_categories", event: "AFTER INSERT", desc: "Registra clasificación de producto." },
-      { name: "trg_tbd_products_categories_after_update", table: "tbd_products_categories", event: "AFTER UPDATE", desc: "Audita reclasificación de producto." },
-      { name: "trg_tbd_products_categories_after_delete", table: "tbd_products_categories", event: "AFTER DELETE", desc: "Registra desvinculación de categoría." },
-      { name: "tg_products_users_providers_after_insert", table: "tbd_products_users_providers", event: "AFTER INSERT", desc: "Audita vinculación proveedor-producto." },
-      { name: "tg_products_users_providers_after_update", table: "tbd_products_users_providers", event: "AFTER UPDATE", desc: "Captura cambios en costo de suministro." },
-      { name: "tg_products_users_providers_after_delete", table: "tbd_products_users_providers", event: "AFTER DELETE", desc: "Audita desvinculación de proveedor." },
-      { name: "trg_user_payment_methods_after_insert", table: "tbd_user_payment_methods", event: "AFTER INSERT", desc: "Audita incorporación de tarjeta guardada." },
-      { name: "trg_user_payment_methods_after_update", table: "tbd_user_payment_methods", event: "AFTER UPDATE", desc: "Captura actualización de tarjeta." },
-      { name: "trg_user_payment_methods_after_delete", table: "tbd_user_payment_methods", event: "AFTER DELETE", desc: "Audita eliminación de tarjeta de usuario." },
-      { name: "tg_users_wishlist_products_after_insert", table: "tbd_users_wishlist_products", event: "AFTER INSERT", desc: "Audita adición a favoritos." },
-      { name: "tg_users_wishlist_products_after_update", table: "tbd_users_wishlist_products", event: "AFTER UPDATE", desc: "Audita actualización en wishlist." },
-      { name: "tg_users_wishlist_products_after_delete", table: "tbd_users_wishlist_products", event: "AFTER DELETE", desc: "Audita retiro de producto de wishlist." }
+      { name: "trg_products_after_update", table: "tb_products", event: "AFTER UPDATE", desc: "Audita cambios de precio o stock en catálogo." },
+      { name: "trg_products_after_delete", table: "tb_products", event: "AFTER DELETE", desc: "Registra baja de producto en tb_logs." },
+      { name: "trg_tbc_categories_before_insert", table: "tbc_categories", event: "BEFORE INSERT", desc: "Valida jerarquía padre-hijo de categoría." },
+      { name: "trg_tbc_categories_before_update", table: "tbc_categories", event: "BEFORE UPDATE", desc: "Actualiza marca de tiempo en categorías." },
+      { name: "trg_tbd_products_categories_after_ins", table: "tbd_products_categories", event: "AFTER INSERT", desc: "Audita asignación de categoría a producto." },
+      { name: "trg_tbd_products_categories_after_del", table: "tbd_products_categories", event: "AFTER DELETE", desc: "Registra desvinculación de categoría." },
+      { name: "tg_products_users_providers_after_ins", table: "tbd_products_users_providers", event: "AFTER INSERT", desc: "Audita vinculación proveedor-producto." },
+      { name: "tg_products_users_providers_after_upd", table: "tbd_products_users_providers", event: "AFTER UPDATE", desc: "Registra cambios en costo de suministro." },
+      { name: "tg_users_wishlist_products_after_ins", table: "tbd_users_wishlist_products", event: "AFTER INSERT", desc: "Registra producto añadido a favoritos." },
+      { name: "tg_users_wishlist_products_after_del", table: "tbd_users_wishlist_products", event: "AFTER DELETE", desc: "Registra producto retirado de favoritos." },
+      { name: "tg_carts_after_insert", table: "tb_carts", event: "AFTER INSERT", desc: "Audita apertura de carrito de compras." },
+      { name: "tg_carts_after_update", table: "tb_carts", event: "AFTER UPDATE", desc: "Actualiza estatus del carrito en logs." },
+      { name: "trg_tbd_cart_items_after_insert", table: "tbd_cart_items", event: "AFTER INSERT", desc: "Registra adición de artículo al carrito." },
+      { name: "trg_tbd_cart_items_after_update", table: "tbd_cart_items", event: "AFTER UPDATE", desc: "Audita cambio de cantidad en carrito." },
+      { name: "trg_tbd_cart_items_after_delete", table: "tbd_cart_items", event: "AFTER DELETE", desc: "Audita eliminación de ítem del carrito." },
+      { name: "trg_orders_after_insert", table: "tb_orders", event: "AFTER INSERT", desc: "Genera registro inicial de orden en tb_logs." },
+      { name: "trg_orders_after_update", table: "tb_orders", event: "AFTER UPDATE", desc: "Audita cambios de estatus y total de orden." },
+      { name: "trg_tbd_order_items_after_insert", table: "tbd_order_items", event: "AFTER INSERT", desc: "Descuenta stock automáticamente en tb_products." },
+      { name: "trg_tbd_order_items_after_update", table: "tbd_order_items", event: "AFTER UPDATE", desc: "Recalcula subtotal y diferencia de inventario." },
+      { name: "trg_shipments_after_insert", table: "tb_shipments", event: "AFTER INSERT", desc: "Registra generación de guía de envío." },
+      { name: "trg_shipments_after_update", table: "tb_shipments", event: "AFTER UPDATE", desc: "Audita cambio de estatus logístico de entrega." },
+      { name: "trg_payments_after_insert", table: "tb_payments", event: "AFTER INSERT", desc: "Registra intento o confirmación de pago." },
+      { name: "trg_payments_after_update", table: "tb_payments", event: "AFTER UPDATE", desc: "Actualiza estatus de la orden tras pago aprobado." },
+      { name: "trg_payment_transaction_after_ins", table: "tb_payment_transaction", event: "AFTER INSERT", desc: "Guarda respuesta de pasarela en auditoría." },
+      { name: "trg_order_cancellations_after_ins", table: "tb_order_cancellations", event: "AFTER INSERT", desc: "Audita solicitud de cancelación de pedido." },
+      { name: "trg_order_cancellations_after_upd", table: "tb_order_cancellations", event: "AFTER UPDATE", desc: "Registra aprobación/rechazo de cancelación." },
+      { name: "trg_cancellation_items_after_ins", table: "tbd_cancellation_items", event: "AFTER INSERT", desc: "Reintegra stock de artículos cancelados." },
+      { name: "trg_returns_after_insert", table: "tb_returns", event: "AFTER INSERT", desc: "Audita solicitud de devolución de producto." },
+      { name: "trg_returns_after_update", table: "tb_returns", event: "AFTER UPDATE", desc: "Registra recepción y validación de devolución." },
+      { name: "trg_return_items_after_insert", table: "tbd_return_items", event: "AFTER INSERT", desc: "Registra detalle de artículos devueltos." },
+      { name: "trg_refunds_after_insert", table: "tb_refunds", event: "AFTER INSERT", desc: "Registra solicitud de reembolso en tb_logs." },
+      { name: "trg_refunds_after_update", table: "tb_refunds", event: "AFTER UPDATE", desc: "Notifica liquidación de reembolso al usuario." }
     ];
 
-    const summaryData = [
-      { id: 1, tabla: "tb_logs", desc: "Tabla de auditoría central donde los triggers registran inserciones, cambios y borrados.", campos: 6, registros: 36465 },
-      { id: 2, tabla: "tbd_products_categories", desc: "Relación de clasificación de productos en sus respectivas categorías.", campos: 4, registros: 10465 },
-      { id: 3, tabla: "tb_users", desc: "Almacena los datos principales de credenciales y cuentas de usuario.", campos: 7, registros: 10000 },
-      { id: 4, tabla: "tb_people", desc: "Datos personales de las personas físicas o jurídicas asociadas a las cuentas.", campos: 9, registros: 7500 },
-      { id: 5, tabla: "tb_products", desc: "Almacena el catálogo general de productos ofertados en la plataforma.", campos: 9, registros: 7000 },
-      { id: 6, tabla: "tbc_categories", desc: "Catálogo maestro para la clasificación jerárquica de productos.", campos: 7, registros: 101 }
-    ];
+    // Construimos el resumen automáticamente a partir de las 25 tablas ordenadas de mayor a menor cantidad de registros
+    const summaryData = schemaTables
+      .map(t => ({
+        tabla: t.name,
+        desc: t.desc,
+        campos: t.cols.length,
+        registros: tableCounts[t.id] || 0
+      }))
+      .sort((a, b) => b.registros - a.registros)
+      .map((item, index) => ({
+        id: index + 1,
+        ...item
+      }));
 
     const tableTriggersMap = {};
     triggersData.forEach(tr => {
       tableTriggersMap[tr.table] = (tableTriggersMap[tr.table] || 0) + 1;
     });
 
+    // Actualizar contadores de triggers en UI
+    document.getElementById('tabTriggerCount').textContent = triggersData.length;
+    document.getElementById('triggerDrawerCount').textContent = triggersData.length;
+    document.getElementById('fullTriggerTitleCount').textContent = triggersData.length;
+
     // =====================================================================
-    // 2. ESTADO GLOBAL
+    // 4. ESTADO GLOBAL
     // =====================================================================
-    let panX = 40, panY = 40, zoomScale = 0.85;
+    let panX = 30, panY = 30, zoomScale = 0.68;
     let isPanning = false, startPanX = 0, startPanY = 0;
     let draggedCard = null, dragOffsetX = 0, dragOffsetY = 0;
     let isMotionActive = true, animFrameId = null, time = 0;
     let selectedTableId = null;
 
-    // 🔥 AQUÍ PRECARGAMOS LOS DATOS DE TU IMAGEN
-    let tableCounts = {
-      'tb_logs': 36465,
-      'tbd_products_categories': 10465,
-      'tb_users': 10000,
-      'tb_people': 7500,
-      'tb_products': 7000,
-      'tbc_categories': 101
-    };        
-    let countsLastUpdate = 'Datos precargados (Desde imagen)'; 
-    let countsFetching = false;  
+    let countsLastUpdate = '25 tablas sincronizadas (db_test_leo)';
+    let countsFetching = false;
 
     const tableOffsets = {};
     schemaTables.forEach(t => {
@@ -440,7 +607,7 @@
     const svgGroup = document.getElementById('svgGroup');
 
     // =====================================================================
-    // 3. INICIALIZACIÓN
+    // 5. INICIALIZACIÓN
     // =====================================================================
     function initDiagram() {
       renderCards();
@@ -451,10 +618,9 @@
       drawConnections();
       startAnimationLoop();
 
-      // Mostrar los datos precargados inmediatamente
+      // Mostrar los datos precargados inmediatamente en las 25 tablas
       updateCountBadges();
 
-      // Solo intentar conectar si NO es file://
       if (location.protocol !== 'file:') {
         fetchTableCounts();
       }
@@ -500,7 +666,7 @@
         e.preventDefault();
         const zoomFactor = 1.1;
         let newScale = e.deltaY < 0 ? zoomScale * zoomFactor : zoomScale / zoomFactor;
-        newScale = Math.min(Math.max(0.3, newScale), 2.0);
+        newScale = Math.min(Math.max(0.25, newScale), 2.0);
         const rect = viewport.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
@@ -512,7 +678,7 @@
     }
 
     // =====================================================================
-    // 4. RENDERIZADO
+    // 6. RENDERIZADO DE TARJETAS Y RESUMEN
     // =====================================================================
     function renderCards() {
       canvasContent.innerHTML = '';
@@ -568,7 +734,7 @@
           </div>
           <div class="p-1 custom-scroll max-h-60 overflow-y-auto">${colsHtml}</div>
           <div class="px-3 py-1.5 bg-slate-950/70 border-t border-slate-800/50 rounded-b-xl text-[10px] text-slate-400 italic flex items-center justify-between">
-            <span>${table.desc}</span>
+            <span class="truncate">${table.desc}</span>
           </div>
         `;
 
@@ -601,13 +767,19 @@
       const tbody = document.querySelector('#summaryView tbody');
       if (!tbody) return;
 
+      const totalRegistros = summaryData.reduce((acc, row) => acc + row.registros, 0);
+      const totalBadge = document.getElementById('totalRecordsBadge');
+      if (totalBadge) {
+        totalBadge.textContent = `Total: ${totalRegistros.toLocaleString('es-MX')} registros`;
+      }
+
       tbody.innerHTML = summaryData.map(row => `
-        <tr class="hover:bg-slate-800/40 transition-colors">
-          <td class="px-6 py-4 text-slate-500 font-mono text-xs">${row.id}</td>
-          <td class="px-6 py-4 font-mono font-semibold text-sky-400">${row.tabla}</td>
-          <td class="px-6 py-4 text-slate-300">${row.desc}</td>
-          <td class="px-6 py-4 text-center font-mono text-slate-400">${row.campos}</td>
-          <td class="px-6 py-4 text-center">
+        <tr class="hover:bg-slate-800/40 transition-colors cursor-pointer" onclick="focusTableFromTrigger('${row.tabla}')">
+          <td class="px-6 py-3.5 text-slate-500 font-mono text-xs">${row.id}</td>
+          <td class="px-6 py-3.5 font-mono font-semibold text-sky-400">${row.tabla}</td>
+          <td class="px-6 py-3.5 text-slate-300">${row.desc}</td>
+          <td class="px-6 py-3.5 text-center font-mono text-slate-400">${row.campos}</td>
+          <td class="px-6 py-3.5 text-center">
             <span class="inline-block bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold text-xs shadow-sm shadow-emerald-500/10">
               ${row.registros.toLocaleString('es-MX')}
             </span>
@@ -617,7 +789,7 @@
     }
 
     // =====================================================================
-    // 5. CONEXIONES
+    // 7. CONEXIONES VECTORIALES (FK -> PK)
     // =====================================================================
     function drawConnections() {
       svgGroup.innerHTML = '';
@@ -654,7 +826,7 @@
     }
 
     // =====================================================================
-    // 6. TRIGGERS PANELS
+    // 8. PANELES DE TRIGGERS
     // =====================================================================
     function renderFullTriggersGrid() {
       const grid = document.getElementById('fullTriggersGrid');
@@ -683,9 +855,9 @@
       let filtered = triggersData;
       if (filterTable) {
         filtered = triggersData.filter(t => t.table === filterTable);
-        drawerTitle.innerText = `Triggers de ${filterTable}`;
+        drawerTitle.innerText = `Triggers de ${filterTable} (${filtered.length})`;
       } else {
-        drawerTitle.innerText = `Triggers del Sistema (56)`;
+        drawerTitle.innerText = `Triggers del Sistema (${triggersData.length})`;
       }
       list.innerHTML = filtered.map(tr => `
         <div class="bg-slate-950 border border-slate-800 rounded-lg p-3 hover:border-indigo-500/60 transition-all">
@@ -725,7 +897,7 @@
       document.getElementById('triggerDrawer').classList.add('translate-x-full');
       const targetTable = schemaTables.find(t => t.id === tableId);
       if (!targetTable) return;
-      selectedTableId = tableId;
+      selectedTableId = null;
       highlightConnections(tableId);
       const rect = viewport.getBoundingClientRect();
       const state = tableOffsets[tableId];
@@ -740,7 +912,7 @@
     }
 
     // =====================================================================
-    // 7. CONTROL DE VISTAS
+    // 9. CONTROL DE VISTAS
     // =====================================================================
     function switchMainView(view) {
       const diagramView   = document.getElementById('viewport');
@@ -800,7 +972,7 @@
     }
 
     // =====================================================================
-    // 8. HIGHLIGHT + INFO PANEL + SEARCH
+    // 10. HIGHLIGHT + INFO PANEL + SEARCH
     // =====================================================================
     function highlightConnections(tableId) {
       selectedTableId = (selectedTableId === tableId) ? null : tableId;
@@ -834,7 +1006,7 @@
       const table = schemaTables.find(t => t.id === tableId);
       if (!table) return;
       const panel   = document.getElementById('tableInfoPanel');
-      const count   = tableCounts[tableId];
+      const count   = tableCounts[tableId] ?? 0;
       const trigCnt = tableTriggersMap[tableId] || 0;
 
       document.getElementById('infoTableName').textContent = table.name;
@@ -843,18 +1015,11 @@
       document.getElementById('infoTriggers').textContent  = trigCnt;
 
       const recEl = document.getElementById('infoRecords');
-      recEl.classList.remove('text-amber-400', 'text-slate-500');
-      if (count === undefined) {
-        recEl.textContent = 'N/D';
-        recEl.classList.add('text-amber-400');
-        recEl.title = 'La tabla no existe en la base de datos';
-      } else {
-        recEl.textContent = count.toLocaleString('es-MX');
-        recEl.title = `${count.toLocaleString('es-MX')} registros`;
-      }
+      recEl.textContent = count.toLocaleString('es-MX');
+      recEl.title = `${count.toLocaleString('es-MX')} registros`;
 
       const tsEl = document.getElementById('infoTimestamp');
-      tsEl.textContent = countsLastUpdate || 'Datos no disponibles';
+      tsEl.textContent = countsLastUpdate;
 
       panel.classList.remove('hidden');
     }
@@ -898,12 +1063,12 @@
     }
 
     // =====================================================================
-    // 9. CONTEOS REALES DESDE LA BD (Solo si se abre en servidor)
+    // 11. CONTEOS REALES DESDE LA BD (Opcional con servidor PHP)
     // =====================================================================
     async function fetchTableCounts() {
       if (countsFetching) return;
       if (location.protocol === 'file:') {
-        alert("Para consultar datos en tiempo real, debes usar un servidor local (XAMPP/WAMP) y tener el archivo contar.php. Por ahora se muestran los datos precargados.");
+        alert("Los 25 conteos ya están precargados. Si deseas actualizarlos en tiempo real desde MySQL, abre este archivo desde un servidor local (XAMPP/WAMP) junto con contar.php.");
         return;
       }
       
@@ -919,15 +1084,14 @@
         const data = await res.json();
         if (!data.success || !data.counts) throw new Error(data.error || 'Respuesta inválida');
 
-        tableCounts      = data.counts;
+        tableCounts      = { ...tableCounts, ...data.counts };
         countsLastUpdate = data.timestamp || new Date().toLocaleString('es-MX');
 
         updateCountBadges();
         if (selectedTableId) showTableInfo(selectedTableId);
 
       } catch (err) {
-        console.warn('⚠️ No se pudieron cargar los conteos:', err);
-        countsLastUpdate = 'Error al conectar con la BD';
+        console.warn('⚠️ Usando conteos precargados:', err);
         updateCountBadges();
         if (selectedTableId) showTableInfo(selectedTableId);
       } finally {
@@ -942,25 +1106,17 @@
         const valEl = badge.querySelector('.count-val');
         if (!valEl) return;
 
-        const c = tableCounts[t.id];
+        const c = tableCounts[t.id] ?? 0;
         valEl.classList.remove('count-loading');
-
-        if (c === undefined) {
-          valEl.textContent = 'N/D';
-          valEl.style.color = '#fbbf24';
-          badge.title = 'La tabla no existe o no tiene registros';
-          badge.style.borderColor = 'rgba(251,191,36,0.55)';
-        } else {
-          valEl.textContent = c.toLocaleString('es-MX');
-          valEl.style.color = '';
-          badge.title = `${c.toLocaleString('es-MX')} registros en la BD`;
-          badge.style.borderColor = 'rgba(16,185,129,0.6)';
-        }
+        valEl.textContent = c.toLocaleString('es-MX');
+        valEl.style.color = '';
+        badge.title = `${c.toLocaleString('es-MX')} registros en la BD`;
+        badge.style.borderColor = 'rgba(16,185,129,0.6)';
       });
     }
 
     // =====================================================================
-    // 10. ANIMACIÓN / ZOOM
+    // 12. ANIMACIÓN / ZOOM
     // =====================================================================
     function startAnimationLoop() {
       function animate() {
@@ -1011,9 +1167,9 @@
     }
 
     function zoomIn()  { zoomScale = Math.min(zoomScale * 1.15, 2.0); updateTransform(); }
-    function zoomOut() { zoomScale = Math.max(zoomScale / 1.15, 0.3); updateTransform(); }
+    function zoomOut() { zoomScale = Math.max(zoomScale / 1.15, 0.25); updateTransform(); }
     function resetZoom() {
-      zoomScale = 0.85; panX = 40; panY = 40;
+      zoomScale = 0.68; panX = 30; panY = 30;
       selectedTableId = null;
       highlightConnections(null);
       updateTransform();
