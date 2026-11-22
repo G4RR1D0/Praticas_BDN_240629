@@ -3,6 +3,7 @@
 ### Docente: M.T.I. Marco A. Ramírez Hernández
 
 **Periodo:** Septiembre - Diciembre 2026
+
 [Diccionario de datos](https://g4rr1d0.github.io/Praticas_BDN_240629/archify/index.html?v=2)
 
 [Diagrama entidad-relación](https://g4rr1d0.github.io/Praticas_BDN_240629/archify/modelo_de_tablas2.html?v=2)
